@@ -20,6 +20,9 @@
                 <img src="../images/logo.svg" alt="Dropship Logo">
                 <span>Dropship</span>
             </div>
+            <div class="mobile-search">
+                <input type="text" id="mobileSearchInput" placeholder="Search products..." autocomplete="off">
+            </div>
             <ul class="nav-menu">
                 <li><a href="index.html" class="active">Home</a></li>
                 <li class="dropdown">
@@ -85,12 +88,19 @@
                     <input type="text" id="searchInput" placeholder="Search products..." autocomplete="off">
                     <button type="button" id="searchBtn"><i class="fas fa-search"></i></button>
                 </div>
-                <a href="signup.html" class="btn-signup">Sign Up</a>
-                <a href="login.html" class="btn-login">Login</a>
+                <div class="mobile-actions">
+                    <a href="signup.html" class="mobile-auth-btn"><i class="fas fa-user-plus"></i></a>
+                    <a href="login.html" class="mobile-auth-btn"><i class="fas fa-sign-in-alt"></i></a>
+                </div>
                 <a href="cart.html" class="cart-icon">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-count">0</span>
                 </a>
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </div>
         </div>
     </nav>
@@ -185,6 +195,46 @@
     <script src="../js/api.js"></script>
     <script src="../js/main.js"></script>
     <script>
+        // Mobile menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        if (hamburger && navMenu) {
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+        }
+        
+        // Mobile dropdown toggle
+        const dropdowns = document.querySelectorAll('.dropdown');
+        dropdowns.forEach(dropdown => {
+            dropdown.addEventListener('click', (e) => {
+                if (window.innerWidth <= 1024) {
+                    e.preventDefault();
+                    dropdown.classList.toggle('active');
+                }
+            });
+        });
+        
+        // Mobile search
+        const mobileSearchInput = document.getElementById('mobileSearchInput');
+        
+        function performMobileSearch() {
+            const query = mobileSearchInput.value.trim();
+            if (query) {
+                window.location.href = 'products.html?search=' + encodeURIComponent(query);
+            }
+        }
+        
+        if (mobileSearchInput) {
+            mobileSearchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    performMobileSearch();
+                }
+            });
+        }
+        
         // Search functionality
         const searchInput = document.getElementById('searchInput');
         const searchBtn = document.getElementById('searchBtn');

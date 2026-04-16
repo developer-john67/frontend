@@ -198,6 +198,9 @@
             <img src="../images/logo.svg" alt="Dropship Logo">
             <span>Dropship</span>
         </div>
+        <div class="mobile-search">
+            <input type="text" id="mobileSearchInput" placeholder="Search products..." autocomplete="off">
+        </div>
         <ul class="nav-menu">
             <li><a href="index.html">Home</a></li>
             <li><a href="products.html">Products</a></li>
@@ -205,8 +208,22 @@
             <li><a href="account.html">Account</a></li>
         </ul>
         <div class="nav-actions">
-            <a href="signup.html" class="btn-signup">Sign Up</a>
-            <a href="login.html" class="btn-login">Login</a>
+            <div class="mobile-actions">
+                <a href="signup.html" class="mobile-auth-btn"><i class="fas fa-user-plus"></i></a>
+                <a href="login.html" class="mobile-auth-btn"><i class="fas fa-sign-in-alt"></i></a>
+            </div>
+            <a href="cart.html" class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </a>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+</nav>
             <a href="cart.html" class="cart-icon">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="cart-count">0</span>
