@@ -16,6 +16,11 @@
 <body>
     <nav class="navbar">
         <div class="nav-container">
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
             <div class="logo">
                 <img src="../images/logo.svg" alt="Dropship Logo">
                 <span>Dropship</span>
@@ -96,11 +101,6 @@
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-count">0</span>
                 </a>
-                <div class="hamburger" id="hamburger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
             </div>
         </div>
     </nav>
@@ -227,12 +227,15 @@
             }
         }
         
-        if (mobileSearchInput) {
+if (mobileSearchInput) {
             mobileSearchInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    performMobileSearch();
-                }
+                if (e.key === 'Enter') performSearch(mobileSearchInput.value);
             });
+        }
+        
+        function handleLogout() {
+            Auth.logout();
+            window.location.href = 'index.html';
         }
         
         // Search functionality

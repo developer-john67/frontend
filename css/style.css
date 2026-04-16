@@ -189,6 +189,7 @@ body {
     gap: 5px;
     cursor: pointer;
     padding: 5px;
+    order: 1;
 }
 
 .hamburger span {
@@ -201,10 +202,32 @@ body {
 
 .mobile-search {
     display: none;
+    order: 2;
 }
 
 .mobile-actions {
     display: none;
+    order: 3;
+    gap: 0.5rem;
+}
+
+.mobile-actions a {
+    padding: 0.5rem;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mobile-actions .logout-btn {
+    background: rgba(255, 82, 82, 0.3);
+}
+
+.nav-actions .cart-icon {
+    order: 4;
 }
 
 /* Hero Section */
@@ -410,12 +433,45 @@ footer {
 @media (max-width: 1024px) {
     .nav-container {
         flex-wrap: wrap;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 1rem;
+    }
+    
+    .hamburger {
+        display: flex;
+        order: 1;
+    }
+    
+    .logo {
+        order: 2;
+    }
+    
+    .mobile-search {
+        display: block;
+        order: 3;
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+    
+    .mobile-search input {
+        width: 100%;
+        padding: 0.6rem 1rem;
+        border: none;
+        border-radius: 20px;
+        background: rgba(255,255,255,0.2);
+        color: white;
+    }
+    
+    .mobile-search input::placeholder {
+        color: rgba(255,255,255,0.7);
     }
     
     .nav-menu {
         display: none;
         width: 100%;
-        order: 3;
+        order: 5;
         flex-direction: column;
         text-align: center;
         padding: 1rem 0;
@@ -465,11 +521,22 @@ footer {
     }
     
     .nav-actions {
-        order: 2;
+        order: 4;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
     
     .search-box {
         display: none;
+    }
+    
+    .hamburger {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        padding: 5px;
     }
     
     .mobile-search {
@@ -547,6 +614,38 @@ footer {
     
     .nav-container {
         padding: 0 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .logo {
+        order: 2;
+    }
+    
+    .mobile-search {
+        order: 3;
+        width: 100%;
+        margin-top: 0.5rem;
+        display: block;
+    }
+    
+    .mobile-search input {
+        width: 100%;
+    }
+    
+    .nav-menu {
+        order: 4;
+        width: 100%;
+    }
+    
+    .nav-actions {
+        order: 1;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
     
     .logo img {

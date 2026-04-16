@@ -194,6 +194,11 @@
 
 <nav class="navbar">
     <div class="nav-container">
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
         <div class="logo">
             <img src="../images/logo.svg" alt="Dropship Logo">
             <span>Dropship</span>
@@ -209,18 +214,12 @@
         </ul>
         <div class="nav-actions">
             <div class="mobile-actions">
-                <a href="signup.html" class="mobile-auth-btn"><i class="fas fa-user-plus"></i></a>
-                <a href="login.html" class="mobile-auth-btn"><i class="fas fa-sign-in-alt"></i></a>
+                <a href="cart.html" class="mobile-auth-btn"><i class="fas fa-shopping-cart"></i></a>
             </div>
             <a href="cart.html" class="cart-icon">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="cart-count">0</span>
             </a>
-            <div class="hamburger" id="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
         </div>
     </div>
 </nav>
@@ -278,10 +277,62 @@
 </main>
 
 <script src="../js/api.js"></script>
-<script src="../js/main.js"></script>
-<script>
-    // ── State ──────────────────────────────────────────────────────────────────
-let cartData  = [];
+    <script src="../js/main.js"></script>
+    <script>
+        // Mobile menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        if (hamburger && navMenu) {
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+        }
+        
+        // Mobile dropdown toggle
+        const dropdowns = document.querySelectorAll('.dropdown');
+        dropdowns.forEach(dropdown => {
+            dropdown.addEventListener('click', (e) => {
+                if (window.innerWidth <= 1024) {
+                    e.preventDefault();
+                    dropdown.classList.toggle('active');
+                }
+            });
+        });
+        
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const mobileSearchInput = document.getElementById('mobileSearchInput');
+
+        function performSearch(query) {
+            if (query) {
+                window.location.href = 'products.html?search=' + encodeURIComponent(query);
+            }
+        }
+
+        if (searchBtn) {
+            searchBtn.addEventListener('click', () => performSearch(searchInput.value));
+        }
+        if (searchInput) {
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') performSearch(searchInput.value);
+            });
+        }
+        if (mobileSearchInput) {
+            mobileSearchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') performSearch(mobileSearchInput.value);
+            });
+        }
+        
+        function handleLogout() {
+            Auth.logout();
+            window.location.href = 'index.html';
+        }
+        
+        // ── State ──────────────────────────────────────────────────────────────────
+        let cartData  = [];
 let isApiCart = false;
 
 const MEDIA_URL = window.location.origin + '/media/';

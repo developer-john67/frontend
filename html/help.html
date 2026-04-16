@@ -17,6 +17,11 @@
 <body>
     <nav class="navbar">
         <div class="nav-container">
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
             <div class="logo">
                 <img src="../images/logo.svg" alt="Dropship Logo">
                 <span>Dropship</span>
@@ -50,18 +55,12 @@
                     <button type="button" id="searchBtn"><i class="fas fa-search"></i></button>
                 </div>
                 <div class="mobile-actions">
-                    <a href="login.html" class="mobile-auth-btn"><i class="fas fa-sign-in-alt"></i></a>
-                    <a href="signup.html" class="mobile-auth-btn"><i class="fas fa-user-plus"></i></a>
+                    <a href="cart.html" class="mobile-auth-btn"><i class="fas fa-shopping-cart"></i></a>
                 </div>
                 <a href="cart.html" class="cart-icon">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-count">0</span>
                 </a>
-                <div class="hamburger" id="hamburger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
             </div>
         </div>
     </nav>
@@ -172,6 +171,11 @@
             mobileSearchInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') performSearch(mobileSearchInput.value);
             });
+        }
+        
+        function handleLogout() {
+            Auth.logout();
+            window.location.href = 'index.html';
         }
         
         // WhatsApp chat button

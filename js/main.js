@@ -190,16 +190,38 @@ function updateNav() {
     const btnLogin   = document.querySelector('a.btn-login');
     const btnSignup  = document.querySelector('a.btn-signup');
     const navAccount = document.querySelector('a[href="account.html"]');
+    
+    const mobileActions = document.querySelector('.mobile-actions');
 
     if (isLoggedIn && user) {
         if (btnLogin)   btnLogin.style.display  = 'none';
         if (btnSignup)  btnSignup.style.display = 'none';
         if (navAccount) navAccount.textContent  = user.username || 'Account';
+        
+        if (mobileActions) {
+            mobileActions.innerHTML = `
+                <a href="cart.html" class="mobile-auth-btn"><i class="fas fa-shopping-cart"></i></a>
+                <a href="account.html" class="mobile-auth-btn"><i class="fas fa-user"></i></a>
+                <a href="#" class="mobile-auth-btn logout-btn" onclick="handleLogout(); return false;"><i class="fas fa-sign-out-alt"></i></a>
+            `;
+        }
     } else {
         if (btnLogin)   btnLogin.style.display  = '';
         if (btnSignup)  btnSignup.style.display = '';
         if (navAccount) navAccount.textContent  = 'Account';
+        
+        if (mobileActions) {
+            mobileActions.innerHTML = `
+                <a href="signup.html" class="mobile-auth-btn"><i class="fas fa-user-plus"></i></a>
+                <a href="login.html" class="mobile-auth-btn"><i class="fas fa-sign-in-alt"></i></a>
+            `;
+        }
     }
+}
+
+function handleLogout() {
+    Auth.logout();
+    window.location.href = 'index.html';
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
