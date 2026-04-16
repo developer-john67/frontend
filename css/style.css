@@ -202,32 +202,6 @@ body {
 
 .mobile-search {
     display: none;
-    order: 2;
-}
-
-.mobile-actions {
-    display: none;
-    order: 3;
-    gap: 0.5rem;
-}
-
-.mobile-actions a {
-    padding: 0.5rem;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.2);
-    color: white;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mobile-actions .logout-btn {
-    background: rgba(255, 82, 82, 0.3);
-}
-
-.nav-actions .cart-icon {
-    order: 4;
 }
 
 /* Hero Section */
@@ -662,22 +636,6 @@ footer {
     }
     
     .btn-signup, .btn-login {
-        display: none;
-    }
-    
-    .mobile-actions {
-        display: flex;
-        gap: 0.5rem;
-    }
-    
-    .mobile-actions a {
-        padding: 0.5rem;
-        border-radius: 50%;
-        background: rgba(255,255,255,0.2);
-    }
-    
-    .nav-actions .btn-signup,
-    .nav-actions .btn-login {
         display: none;
     }
     
