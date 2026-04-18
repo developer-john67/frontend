@@ -540,6 +540,15 @@
                 countEl.textContent = totalItems;
             }
         }
+
+        // Service Worker Registration for PWA/TWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/js/service-worker.js')
+                    .then(reg => console.log('SW registered:', reg.scope))
+                    .catch(err => console.log('SW registration failed:', err));
+            });
+        }
     </script>
 </body>
 </html>
