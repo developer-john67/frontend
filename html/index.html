@@ -175,23 +175,27 @@
                     <div class="category-icon"><i class="fas fa-laptop"></i></div>
                     <span class="category-name">Electronics</span>
                 </a>
-                <a href="products.html?category=sports" class="category-item">
+                <a href="products.html?category=clothing-apparel" class="category-item">
+                    <div class="category-icon"><i class="fas fa-tshirt"></i></div>
+                    <span class="category-name">Clothing</span>
+                </a>
+                <a href="products.html?category=home-garden" class="category-item">
+                    <div class="category-icon"><i class="fas fa-home"></i></div>
+                    <span class="category-name">Home & Garden</span>
+                </a>
+                <a href="products.html?category=sports-outdoor" class="category-item">
                     <div class="category-icon"><i class="fas fa-running"></i></div>
                     <span class="category-name">Sports</span>
                 </a>
-                <a href="products.html?category=home" class="category-item">
-                    <div class="category-icon"><i class="fas fa-couch"></i></div>
-                    <span class="category-name">Home</span>
-                </a>
-                <a href="products.html?category=fashion" class="category-item">
-                    <div class="category-icon"><i class="fas fa-tshirt"></i></div>
-                    <span class="category-name">Fashion</span>
-                </a>
-                <a href="products.html?category=beauty" class="category-item">
+                <a href="products.html?category=beauty-health" class="category-item">
                     <div class="category-icon"><i class="fas fa-spa"></i></div>
                     <span class="category-name">Beauty</span>
                 </a>
-                <a href="products.html?category=toys" class="category-item">
+                <a href="products.html?category=books-media" class="category-item">
+                    <div class="category-icon"><i class="fas fa-book"></i></div>
+                    <span class="category-name">Books</span>
+                </a>
+                <a href="products.html?category=games-toys" class="category-item">
                     <div class="category-icon"><i class="fas fa-gamepad"></i></div>
                     <span class="category-name">Toys</span>
                 </a>
@@ -199,10 +203,25 @@
                     <div class="category-icon"><i class="fas fa-car"></i></div>
                     <span class="category-name">Automotive</span>
                 </a>
-                <a href="products.html?category=groceries" class="category-item">
+                <a href="products.html?category=food-groceries" class="category-item">
                     <div class="category-icon"><i class="fas fa-shopping-basket"></i></div>
                     <span class="category-name">Groceries</span>
                 </a>
+                <a href="products.html?category=other" class="category-item">
+                    <div class="category-icon"><i class="fas fa-box"></i></div>
+                    <span class="category-name">Other</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- All Products -->
+        <section class="products-section">
+            <div class="section-header">
+                <h2 class="section-title">All Products</h2>
+                <a href="products.html" class="section-link">See All</a>
+            </div>
+            <div class="product-grid" id="productGrid">
+                <!-- Products loaded via JS -->
             </div>
         </section>
     </main>
@@ -412,19 +431,11 @@
             try {
                 const products = await Products.getAll();
                 const grid = document.getElementById('productGrid');
-                const newGrid = document.getElementById('newProductsGrid');
-                const flashGrid = document.getElementById('flashProducts');
 
                 if (grid && products.length > 0) {
-                    grid.innerHTML = products.slice(0, 6).map(p => createProductCard(p)).join('');
-                }
-
-                if (newGrid && products.length > 0) {
-                    newGrid.innerHTML = products.slice(6, 12).map(p => createProductCard(p)).join('');
-                }
-
-                if (flashGrid && products.length > 0) {
-                    flashGrid.innerHTML = products.slice(0, 5).map(p => createFlashCard(p)).join('');
+                    grid.innerHTML = products.map(p => createProductCard(p)).join('');
+                } else if (grid) {
+                    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#666;">No products available</div>';
                 }
             } catch (error) {
                 console.error('Failed to load products:', error);
@@ -432,7 +443,7 @@
         }
 
         function createProductCard(product) {
-            const imageUrl = product.image_url || 'https://via.placeholder.com/200x200?text=Product';
+            const imageUrl = product.main_image || product.image_url || 'https://placehold.co/200x200/FA7207/white?text=No+Image';
             return `
                 <div class="product-card">
                     <img src="${imageUrl}" alt="${product.name}" class="product-image" onclick="window.location.href='product.html?id=${product.id}'" onerror="this.src='https://via.placeholder.com/200x200?text=Product'">
