@@ -149,15 +149,14 @@
                 </button>
                 <div class="search-results" id="searchResults"></div>
             </div>
-            <div class="header-actions">
-                <a href="account.html">
-                    <i class="far fa-user"></i>
-                </a>
-                <a href="cart.html">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count" id="cartCount">0</span>
-                </a>
+            <div class="header-auth">
+                <a href="signup.html" class="auth-btn-small">Create Account</a>
+                <a href="login.html" class="auth-btn-small" style="background: #fff; color: var(--primary);">Sign In</a>
             </div>
+            <a href="cart.html" class="cart-icon-header">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </a>
         </div>
     </header>
 
@@ -204,46 +203,6 @@
                     <div class="category-icon"><i class="fas fa-shopping-basket"></i></div>
                     <span class="category-name">Groceries</span>
                 </a>
-            </div>
-        </section>
-
-        <!-- Flash Sales -->
-        <section class="flash-sales">
-            <div class="flash-header">
-                <span class="flash-logo">FLASH SALES</span>
-                <div class="flash-timer">
-                    <div class="timer-block">02</div>
-                    <div class="timer-block">:</div>
-                    <div class="timer-block">34</div>
-                    <div class="timer-block">:</div>
-                    <div class="timer-block">56</div>
-                </div>
-                <a href="products.html?filter=flash" class="section-link" style="margin-left: auto; color: #d32f2f;">See All</a>
-            </div>
-            <div class="flash-products" id="flashProducts">
-                <!-- Loaded via JS -->
-            </div>
-        </section>
-
-        <!-- Featured Products -->
-        <section class="products-section">
-            <div class="section-header">
-                <h2 class="section-title">Recommended For You</h2>
-                <a href="products.html" class="section-link">See All</a>
-            </div>
-            <div class="product-grid" id="productGrid">
-                <!-- Products loaded via JS -->
-            </div>
-        </section>
-
-        <!-- All Products -->
-        <section class="products-section">
-            <div class="section-header">
-                <h2 class="section-title">New Arrivals</h2>
-                <a href="products.html" class="section-link">See All</a>
-            </div>
-            <div class="product-grid" id="newProductsGrid">
-                <!-- Products loaded via JS -->
             </div>
         </section>
     </main>
