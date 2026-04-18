@@ -5,569 +5,584 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products - Dropship</title>
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="manifest" href="../manifest.json">
-    <meta name="theme-color" content="#3b82f6">
+    <meta name="theme-color" content="#FA7207">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Dropship">
     <link rel="apple-touch-icon" href="../images/icon-192.svg">
     <style>
-        .products-page { padding: 32px 0; }
-
-        /* ── Breadcrumb ── */
-        .breadcrumb {
-            font-size: 13px;
-            color: #888;
-            margin-bottom: 20px;
+        .products-page {
+            padding-bottom: 70px;
         }
-        .breadcrumb a { color: #3b82f6; text-decoration: none; }
-        .breadcrumb a:hover { text-decoration: underline; }
-        .breadcrumb span { margin: 0 6px; }
-
-        /* ── Page Header ── */
-        .page-header {
+        .products-header-bar {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 28px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-        .page-header h1 {
-            font-size: 26px;
-            font-weight: 700;
-            color: #111;
-            margin: 0;
-        }
-        .product-count {
-            font-size: 14px;
-            color: #666;
-        }
-
-        /* ── Layout ── */
-        .products-layout {
-            display: grid;
-            grid-template-columns: 240px 1fr;
-            gap: 28px;
-            align-items: start;
-        }
-        @media (max-width: 768px) {
-            .products-layout { grid-template-columns: 1fr; }
-            .filters-sidebar { display: none; }
-            .mobile-filter-btn { display: flex; }
-        }
-
-        /* ── Mobile Filter Button ── */
-        .mobile-filter-btn {
-            display: none;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 16px;
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 14px;
-            color: #444;
-            cursor: pointer;
-            margin-bottom: 16px;
-        }
-        @media (max-width: 768px) {
-            .mobile-filter-btn { display: flex; }
-        }
-
-        /* ── Filters Sidebar ── */
-        .filters-sidebar {
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 20px;
+            gap: 10px;
+            padding: 12px 15px;
+            background: var(--white);
+            box-shadow: var(--shadow);
             position: sticky;
-            top: 80px;
+            top: 56px;
+            z-index: 99;
         }
-        .filter-section { margin-bottom: 24px; }
-        .filter-section h3 {
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #555;
-            margin: 0 0 12px;
+        .back-btn {
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            padding: 8px;
         }
-        .category-filter-list { list-style: none; padding: 0; margin: 0; }
-        .category-filter-list li a {
-            display: block;
-            padding: 6px 8px;
-            border-radius: 6px;
-            font-size: 14px;
-            color: #444;
-            text-decoration: none;
-            transition: background 0.15s;
-        }
-        .category-filter-list li a:hover { background: #f3f4f6; }
-        .category-filter-list li a.active {
-            background: #dbeafe;
-            color: #1d4ed8;
-            font-weight: 600;
-        }
-        .price-inputs {
+        .products-search {
+            flex: 1;
             display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-        .price-inputs input {
-            width: 80px;
-            padding: 6px 8px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 13px;
-            outline: none;
-        }
-        .price-inputs input:focus { border-color: #3b82f6; }
-        .btn-apply-price {
-            padding: 6px 12px;
-            background: #3b82f6;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            font-size: 13px;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-        .btn-apply-price:hover { background: #2563eb; }
-
-        /* ── Sort Bar ── */
-        .sort-bar {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        .sort-bar label { font-size: 14px; color: #555; }
-        .sort-bar select {
-            padding: 6px 10px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            outline: none;
-            cursor: pointer;
-        }
-
-        /* ── Product Grid ── */
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-        }
-        .product-card {
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
+            background: var(--secondary);
+            border-radius: 4px;
             overflow: hidden;
-            transition: box-shadow 0.2s, transform 0.2s;
+            position: relative;
         }
-        .product-card:hover {
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-            transform: translateY(-2px);
+        .products-search input {
+            flex: 1;
+            padding: 10px 12px;
+            border: none;
+            background: transparent;
+            font-size: 0.95rem;
+            outline: none;
         }
-        .product-image {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            background: #f9fafb;
+        .products-search button {
+            background: var(--primary);
+            border: none;
+            padding: 10px 14px;
+            cursor: pointer;
         }
-        .product-info { padding: 14px; }
-        .product-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: #111;
-            margin: 0 0 6px;
+        .products-search button i {
+            color: var(--white);
+        }
+        .search-results {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border-radius: 0 0 4px 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        .search-results.active {
+            display: block;
+        }
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+        }
+        .search-result-item:hover {
+            background: var(--secondary);
+        }
+        .search-result-image {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+        }
+        .search-result-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .search-result-name {
+            font-size: 0.9rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .product-category {
-            font-size: 12px;
-            color: #888;
-            margin: 0 0 8px;
+        .search-result-price {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .search-no-results, .search-loading {
+            padding: 20px;
+            text-align: center;
+            color: var(--text-light);
+        }
+        .search-loading i {
+            animation: spin 1s linear infinite;
+        }
+        .products-toolbar {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 15px;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+        }
+        .filter-sort-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: var(--white);
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            background: var(--border);
+            gap: 1px;
+        }
+        .product-card {
+            background: var(--white);
+            padding: 10px;
+            cursor: pointer;
+        }
+        .product-image {
+            width: 100%;
+            height: 140px;
+            object-fit: contain;
+            margin-bottom: 8px;
+        }
+        .product-title {
+            font-size: 0.85rem;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+            min-height: 40px;
         }
         .product-price {
-            font-size: 16px;
+            font-size: 1rem;
             font-weight: 700;
-            color: #111;
-            margin: 0 0 12px;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+        .product-old-price {
+            font-size: 0.75rem;
+            color: #999;
+            text-decoration: line-through;
+            margin-right: 8px;
+        }
+        .product-discount {
+            font-size: 0.7rem;
+            color: var(--green);
+            font-weight: 600;
         }
         .add-to-cart {
             width: 100%;
             padding: 8px;
-            background: #3b82f6;
-            color: #fff;
+            background: var(--primary);
+            color: var(--white);
             border: none;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 500;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 8px;
             cursor: pointer;
-            transition: background 0.2s;
         }
-        .add-to-cart:hover { background: #2563eb; }
-
-        /* ── States ── */
-        .loading-state, .empty-state, .error-state {
+        .add-to-cart:hover {
+            background: var(--primary-dark);
+        }
+        .loading-state, .empty-state {
             grid-column: 1 / -1;
             text-align: center;
             padding: 60px 20px;
-            color: #888;
+            background: var(--white);
         }
-        .loading-state i, .empty-state i { font-size: 40px; margin-bottom: 12px; display: block; }
-        .empty-state a { color: #3b82f6; text-decoration: none; }
+        .loading-state i {
+            font-size: 2rem;
+            color: var(--primary);
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        @media (min-width: 1024px) {
+            .products-header-bar {
+                top: 60px;
+            }
+            .product-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            .product-image {
+                height: 180px;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Mobile Menu -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <button class="mobile-menu-close" id="closeMenu">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="logo" style="font-size: 1.3rem;">
+                <i class="fas fa-shopping-bag"></i> Dropship
+            </div>
+            <div class="mobile-menu-user">
+                <div class="avatar"><i class="fas fa-user"></i></div>
+                <div><div style="font-weight: 600;">Welcome</div></div>
+            </div>
+        </div>
+        <div class="mobile-menu-links">
+            <div class="mobile-menu-section">
+                <h4>My Account</h4>
+                <a href="account.html"><i class="fas fa-user"></i> My Account</a>
+                <a href="cart.html"><i class="fas fa-shopping-cart"></i> Cart</a>
+            </div>
+            <div class="mobile-menu-section">
+                <h4>Categories</h4>
+                <a href="products.html?category=electronics"><i class="fas fa-laptop"></i> Electronics</a>
+                <a href="products.html?category=fashion"><i class="fas fa-tshirt"></i> Fashion</a>
+                <a href="products.html?category=home"><i class="fas fa-home"></i> Home</a>
+                <a href="products.html?category=beauty"><i class="fas fa-spa"></i> Beauty</a>
+            </div>
+            <div class="mobile-menu-section">
+                <h4>Help</h4>
+                <a href="help.html"><i class="fas fa-question-circle"></i> Help Center</a>
+            </div>
+        </div>
+    </div>
 
-    <!-- ── Navbar ── -->
-    <nav class="navbar">
-        <div class="nav-container">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
             <div class="hamburger" id="hamburger">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
-            <div class="logo">
-                <img src="../images/logo.svg" alt="Dropship Logo">
+            <a href="index.html" class="logo">
+                <i class="fas fa-shopping-bag logo-icon"></i>
                 <span>Dropship</span>
+            </a>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search products..." autocomplete="off">
+                <button type="button" id="searchBtn">
+                    <i class="fas fa-search"></i>
+                </button>
             </div>
-            <div class="mobile-search">
-                <input type="text" id="mobileSearchInput" placeholder="Search products..." autocomplete="off">
-            </div>
-            <ul class="nav-menu">
-                <li><a href="index.html">Home</a></li>
-                <li class="dropdown">
-                    <a href="#">Categories <i class="fas fa-chevron-down"></i></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="products.html?category=electronics"><i class="fas fa-laptop"></i> Electronics</a></li>
-                        <li><a href="products.html?category=sports-outdoor"><i class="fas fa-football-ball"></i> Sports &amp; Outdoor</a></li>
-                        <li><a href="products.html?category=home-garden"><i class="fas fa-home"></i> Home &amp; Garden</a></li>
-                        <li><a href="products.html?category=clothing-apparel"><i class="fas fa-tshirt"></i> Clothing &amp; Apparel</a></li>
-                        <li><a href="products.html?category=games-toys"><i class="fas fa-gamepad"></i> Games &amp; Toys</a></li>
-                        <li><a href="products.html?category=beauty-health"><i class="fas fa-spa"></i> Beauty &amp; Health</a></li>
-                        <li><a href="products.html?category=automotive"><i class="fas fa-car"></i> Automotive</a></li>
-                        <li><a href="products.html?category=books-media"><i class="fas fa-book"></i> Books &amp; Media</a></li>
-                        <li><a href="products.html?category=food-groceries"><i class="fas fa-shopping-basket"></i> Food &amp; Groceries</a></li>
-                        <li><a href="products.html?category=other"><i class="fas fa-ellipsis-h"></i> Other</a></li>
-                    </ul>
-                </li>
-                <li><a href="help.html">Help</a></li>
-                <li><a href="account.html">Account</a></li>
-            </ul>
-            <div class="nav-actions">
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Search products..." autocomplete="off">
-                    <button type="button" id="searchBtn"><i class="fas fa-search"></i></button>
-                </div>
-                <a href="signup.html" class="btn-signup">Sign Up</a>
-                <a href="login.html" class="btn-login">Login</a>
-                <a href="cart.html" class="cart-icon">
+            <div class="header-actions">
+                <a href="account.html">
+                    <i class="far fa-user"></i>
+                </a>
+                <a href="cart.html">
                     <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count">0</span>
+                    <span class="cart-count" id="cartCount">0</span>
                 </a>
             </div>
         </div>
+    </header>
+
+    <!-- Products Header -->
+    <div class="products-page">
+        <div class="products-header-bar">
+            <a href="index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div class="products-search" style="position: relative;">
+                <input type="text" id="productsSearchInput" placeholder="Search in this category..." autocomplete="off">
+                <button type="button" id="productsSearchBtn">
+                    <i class="fas fa-search"></i>
+                </button>
+                <div class="search-results" id="productsSearchResults"></div>
+            </div>
+        </div>
+
+        <div class="products-toolbar">
+            <button class="filter-sort-btn" onclick="toggleFilters()">
+                <i class="fas fa-filter"></i> Filter
+            </button>
+            <button class="filter-sort-btn" onclick="toggleSort()">
+                <i class="fas fa-sort"></i> Sort
+            </button>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="product-grid" id="productGrid">
+            <div class="loading-state">
+                <i class="fas fa-spinner"></i>
+                <p>Loading products...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="mobile-nav">
+        <ul class="mobile-nav-list">
+            <li class="mobile-nav-item" onclick="window.location.href='index.html'">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </li>
+            <li class="mobile-nav-item" onclick="document.getElementById('productsSearchInput').focus()">
+                <i class="fas fa-search"></i>
+                <span>Search</span>
+            </li>
+            <li class="mobile-nav-item">
+                <i class="fas fa-th"></i>
+                <span>Categories</span>
+            </li>
+            <li class="mobile-nav-item" onclick="window.location.href='cart.html'">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Cart</span>
+            </li>
+            <li class="mobile-nav-item" onclick="window.location.href='account.html'">
+                <i class="fas fa-user"></i>
+                <span>Account</span>
+            </li>
+        </ul>
     </nav>
 
-    <main class="products-page">
-        <div class="container">
-
-            <!-- Breadcrumb -->
-            <div class="breadcrumb">
-                <a href="index.html">Home</a>
-                <span>›</span>
-                <span id="breadcrumbCategory">Products</span>
-            </div>
-
-            <!-- Page Header -->
-            <div class="page-header">
-                <h1 id="pageTitle">All Products</h1>
-                <span class="product-count" id="productCount"></span>
-            </div>
-
-            <div class="products-layout">
-
-                <!-- ── Filters Sidebar ── -->
-                <aside class="filters-sidebar">
-                    <div class="filter-section">
-                        <h3>Categories</h3>
-                        <ul class="category-filter-list">
-                            <li><a href="products.html">All Products</a></li>
-                            <li><a href="products.html?category=electronics">Electronics</a></li>
-                            <li><a href="products.html?category=sports-outdoor">Sports &amp; Outdoor</a></li>
-                            <li><a href="products.html?category=home-garden">Home &amp; Garden</a></li>
-                            <li><a href="products.html?category=clothing-apparel">Clothing &amp; Apparel</a></li>
-                            <li><a href="products.html?category=games-toys">Games &amp; Toys</a></li>
-                            <li><a href="products.html?category=beauty-health">Beauty &amp; Health</a></li>
-                            <li><a href="products.html?category=automotive">Automotive</a></li>
-                            <li><a href="products.html?category=books-media">Books &amp; Media</a></li>
-                            <li><a href="products.html?category=food-groceries">Food &amp; Groceries</a></li>
-                            <li><a href="products.html?category=other">Other</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="filter-section">
-                        <h3>Price Range</h3>
-                        <div class="price-inputs">
-                            <input type="number" id="minPrice" placeholder="Min" min="0">
-                            <span>–</span>
-                            <input type="number" id="maxPrice" placeholder="Max" min="0">
-                        </div>
-                        <br>
-                        <button class="btn-apply-price" onclick="applyPriceFilter()">Apply</button>
-                    </div>
-                </aside>
-
-                <!-- ── Products Area ── -->
-                <div>
-                    <!-- Sort Bar -->
-                    <div class="sort-bar">
-                        <button class="mobile-filter-btn" onclick="toggleFilters()">
-                            <i class="fas fa-filter"></i> Filters
-                        </button>
-                        <label for="sortSelect">Sort by:</label>
-                        <select id="sortSelect" onchange="sortProducts()">
-                            <option value="default">Default</option>
-                            <option value="price-asc">Price: Low to High</option>
-                            <option value="price-desc">Price: High to Low</option>
-                            <option value="name-asc">Name: A–Z</option>
-                            <option value="name-desc">Name: Z–A</option>
-                        </select>
-                    </div>
-
-                    <!-- Product Grid -->
-                    <div class="product-grid" id="productGrid">
-                        <div class="loading-state">
-                            <i class="fas fa-spinner fa-spin"></i>
-                            <p>Loading products...</p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </main>
-
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>About Dropship</h3>
-                <p>Your trusted online shopping partner</p>
-            </div>
-            <div class="footer-section">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Terms of Service</a></li>
-                    <li><a href="help.html">Help Center</a></li>
-                </ul>
-            </div>
-        </div>
-    </footer>
-
     <script src="../js/api.js"></script>
-    <script src="../js/main.js"></script>
     <script>
-        // Mobile menu toggle
+        // Mobile menu
         const hamburger = document.getElementById('hamburger');
-        const navMenu = document.querySelector('.nav-menu');
-        
-        if (hamburger && navMenu) {
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const closeMenu = document.getElementById('closeMenu');
+
+        if (hamburger && mobileMenu) {
             hamburger.addEventListener('click', () => {
-                hamburger.classList.toggle('active');
-                navMenu.classList.toggle('active');
+                mobileMenu.classList.add('active');
+                menuOverlay.classList.add('active');
             });
         }
-        
-        // Mobile dropdown toggle
-        const dropdowns = document.querySelectorAll('.dropdown');
-        dropdowns.forEach(dropdown => {
-            dropdown.addEventListener('click', (e) => {
-                if (window.innerWidth <= 1024) {
-                    e.preventDefault();
-                    dropdown.classList.toggle('active');
-                }
+
+        if (closeMenu && mobileMenu) {
+            closeMenu.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                menuOverlay.classList.remove('active');
             });
-        });
-        
-        // Search functionality
+        }
+
+        if (menuOverlay) {
+            menuOverlay.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                menuOverlay.classList.remove('active');
+            });
+        }
+
+        // URL params
+        const params = new URLSearchParams(window.location.search);
+        const categorySlug = params.get('category') || '';
+        const searchQuery = params.get('search') || '';
+
+        // Category labels
+        const CATEGORY_LABELS = {
+            'electronics': 'Electronics',
+            'sports-outdoor': 'Sports & Outdoor',
+            'home-garden': 'Home & Garden',
+            'clothing-apparel': 'Clothing & Apparel',
+            'games-toys': 'Games & Toys',
+            'beauty-health': 'Beauty & Health',
+            'automotive': 'Automotive',
+            'books-media': 'Books & Media',
+            'food-groceries': 'Food & Groceries',
+            'other': 'Other',
+            'fashion': 'Fashion',
+            'home': 'Home',
+            'beauty': 'Beauty',
+            'toys': 'Toys',
+            'groceries': 'Groceries'
+        };
+
+        // Set page title
+        const pageTitle = categorySlug 
+            ? (CATEGORY_LABELS[categorySlug] || categorySlug)
+            : searchQuery 
+                ? `Search: "${searchQuery}"`
+                : 'All Products';
+        document.title = `${pageTitle} - Dropship`;
+
+        // Search
         const searchInput = document.getElementById('searchInput');
         const searchBtn = document.getElementById('searchBtn');
-        const mobileSearchInput = document.getElementById('mobileSearchInput');
+        const productsSearchInput = document.getElementById('productsSearchInput');
+        const productsSearchBtn = document.getElementById('productsSearchBtn');
+        const productsSearchResults = document.getElementById('productsSearchResults');
+        let productsSearchTimeout = null;
 
-        function performSearch(query) {
+        function showProductsSearchLoading() {
+            if (productsSearchResults) {
+                productsSearchResults.innerHTML = '<div class="search-loading"><i class="fas fa-spinner"></i></div>';
+                productsSearchResults.classList.add('active');
+            }
+        }
+
+        function showProductsSearchResults(results) {
+            if (!productsSearchResults) return;
+            if (!results || results.length === 0) {
+                productsSearchResults.innerHTML = '<div class="search-no-results">No products found</div>';
+                productsSearchResults.classList.add('active');
+                return;
+            }
+            productsSearchResults.innerHTML = results.slice(0, 6).map(product => {
+                const imageUrl = product.image_url || product.main_image || 'https://via.placeholder.com/40x40?text=Product';
+                return `
+                    <div class="search-result-item" onclick="window.location.href='product.html?id=${product.id || product.product_id}'">
+                        <img src="${imageUrl}" alt="${product.name}" class="search-result-image" onerror="this.src='https://via.placeholder.com/40x40?text=Product'">
+                        <div class="search-result-info">
+                            <div class="search-result-name">${product.name}</div>
+                            <div class="search-result-price">$${parseFloat(product.price).toFixed(2)}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            productsSearchResults.classList.add('active');
+        }
+
+        function hideProductsSearchResults() {
+            if (productsSearchResults) productsSearchResults.classList.remove('active');
+        }
+
+        async function performProductsLiveSearch(query) {
+            if (!query || query.length < 2) {
+                hideProductsSearchResults();
+                return;
+            }
+            showProductsSearchLoading();
+            try {
+                const products = await Products.getAll({ search: query });
+                showProductsSearchResults(products.results || products || []);
+            } catch (error) {
+                productsSearchResults.innerHTML = '<div class="search-no-results">Error searching</div>';
+                productsSearchResults.classList.add('active');
+            }
+        }
+
+        function handleProductsSearchInput() {
+            const query = productsSearchInput.value.trim();
+            if (productsSearchTimeout) clearTimeout(productsSearchTimeout);
+            if (query.length < 2) {
+                hideProductsSearchResults();
+                return;
+            }
+            productsSearchTimeout = setTimeout(() => performProductsLiveSearch(query), 300);
+        }
+
+        function performSearch(query, isProductsPage = false) {
             if (query) {
+                hideProductsSearchResults();
                 window.location.href = 'products.html?search=' + encodeURIComponent(query);
             }
         }
 
-        if (searchBtn) {
-            searchBtn.addEventListener('click', () => performSearch(searchInput.value));
-        }
-        if (searchInput) {
-            searchInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') performSearch(searchInput.value);
-            });
-        }
-        if (mobileSearchInput) {
-            mobileSearchInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') performSearch(mobileSearchInput.value);
-            });
-        }
-        
-        function handleLogout() {
-            Auth.logout();
-            window.location.href = 'index.html';
-        }
-
-        // ── Read URL params ──────────────────────────────────────────────
-        const params       = new URLSearchParams(window.location.search);
-        const params       = new URLSearchParams(window.location.search);
-        const categorySlug = params.get('category') || '';
-        const searchQuery  = params.get('search')   || '';
-
-        let allProducts = [];  // store for client-side sort/filter
-
-        // ── Category label map ───────────────────────────────────────────
-        const CATEGORY_LABELS = {
-            'electronics':       'Electronics',
-            'sports-outdoor':    'Sports & Outdoor',
-            'home-garden':       'Home & Garden',
-            'clothing-apparel':  'Clothing & Apparel',
-            'games-toys':        'Games & Toys',
-            'beauty-health':     'Beauty & Health',
-            'automotive':        'Automotive',
-            'books-media':       'Books & Media',
-            'food-groceries':    'Food & Groceries',
-            'other':             'Other',
-        };
-
-        // ── Set page title & breadcrumb ──────────────────────────────────
-        function setPageTitle() {
-            const label = categorySlug
-                ? (CATEGORY_LABELS[categorySlug] || categorySlug)
-                : searchQuery
-                    ? `Search: "${searchQuery}"`
-                    : 'All Products';
-
-            document.getElementById('pageTitle').textContent       = label;
-            document.getElementById('breadcrumbCategory').textContent = label;
-            document.title = `${label} - Dropship`;
-
-            // Highlight active category in sidebar
-            document.querySelectorAll('.category-filter-list a').forEach(a => {
-                a.classList.remove('active');
-                const href = a.getAttribute('href');
-                if (categorySlug && href.includes(`category=${categorySlug}`)) {
-                    a.classList.add('active');
-                } else if (!categorySlug && href === 'products.html') {
-                    a.classList.add('active');
-                }
+        if (searchBtn) searchBtn.addEventListener('click', () => performSearch(searchInput.value));
+        if (searchInput) searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') performSearch(searchInput.value); });
+        if (productsSearchBtn) productsSearchBtn.addEventListener('click', () => performSearch(productsSearchInput.value, true));
+        if (productsSearchInput) {
+            productsSearchInput.addEventListener('input', handleProductsSearchInput);
+            productsSearchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') performSearch(productsSearchInput.value, true); });
+            productsSearchInput.addEventListener('focus', () => {
+                if (productsSearchInput.value.trim().length >= 2) productsSearchResults.classList.add('active');
             });
         }
 
-        // ── Build product card HTML ──────────────────────────────────────
+        document.addEventListener('click', (e) => {
+            if (productsSearchResults && !productsSearchResults.contains(e.target) && !productsSearchInput.contains(e.target)) {
+                hideProductsSearchResults();
+            }
+        });
+
+        let allProducts = [];
+
         function buildCard(product) {
-            const image = product.main_image || product.image_url
-                        || 'https://via.placeholder.com/300x200?text=No+Image';
+            const image = product.main_image || product.image_url || 'https://via.placeholder.com/200x200?text=Product';
             const price = parseFloat(product.price).toFixed(2);
             return `
-                <div class="product-card">
-                    <img src="${image}" alt="${product.name}" class="product-image" loading="lazy"
-                         onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
-                    <div class="product-info">
-                        <p class="product-category">${product.category_name || ''}</p>
-                        <h3 class="product-title" title="${product.name}">${product.name}</h3>
-                        <p class="product-price">$${price}</p>
-                        <button class="add-to-cart"
-                            onclick="addToCart('${product.product_id}', '${product.name}', ${product.price})">
-                            Add to Cart
-                        </button>
-                    </div>
+                <div class="product-card" onclick="window.location.href='product.html?id=${product.id || product.product_id}'">
+                    <img src="${image}" alt="${product.name}" class="product-image" loading="lazy" onerror="this.src='https://via.placeholder.com/200x200?text=Product'">
+                    <div class="product-title">${product.name}</div>
+                    <div class="product-price">$${price}</div>
+                    <button class="add-to-cart" onclick="event.stopPropagation(); addToCart('${product.id || product.product_id}', '${product.name}', ${product.price})">
+                        <i class="fas fa-cart-plus"></i> Add
+                    </button>
                 </div>`;
         }
 
-        // ── Render products ──────────────────────────────────────────────
         function renderProducts(products) {
             const grid = document.getElementById('productGrid');
             if (!products || products.length === 0) {
-                grid.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-box-open"></i>
-                        <p>No products found in this category.</p>
-                        <a href="products.html">Browse all products</a>
-                    </div>`;
-                document.getElementById('productCount').textContent = '';
+                grid.innerHTML = `<div class="empty-state"><i class="fas fa-box-open"></i><p>No products found.</p><a href="products.html">Browse all products</a></div>`;
                 return;
             }
             grid.innerHTML = products.map(buildCard).join('');
-            document.getElementById('productCount').textContent = `${products.length} product${products.length !== 1 ? 's' : ''}`;
         }
 
-        // ── Sort products ────────────────────────────────────────────────
         function sortProducts() {
-            const val = document.getElementById('sortSelect').value;
-            let sorted = [...allProducts];
-            if (val === 'price-asc')  sorted.sort((a, b) => a.price - b.price);
-            if (val === 'price-desc') sorted.sort((a, b) => b.price - a.price);
-            if (val === 'name-asc')   sorted.sort((a, b) => a.name.localeCompare(b.name));
-            if (val === 'name-desc')  sorted.sort((a, b) => b.name.localeCompare(a.name));
+            const sorted = [...allProducts].sort(() => Math.random() - 0.5);
             renderProducts(sorted);
         }
 
-        // ── Price filter ─────────────────────────────────────────────────
-        function applyPriceFilter() {
-            const min = parseFloat(document.getElementById('minPrice').value) || 0;
-            const max = parseFloat(document.getElementById('maxPrice').value) || Infinity;
-            const filtered = allProducts.filter(p => {
-                const price = parseFloat(p.price);
-                return price >= min && price <= max;
-            });
-            renderProducts(filtered);
-        }
-
-        // ── Toggle mobile filters ─────────────────────────────────────────
         function toggleFilters() {
-            const sidebar = document.querySelector('.filters-sidebar');
-            sidebar.style.display = sidebar.style.display === 'none' ? 'block' : 'none';
+            alert('Filter options coming soon!');
         }
 
-        // ── Load products from API ───────────────────────────────────────
+        function toggleSort() {
+            sortProducts();
+        }
+
         async function loadProducts() {
             const grid = document.getElementById('productGrid');
-            grid.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i><p>Loading products...</p></div>';
+            grid.innerHTML = '<div class="loading-state"><i class="fas fa-spinner"></i><p>Loading products...</p></div>';
 
             try {
                 const apiParams = {};
                 if (categorySlug) apiParams.category = categorySlug;
-                if (searchQuery)  apiParams.search   = searchQuery;
+                if (searchQuery) apiParams.search = searchQuery;
 
-                const data  = await Products.getAll(apiParams);
-                allProducts = data.results || data || [];
-                renderProducts(allProducts);
+                const data = await API.getProducts ? await API.getProducts(apiParams) : [];
+                const products = data.results || data || [];
+                allProducts = products;
+                renderProducts(products);
             } catch (err) {
-                grid.innerHTML = `
-                    <div class="error-state">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <p>Failed to load products. Please try again.</p>
-                    </div>`;
-                console.error('Product load error:', err);
+                grid.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-circle"></i><p>Failed to load products.</p></div>`;
+                console.error(err);
             }
         }
 
-        // ── Init ─────────────────────────────────────────────────────────
+        function addToCart(id, name, price) {
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const existing = cart.find(item => item.id === id);
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ id, name, price, quantity: 1 });
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            showToast('Added to cart!');
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const countEl = document.getElementById('cartCount');
+            if (countEl) countEl.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
-            setPageTitle();
             loadProducts();
-            updateNav();
             updateCartCount();
         });
     </script>
-
 </body>
 </html>

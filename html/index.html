@@ -3,246 +3,427 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dropship - Your Shopping Destination</title>
+    <title>Dropship - Shop Online</title>
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="manifest" href="../manifest.json">
-    <meta name="theme-color" content="#3b82f6">
+    <meta name="theme-color" content="#FA7207">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Dropship">
     <link rel="apple-touch-icon" href="../images/icon-192.svg">
+    <style>
+        .search-results {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border-radius: 0 0 4px 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        .search-results.active {
+            display: block;
+        }
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s;
+        }
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+        .search-result-item:hover {
+            background: var(--secondary);
+        }
+        .search-result-image {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+        }
+        .search-result-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .search-result-name {
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .search-result-price {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .search-no-results {
+            padding: 20px;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        .search-loading {
+            padding: 20px;
+            text-align: center;
+            color: var(--text-light);
+        }
+        .search-loading i {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
+    <!-- Mobile Menu Overlay -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    
+    <!-- Mobile Menu Sidebar -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <button class="mobile-menu-close" id="closeMenu">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="logo" style="font-size: 1.3rem;">
+                <i class="fas fa-shopping-bag"></i> Dropship
+            </div>
+            <div class="mobile-menu-user">
+                <div class="avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <div style="font-weight: 600;">Welcome</div>
+                    <div style="font-size: 0.8rem; opacity: 0.8;">Sign in / Register</div>
+                </div>
+            </div>
+        </div>
+        <div class="mobile-menu-links">
+            <div class="mobile-menu-section">
+                <h4>My Account</h4>
+                <a href="account.html"><i class="fas fa-user"></i> My Account</a>
+                <a href="orders.html"><i class="fas fa-box"></i> Orders</a>
+                <a href="cart.html"><i class="fas fa-shopping-cart"></i> Cart</a>
+            </div>
+            <div class="mobile-menu-section">
+                <h4>Categories</h4>
+                <a href="products.html?category=electronics"><i class="fas fa-laptop"></i> Electronics</a>
+                <a href="products.html?category=fashion"><i class="fas fa-tshirt"></i> Fashion</a>
+                <a href="products.html?category=home"><i class="fas fa-home"></i> Home & Garden</a>
+                <a href="products.html?category=beauty"><i class="fas fa-spa"></i> Beauty</a>
+            </div>
+            <div class="mobile-menu-section">
+                <h4>Help</h4>
+                <a href="help.html"><i class="fas fa-question-circle"></i> Help Center</a>
+                <a href="contact.html"><i class="fas fa-envelope"></i> Contact Us</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
             <div class="hamburger" id="hamburger">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
-            <div class="logo">
-                <img src="../images/logo.svg" alt="Dropship Logo">
+            <a href="index.html" class="logo">
+                <i class="fas fa-shopping-bag logo-icon"></i>
                 <span>Dropship</span>
+            </a>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search products..." autocomplete="off">
+                <button type="button" id="searchBtn">
+                    <i class="fas fa-search"></i>
+                </button>
+                <div class="search-results" id="searchResults"></div>
             </div>
-            <div class="mobile-search">
-                <input type="text" id="mobileSearchInput" placeholder="Search products..." autocomplete="off">
-            </div>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="active">Home</a></li>
-                <li class="dropdown">
-                    <a href="#">Categories <i class="fas fa-chevron-down"></i></a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="products.html?category=electronics">
-                                <i class="fas fa-laptop"></i> Electronics
-                            </a>
-                        </li>
-                        <li>
-                            <a href="products.html?category=sports-outdoor">
-                                <i class="fas fa-football-ball"></i> Sports &amp; Outdoor
-                            </a>
-                        </li>
-                        <li>
-                            <a href="products.html?category=home-garden">
-                                <i class="fas fa-home"></i> Home &amp; Garden
-                            </a>
-                        </li>
-                        <li>
-                            <a href="products.html?category=clothing-apparel">
-                                <i class="fas fa-tshirt"></i> Clothing &amp; Apparel
-                            </a>
-                        </li>
-                        <li>
-                            <a href="products.html?category=games-toys">
-                                <i class="fas fa-gamepad"></i> Games &amp; Toys
-                            </a>
-                        </li>
-                        <li>
-                            <a href="products.html?category=beauty-health">
-                                <i class="fas fa-spa"></i> Beauty &amp; Health
-                            </a>
-                        </li>
-                        <li>
-                            <a href="products.html?category=automotive">
-                                <i class="fas fa-car"></i> Automotive
-                            </a>
-                        </li>
-                        <li>
-                            <a href="products.html?category=books-media">
-                                <i class="fas fa-book"></i> Books &amp; Media
-                            </a>
-                        </li>
-                        <li>
-                            <a href="products.html?category=food-groceries">
-                                <i class="fas fa-shopping-basket"></i> Food &amp; Groceries
-                            </a>
-                        </li>
-                        <li>
-                            <a href="products.html?category=other">
-                                <i class="fas fa-ellipsis-h"></i> Other
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li><a href="help.html">Help</a></li>
-                <li><a href="account.html">Account</a></li>
-            </ul>
-            <div class="nav-actions">
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Search products..." autocomplete="off">
-                    <button type="button" id="searchBtn"><i class="fas fa-search"></i></button>
-                </div>
-                <a href="signup.html" class="btn-signup">Sign Up</a>
-                <a href="login.html" class="btn-login">Login</a>
-                <a href="cart.html" class="cart-icon">
+            <div class="header-actions">
+                <a href="account.html">
+                    <i class="far fa-user"></i>
+                </a>
+                <a href="cart.html">
                     <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count">0</span>
+                    <span class="cart-count" id="cartCount">0</span>
                 </a>
             </div>
         </div>
-    </nav>
+    </header>
 
+    <!-- Main Content -->
     <main>
-        <section class="hero">
-            <h1>Welcome to Dropship</h1>
-            <p>Your one-stop destination for all your shopping needs</p>
+        <!-- Hero Banner -->
+        <section class="hero-banner">
+            <h1>Big Deals, Small Prices</h1>
+            <p>Shop the best products at unbeatable prices</p>
         </section>
 
-        <!-- Category Cards -->
-        <section class="category-section">
-            <h2>Shop by Category</h2>
-            <div class="category-grid">
-                <a href="products.html?category=electronics" class="category-card">
-                    <i class="fas fa-laptop"></i>
-                    <span>Electronics</span>
+        <!-- Categories - Horizontal Scroll -->
+        <section class="categories-section">
+            <div class="categories-scroll" id="categoriesScroll">
+                <a href="products.html?category=electronics" class="category-item">
+                    <div class="category-icon"><i class="fas fa-laptop"></i></div>
+                    <span class="category-name">Electronics</span>
                 </a>
-                <a href="products.html?category=sports-outdoor" class="category-card">
-                    <i class="fas fa-football-ball"></i>
-                    <span>Sports &amp; Outdoor</span>
+                <a href="products.html?category=sports" class="category-item">
+                    <div class="category-icon"><i class="fas fa-running"></i></div>
+                    <span class="category-name">Sports</span>
                 </a>
-                <a href="products.html?category=home-garden" class="category-card">
-                    <i class="fas fa-home"></i>
-                    <span>Home &amp; Garden</span>
+                <a href="products.html?category=home" class="category-item">
+                    <div class="category-icon"><i class="fas fa-couch"></i></div>
+                    <span class="category-name">Home</span>
                 </a>
-                <a href="products.html?category=clothing-apparel" class="category-card">
-                    <i class="fas fa-tshirt"></i>
-                    <span>Clothing &amp; Apparel</span>
+                <a href="products.html?category=fashion" class="category-item">
+                    <div class="category-icon"><i class="fas fa-tshirt"></i></div>
+                    <span class="category-name">Fashion</span>
                 </a>
-                <a href="products.html?category=games-toys" class="category-card">
-                    <i class="fas fa-gamepad"></i>
-                    <span>Games &amp; Toys</span>
+                <a href="products.html?category=beauty" class="category-item">
+                    <div class="category-icon"><i class="fas fa-spa"></i></div>
+                    <span class="category-name">Beauty</span>
                 </a>
-                <a href="products.html?category=beauty-health" class="category-card">
-                    <i class="fas fa-spa"></i>
-                    <span>Beauty &amp; Health</span>
+                <a href="products.html?category=toys" class="category-item">
+                    <div class="category-icon"><i class="fas fa-gamepad"></i></div>
+                    <span class="category-name">Toys</span>
                 </a>
-                <a href="products.html?category=automotive" class="category-card">
-                    <i class="fas fa-car"></i>
-                    <span>Automotive</span>
+                <a href="products.html?category=automotive" class="category-item">
+                    <div class="category-icon"><i class="fas fa-car"></i></div>
+                    <span class="category-name">Automotive</span>
                 </a>
-                <a href="products.html?category=books-media" class="category-card">
-                    <i class="fas fa-book"></i>
-                    <span>Books &amp; Media</span>
-                </a>
-                <a href="products.html?category=food-groceries" class="category-card">
-                    <i class="fas fa-shopping-basket"></i>
-                    <span>Food &amp; Groceries</span>
-                </a>
-                <a href="products.html?category=other" class="category-card">
-                    <i class="fas fa-ellipsis-h"></i>
-                    <span>Other</span>
+                <a href="products.html?category=groceries" class="category-item">
+                    <div class="category-icon"><i class="fas fa-shopping-basket"></i></div>
+                    <span class="category-name">Groceries</span>
                 </a>
             </div>
         </section>
 
-        <section class="featured-products">
-            <h2>Featured Products</h2>
+        <!-- Flash Sales -->
+        <section class="flash-sales">
+            <div class="flash-header">
+                <span class="flash-logo">FLASH SALES</span>
+                <div class="flash-timer">
+                    <div class="timer-block">02</div>
+                    <div class="timer-block">:</div>
+                    <div class="timer-block">34</div>
+                    <div class="timer-block">:</div>
+                    <div class="timer-block">56</div>
+                </div>
+                <a href="products.html?filter=flash" class="section-link" style="margin-left: auto; color: #d32f2f;">See All</a>
+            </div>
+            <div class="flash-products" id="flashProducts">
+                <!-- Loaded via JS -->
+            </div>
+        </section>
+
+        <!-- Featured Products -->
+        <section class="products-section">
+            <div class="section-header">
+                <h2 class="section-title">Recommended For You</h2>
+                <a href="products.html" class="section-link">See All</a>
+            </div>
             <div class="product-grid" id="productGrid">
+                <!-- Products loaded via JS -->
+            </div>
+        </section>
+
+        <!-- All Products -->
+        <section class="products-section">
+            <div class="section-header">
+                <h2 class="section-title">New Arrivals</h2>
+                <a href="products.html" class="section-link">See All</a>
+            </div>
+            <div class="product-grid" id="newProductsGrid">
                 <!-- Products loaded via JS -->
             </div>
         </section>
     </main>
 
+    <!-- Bottom Navigation -->
+    <nav class="mobile-nav">
+        <ul class="mobile-nav-list">
+            <li class="mobile-nav-item active" data-page="home">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </li>
+            <li class="mobile-nav-item" data-page="search" onclick="document.getElementById('searchInput').focus()">
+                <i class="fas fa-search"></i>
+                <span>Search</span>
+            </li>
+            <li class="mobile-nav-item" data-page="categories">
+                <i class="fas fa-th"></i>
+                <span>Categories</span>
+            </li>
+            <li class="mobile-nav-item" data-page="cart" onclick="window.location.href='cart.html'">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Cart</span>
+            </li>
+            <li class="mobile-nav-item" data-page="account" onclick="window.location.href='account.html'">
+                <i class="fas fa-user"></i>
+                <span>Account</span>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Footer -->
     <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>About Dropship</h3>
-                <p>Your trusted online shopping partner</p>
-            </div>
-            <div class="footer-section">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Terms of Service</a></li>
-                    <li><a href="help.html">Help Center</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Categories</h3>
-                <ul>
-                    <li><a href="products.html?category=electronics">Electronics</a></li>
-                    <li><a href="products.html?category=clothing-apparel">Clothing &amp; Apparel</a></li>
-                    <li><a href="products.html?category=home-garden">Home &amp; Garden</a></li>
-                    <li><a href="products.html?category=beauty-health">Beauty &amp; Health</a></li>
-                </ul>
-            </div>
+        <div class="footer-new">
+            <a href="signup.html" class="footer-btn">Create Account</a>
+            <a href="login.html" class="footer-btn" style="background: #333;">Sign In</a>
+        </div>
+        <div class="footer-section">
+            <h4>Customer Service</h4>
+            <ul>
+                <li><a href="help.html">Help Center</a></li>
+                <li><a href="#">Returns</a></li>
+                <li><a href="#">Shipping Info</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h4>About Dropship</h4>
+            <ul>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Careers</a></li>
+                <li><a href="#">Terms & Conditions</a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Dropship. All rights reserved.
         </div>
     </footer>
 
     <script src="../js/api.js"></script>
     <script src="../js/main.js"></script>
     <script>
-        // Mobile menu toggle
+        // Mobile menu
         const hamburger = document.getElementById('hamburger');
-        const navMenu = document.querySelector('.nav-menu');
-        
-        if (hamburger && navMenu) {
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const closeMenu = document.getElementById('closeMenu');
+
+        if (hamburger && mobileMenu) {
             hamburger.addEventListener('click', () => {
-                hamburger.classList.toggle('active');
-                navMenu.classList.toggle('active');
+                mobileMenu.classList.add('active');
+                menuOverlay.classList.add('active');
             });
         }
-        
-        // Mobile dropdown toggle
-        const dropdowns = document.querySelectorAll('.dropdown');
-        dropdowns.forEach(dropdown => {
-            dropdown.addEventListener('click', (e) => {
-                if (window.innerWidth <= 1024) {
-                    e.preventDefault();
-                    dropdown.classList.toggle('active');
-                }
+
+        if (closeMenu && mobileMenu) {
+            closeMenu.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                menuOverlay.classList.remove('active');
+            });
+        }
+
+        if (menuOverlay) {
+            menuOverlay.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                menuOverlay.classList.remove('active');
+            });
+        }
+
+        // Bottom nav active state
+        const navItems = document.querySelectorAll('.mobile-nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(n => n.classList.remove('active'));
+                item.classList.add('active');
             });
         });
-        
-        // Mobile search
-        const mobileSearchInput = document.getElementById('mobileSearchInput');
-        
-        function performMobileSearch() {
-            const query = mobileSearchInput.value.trim();
-            if (query) {
-                window.location.href = 'products.html?search=' + encodeURIComponent(query);
-            }
-        }
-        
-if (mobileSearchInput) {
-            mobileSearchInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') performSearch(mobileSearchInput.value);
-            });
-        }
-        
-        function handleLogout() {
-            Auth.logout();
-            window.location.href = 'index.html';
-        }
-        
-        // Search functionality
+
+        // Search functionality - Live Search
         const searchInput = document.getElementById('searchInput');
         const searchBtn = document.getElementById('searchBtn');
+        const searchResults = document.getElementById('searchResults');
+        let searchTimeout = null;
+
+        function showSearchLoading() {
+            if (searchResults) {
+                searchResults.innerHTML = '<div class="search-loading"><i class="fas fa-spinner"></i></div>';
+                searchResults.classList.add('active');
+            }
+        }
+
+        function showSearchResults(results) {
+            if (!searchResults) return;
+            
+            if (!results || results.length === 0) {
+                searchResults.innerHTML = '<div class="search-no-results">No products found</div>';
+                searchResults.classList.add('active');
+                return;
+            }
+
+            searchResults.innerHTML = results.slice(0, 6).map(product => {
+                const imageUrl = product.image_url || product.main_image || 'https://via.placeholder.com/40x40?text=Product';
+                return `
+                    <div class="search-result-item" onclick="window.location.href='product.html?id=${product.id || product.product_id}'">
+                        <img src="${imageUrl}" alt="${product.name}" class="search-result-image" onerror="this.src='https://via.placeholder.com/40x40?text=Product'">
+                        <div class="search-result-info">
+                            <div class="search-result-name">${product.name}</div>
+                            <div class="search-result-price">$${parseFloat(product.price).toFixed(2)}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            searchResults.classList.add('active');
+        }
+
+        function hideSearchResults() {
+            if (searchResults) {
+                searchResults.classList.remove('active');
+            }
+        }
+
+        async function performLiveSearch(query) {
+            if (!query || query.length < 2) {
+                hideSearchResults();
+                return;
+            }
+
+            showSearchLoading();
+
+            try {
+                const products = await Products.getAll({ search: query });
+                const results = products.results || products || [];
+                showSearchResults(results);
+            } catch (error) {
+                console.error('Search error:', error);
+                searchResults.innerHTML = '<div class="search-no-results">Error searching</div>';
+                searchResults.classList.add('active');
+            }
+        }
+
+        function handleSearchInput() {
+            const query = searchInput.value.trim();
+            
+            if (searchTimeout) {
+                clearTimeout(searchTimeout);
+            }
+
+            if (query.length < 2) {
+                hideSearchResults();
+                return;
+            }
+
+            searchTimeout = setTimeout(() => {
+                performLiveSearch(query);
+            }, 300);
+        }
 
         function performSearch() {
             const query = searchInput.value.trim();
             if (query) {
+                hideSearchResults();
                 window.location.href = 'products.html?search=' + encodeURIComponent(query);
             }
         }
@@ -252,23 +433,89 @@ if (mobileSearchInput) {
         }
 
         if (searchInput) {
+            searchInput.addEventListener('input', handleSearchInput);
             searchInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     performSearch();
                 }
             });
-        }
-
-        // Highlight active category in dropdown based on current URL
-        const params = new URLSearchParams(window.location.search);
-        const activeCategory = params.get('category');
-        if (activeCategory) {
-            document.querySelectorAll('.dropdown-menu a').forEach(link => {
-                if (link.href.includes(`category=${activeCategory}`)) {
-                    link.style.fontWeight = '600';
-                    link.style.color = 'var(--primary, #3b82f6)';
+            searchInput.addEventListener('focus', () => {
+                if (searchInput.value.trim().length >= 2) {
+                    searchResults.classList.add('active');
                 }
             });
+        }
+
+        document.addEventListener('click', (e) => {
+            if (searchResults && !searchResults.contains(e.target) && !searchInput.contains(e.target)) {
+                hideSearchResults();
+            }
+        });
+
+        // Load products
+        async function loadProducts() {
+            try {
+                const products = await API.getProducts();
+                const grid = document.getElementById('productGrid');
+                const newGrid = document.getElementById('newProductsGrid');
+                const flashGrid = document.getElementById('flashProducts');
+
+                if (grid && products.length > 0) {
+                    grid.innerHTML = products.slice(0, 6).map(p => createProductCard(p)).join('');
+                }
+
+                if (newGrid && products.length > 0) {
+                    newGrid.innerHTML = products.slice(6, 12).map(p => createProductCard(p)).join('');
+                }
+
+                if (flashGrid && products.length > 0) {
+                    flashGrid.innerHTML = products.slice(0, 5).map(p => createFlashCard(p)).join('');
+                }
+            } catch (error) {
+                console.error('Failed to load products:', error);
+            }
+        }
+
+        function createProductCard(product) {
+            const imageUrl = product.image_url || 'https://via.placeholder.com/200x200?text=Product';
+            return `
+                <div class="product-card" onclick="window.location.href='product.html?id=${product.id}'">
+                    <img src="${imageUrl}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/200x200?text=Product'">
+                    <div class="product-title">${product.name}</div>
+                    <div class="product-price">$${parseFloat(product.price).toFixed(2)}</div>
+                    <div class="product-rating">
+                        <i class="fas fa-star"></i>
+                        <span>4.5</span>
+                        <span>(120)</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createFlashCard(product) {
+            const imageUrl = product.image_url || 'https://via.placeholder.com/200x200?text=Product';
+            return `
+                <div class="flash-product" onclick="window.location.href='product.html?id=${product.id}'">
+                    <img src="${imageUrl}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/200x200?text=Product'">
+                    <div class="flash-product-info">
+                        <div class="flash-product-price">$${parseFloat(product.price).toFixed(2)}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProducts();
+            updateCartCount();
+        });
+
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const countEl = document.getElementById('cartCount');
+            if (countEl) {
+                countEl.textContent = cart.length;
+            }
         }
     </script>
 </body>
