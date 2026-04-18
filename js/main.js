@@ -90,6 +90,13 @@ const PLACEHOLDER_PRODUCTS = [
     { id: 4, name: 'Backpack',            price: 49.99,  image_url: 'https://via.placeholder.com/300x200' },
 ];
 
+function getImageUrl(product) {
+    if (product.main_image) return product.main_image;
+    if (product.image_url) return product.image_url;
+    if (product.image) return product.image;
+    return 'https://placehold.co/300x300/FA7207/white?text=No+Image';
+}
+
 function buildProductCard(product) {
     return `
         <div class="product-card">
