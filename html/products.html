@@ -576,7 +576,10 @@
         function updateCartCount() {
             const cart = JSON.parse(localStorage.getItem('cart') || '[]');
             const countEl = document.getElementById('cartCount');
-            if (countEl) countEl.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+            if (countEl && cart) {
+                const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+                countEl.textContent = totalItems;
+            }
         }
 
         document.addEventListener('DOMContentLoaded', () => {

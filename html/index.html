@@ -479,15 +479,13 @@
         function createProductCard(product) {
             const imageUrl = product.image_url || 'https://via.placeholder.com/200x200?text=Product';
             return `
-                <div class="product-card" onclick="window.location.href='product.html?id=${product.id}'">
-                    <img src="${imageUrl}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/200x200?text=Product'">
-                    <div class="product-title">${product.name}</div>
+                <div class="product-card">
+                    <img src="${imageUrl}" alt="${product.name}" class="product-image" onclick="window.location.href='product.html?id=${product.id}'" onerror="this.src='https://via.placeholder.com/200x200?text=Product'">
+                    <div class="product-title" onclick="window.location.href='product.html?id=${product.id}'">${product.name}</div>
                     <div class="product-price">$${parseFloat(product.price).toFixed(2)}</div>
-                    <div class="product-rating">
-                        <i class="fas fa-star"></i>
-                        <span>4.5</span>
-                        <span>(120)</span>
-                    </div>
+                    <button class="add-to-cart" onclick="event.stopPropagation(); addToCart('${product.id}', '${product.name}', ${product.price})">
+                        <i class="fas fa-cart-plus"></i> Add
+                    </button>
                 </div>
             `;
         }
@@ -495,13 +493,37 @@
         function createFlashCard(product) {
             const imageUrl = product.image_url || 'https://via.placeholder.com/200x200?text=Product';
             return `
-                <div class="flash-product" onclick="window.location.href='product.html?id=${product.id}'">
-                    <img src="${imageUrl}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/200x200?text=Product'">
+                <div class="flash-product">
+                    <img src="${imageUrl}" alt="${product.name}" onclick="window.location.href='product.html?id=${product.id}'" onerror="this.src='https://via.placeholder.com/200x200?text=Product'">
                     <div class="flash-product-info">
-                        <div class="flash-product-price">$${parseFloat(product.price).toFixed(2)}</div>
+                        <div class="flash-product-price" onclick="window.location.href='product.html?id=${product.id}'">$${parseFloat(product.price).toFixed(2)}</div>
+                        <button class="add-to-cart" onclick="addToCart('${product.id}', '${product.name}', ${product.price})">
+                            <i class="fas fa-cart-plus"></i>
+                        </button>
                     </div>
                 </div>
             `;
+        }
+
+        function addToCart(id, name, price) {
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const existing = cart.find(item => item.id === id);
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ id, name, price, quantity: 1 });
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            showToast('Added to cart!');
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
         }
 
         // Initialize
@@ -513,8 +535,9 @@
         function updateCartCount() {
             const cart = JSON.parse(localStorage.getItem('cart') || '[]');
             const countEl = document.getElementById('cartCount');
-            if (countEl) {
-                countEl.textContent = cart.length;
+            if (countEl && cart) {
+                const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+                countEl.textContent = totalItems;
             }
         }
     </script>

@@ -333,6 +333,27 @@ img {
     font-size: 0.7rem;
 }
 
+.add-to-cart {
+    width: 100%;
+    padding: 8px;
+    background: var(--primary);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.add-to-cart:hover {
+    background: var(--primary-dark);
+}
+
 /* Flash Sales Section */
 .flash-sales {
     background: var(--white);
@@ -403,6 +424,13 @@ img {
 .flash-product-price {
     font-weight: 700;
     font-size: 0.95rem;
+    cursor: pointer;
+}
+
+.flash-product-info .add-to-cart {
+    padding: 6px;
+    font-size: 0.8rem;
+    margin-top: 6px;
 }
 
 /* Footer */
