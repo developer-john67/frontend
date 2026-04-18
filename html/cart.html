@@ -271,6 +271,7 @@
         }
 
         function normaliseLocalItem(item) {
+            console.log('Raw localStorage item:', item);
             const id = String(item.id || item.product_id || '');
             const price = parseFloat(item.price) || 0;
             const quantity = parseInt(item.quantity) || 1;
@@ -307,11 +308,14 @@
                 } else {
                     isApiCart = false;
                     const local = JSON.parse(localStorage.getItem('cart')) || [];
+                    console.log('Local cart raw:', local);
                     cartData = local.map(normaliseLocalItem);
+                    console.log('Local cart normalized:', cartData);
                 }
             } catch (e) {
                 isApiCart = false;
                 const local = JSON.parse(localStorage.getItem('cart')) || [];
+                console.log('Local cart (catch):', local);
                 cartData = local.map(normaliseLocalItem);
             }
             render();
