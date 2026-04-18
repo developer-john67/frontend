@@ -429,8 +429,10 @@
         // Load products
         async function loadProducts() {
             try {
-                const products = await Products.getAll();
+                const data = await Products.getAll();
+                const products = data.results || data || [];
                 const grid = document.getElementById('productGrid');
+                console.log('Products loaded:', products);
 
                 if (grid && products.length > 0) {
                     grid.innerHTML = products.map(p => createProductCard(p)).join('');
@@ -439,17 +441,22 @@
                 }
             } catch (error) {
                 console.error('Failed to load products:', error);
+                const grid = document.getElementById('productGrid');
+                if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:red;">Error loading products</div>';
             }
         }
 
         function createProductCard(product) {
+            const prodId = product.product_id || product.id || '';
             const imageUrl = product.main_image || product.image_url || 'https://placehold.co/200x200/FA7207/white?text=No+Image';
+            const prodName = product.name || 'Unnamed Product';
+            const prodPrice = product.price || 0;
             return `
                 <div class="product-card">
-                    <img src="${imageUrl}" alt="${product.name}" class="product-image" onclick="window.location.href='product.html?id=${product.id}'" onerror="this.src='https://via.placeholder.com/200x200?text=Product'">
-                    <div class="product-title" onclick="window.location.href='product.html?id=${product.id}'">${product.name}</div>
-                    <div class="product-price">$${parseFloat(product.price).toFixed(2)}</div>
-                    <button class="add-to-cart" onclick="event.stopPropagation(); addToCart('${product.id}', '${product.name}', ${product.price})">
+                    <img src="${imageUrl}" alt="${prodName}" class="product-image" onclick="window.location.href='product.html?id=${prodId}'" onerror="this.src='https://placehold.co/200x200/FA7207/white?text=No+Image'">
+                    <div class="product-title" onclick="window.location.href='product.html?id=${prodId}'">${prodName}</div>
+                    <div class="product-price">$${parseFloat(prodPrice).toFixed(2)}</div>
+                    <button class="add-to-cart" onclick="event.stopPropagation(); addToCart('${prodId}', '${prodName}', ${prodPrice})">
                         <i class="fas fa-cart-plus"></i> Add
                     </button>
                 </div>
