@@ -94,7 +94,7 @@ function buildProductCard(product) {
     return `
         <div class="product-card">
             <img
-                src="${product.main_image || product.image_url || 'https://via.placeholder.com/300x200'}"
+                src="${getImageUrl(product)}"
                 onerror="this.src='https://via.placeholder.com/300x200'"
                 alt="${product.name}"
                 class="product-image"

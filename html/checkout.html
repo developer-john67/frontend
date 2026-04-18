@@ -898,7 +898,6 @@
             if (err) err.style.display = ok ? 'none' : 'block';
             return ok;
         }
-
         function goToPayment() {
             const ok = [
                 validateField('firstName', 'firstNameErr', v => v.length > 0),
@@ -1061,7 +1060,7 @@
         // ── M-Pesa Payment Functions ──────────────────────────────────────────
         async function initiateMpesaPayment(orderId, phone, amount) {
             try {
-                const response = await fetch(`${API_BASE}/orders/mpesa/initiate/`, {
+                const response = await fetch(`${API_BASE}/payments/initiate/`, {  // ✅ fixed URL
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1071,7 +1070,7 @@
                     credentials: 'include',
                     body: JSON.stringify({
                         order_id: orderId,
-                        phone: phone,
+                        phone_number: phone,  // ✅ fixed field name
                         amount: amount
                     })
                 });
@@ -1079,7 +1078,7 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    currentTransactionId = data.checkout_request_id;
+                    currentTransactionId = data.checkout_request_id;  // ✅ use checkout_request_id
                     document.getElementById('mpesaStatus').className = 'mpesa-status pending';
                     document.getElementById('mpesaStatus').innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>Waiting for payment...';
                     
@@ -1102,22 +1101,20 @@
                 pollCount++;
                 
                 try {
-                    const response = await fetch(`${API_BASE}/orders/mpesa/check/`, {
-                        method: 'POST',
+                    // ✅ fixed URL — GET with transaction_id in the path
+                    const response = await fetch(`${API_BASE}/payments/status/${currentTransactionId}/`, {
+                        method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRFToken': getCSRFToken(),
                             'Authorization': `Bearer ${Auth.getToken()}`,
                         },
                         credentials: 'include',
-                        body: JSON.stringify({
-                            transaction_id: currentTransactionId
-                        })
                     });
 
                     const data = await response.json();
 
-                    if (data.payment_status === 'success' || data.payment_status === 'paid' || data.payment_status === 'completed') {
+                    // ✅ fixed status check — backend returns 'status' field
+                    if (data.status === 'success' || data.status === 'completed') {
                         clearInterval(mpesaPollingInterval);
                         mpesaPollingInterval = null;
                         
@@ -1128,6 +1125,15 @@
                             document.getElementById('mpesaModal').classList.remove('visible');
                             showOrderConfirmation();
                         }, 1500);
+
+                    } else if (data.status === 'failed' || data.status === 'cancelled') {
+                        // ✅ handle failed/cancelled explicitly instead of just timing out
+                        clearInterval(mpesaPollingInterval);
+                        mpesaPollingInterval = null;
+
+                        document.getElementById('mpesaStatus').className = 'mpesa-status failed';
+                        document.getElementById('mpesaStatus').innerHTML = '<i class="fas fa-exclamation-circle" style="margin-right:8px;"></i>Payment failed. Please try again.';
+
                     } else if (pollCount >= 30) {
                         clearInterval(mpesaPollingInterval);
                         mpesaPollingInterval = null;
@@ -1179,6 +1185,7 @@
             updateCartCount();
             initCheckout();
         });
+        
     </script>
 </body>
 </html>
