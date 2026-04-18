@@ -455,7 +455,7 @@
         // Load products
         async function loadProducts() {
             try {
-                const products = await API.getProducts();
+                const products = await Products.getAll();
                 const grid = document.getElementById('productGrid');
                 const newGrid = document.getElementById('newProductsGrid');
                 const flashGrid = document.getElementById('flashProducts');

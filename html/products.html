@@ -543,7 +543,7 @@
                 if (categorySlug) apiParams.category = categorySlug;
                 if (searchQuery) apiParams.search = searchQuery;
 
-                const data = await API.getProducts ? await API.getProducts(apiParams) : [];
+                const data = await Products.getAll(apiParams);
                 const products = data.results || data || [];
                 allProducts = products;
                 renderProducts(products);
