@@ -706,23 +706,32 @@
 
         async function initiateMpesaPayment(orderId, phone, amount) {
             try {
+                console.log('[M-PESA] Initiating payment:', { orderId, phone, amount });
+                
                 let sessionId = sessionStorage.getItem('sessionId');
                 if (!sessionId) {
                     sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                     sessionStorage.setItem('sessionId', sessionId);
                 }
+                const headers = {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken':  getCSRFToken(),
+                    'X-Session-ID': sessionId,
+                };
+                const token = Auth.getToken();
+                console.log('[M-PESA] Token:', token ? 'present' : 'none');
+                if (token) headers['Authorization'] = `Token ${token}`;
+                
                 const response = await fetch(`${API_BASE}/payments/initiate/`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken':  getCSRFToken(),
-                        'X-Session-ID': sessionId,
-                        'Authorization': `Token ${Auth.getToken()}`,
-                    },
+                    headers: headers,
                     credentials: 'include',
                     body: JSON.stringify({ order_id: orderId, phone_number: phone, amount }),
                 });
+                console.log('[M-PESA] Response status:', response.status);
                 const data = await response.json();
+                console.log('[M-PESA] Response data:', data);
+                
                 if (data.success) {
                     currentTransactionId = data.checkout_request_id;
                     document.getElementById('mpesaStatus').className = 'mpesa-status pending';
@@ -733,6 +742,7 @@
                     document.getElementById('mpesaStatus').innerHTML = '<i class="fas fa-exclamation-circle" style="margin-right:8px;"></i>' + (data.error || 'Payment failed');
                 }
             } catch (err) {
+                console.error('[M-PESA] Error:', err);
                 document.getElementById('mpesaStatus').className = 'mpesa-status failed';
                 document.getElementById('mpesaStatus').innerHTML = '<i class="fas fa-exclamation-circle" style="margin-right:8px;"></i>Payment service unavailable';
             }
