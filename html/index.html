@@ -479,16 +479,25 @@
         }
 
         function addToCart(id, name, price) {
-            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            const existing = cart.find(item => item.id === id);
-            if (existing) {
-                existing.quantity += 1;
+            if (Auth.isLoggedIn()) {
+                Cart.addItem(String(id), 1).then(() => {
+                    updateCartCount();
+                    showToast('Added to cart!');
+                }).catch(err => {
+                    showToast(err.message || 'Failed to add to cart');
+                });
             } else {
-                cart.push({ id, name, price, quantity: 1 });
+                let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                const existing = cart.find(item => item.id === id);
+                if (existing) {
+                    existing.quantity += 1;
+                } else {
+                    cart.push({ id, name, price, quantity: 1 });
+                }
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartCount();
+                showToast('Added to cart!');
             }
-            localStorage.setItem('cart', JSON.stringify(cart));
-            updateCartCount();
-            showToast('Added to cart!');
         }
 
         function showToast(message) {

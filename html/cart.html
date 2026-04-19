@@ -288,7 +288,8 @@
 
         async function loadCart() {
             try {
-                if (Auth.isLoggedIn()) {
+                // Try API cart first (works for both logged in and anonymous users with session ID)
+                try {
                     isApiCart = true;
                     const data = await Cart.get();
                     const apiItems = (data.cart_items || []).map(normaliseApiItem);
@@ -302,15 +303,21 @@
                         localStorage.removeItem('cart');
                         const fresh = await Cart.get();
                         cartData = (fresh.cart_items || []).map(normaliseApiItem);
-                    } else {
+                    } else if (apiItems.length > 0) {
+                        // Use API cart if it has items
+                        localStorage.removeItem('cart');
                         cartData = apiItems;
+                    } else {
+                        // API cart is empty, fall back to localStorage
+                        isApiCart = false;
+                        cartData = local.map(normaliseLocalItem);
                     }
-                } else {
+                } catch (apiErr) {
+                    // API failed, use localStorage cart
                     isApiCart = false;
                     const local = JSON.parse(localStorage.getItem('cart')) || [];
-                    console.log('Local cart raw:', local);
+                    console.log('Local cart (API fallback):', local);
                     cartData = local.map(normaliseLocalItem);
-                    console.log('Local cart normalized:', cartData);
                 }
             } catch (e) {
                 isApiCart = false;
@@ -406,10 +413,6 @@
         };
 
         document.getElementById('checkoutBtn').addEventListener('click', () => {
-            if (!Auth.isLoggedIn()) {
-                window.location.href = 'login.html?redirect=checkout.html';
-                return;
-            }
             window.location.href = 'checkout.html';
         });
 

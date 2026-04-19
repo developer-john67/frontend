@@ -29,6 +29,14 @@ async function request(endpoint, method = 'GET', body = null) {
     'X-CSRFToken': getCSRFToken(),
   };
 
+  // Generate or get session ID for anonymous cart tracking
+  let sessionId = sessionStorage.getItem('sessionId');
+  if (!sessionId) {
+    sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    sessionStorage.setItem('sessionId', sessionId);
+  }
+  headers['X-Session-ID'] = sessionId;
+
   const token = localStorage.getItem('authToken');
   if (token) headers['Authorization'] = `Token ${token}`;
 

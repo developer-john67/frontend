@@ -803,11 +803,10 @@
         // ── Load cart on init ─────────────────────────────────────────────────
         async function initCheckout() {
             try {
-                if (Auth.isLoggedIn()) {
+                try {
                     let data = await Cart.get();
                     let apiItems = data.cart_items || [];
 
-                    // Migrate localStorage items to API cart if API cart is empty
                     const local = JSON.parse(localStorage.getItem('cart')) || [];
                     if (local.length > 0 && apiItems.length === 0) {
                         for (const item of local) {
@@ -820,22 +819,34 @@
                         apiItems = data.cart_items || [];
                     }
 
-                    cartItems = apiItems;
-                    subtotal  = parseFloat(data.subtotal || 0);
-                } else {
+                    if (apiItems.length > 0) {
+                        localStorage.removeItem('cart');
+                        cartItems = apiItems;
+                        subtotal = parseFloat(data.subtotal || 0);
+                    } else {
+                        cartItems = local.map(i => ({
+                            product_name: i.name,
+                            product_image: '',
+                            quantity: i.quantity,
+                            unit_price: i.price,
+                            total_price: i.price * i.quantity,
+                        }));
+                        subtotal = cartItems.reduce((s, i) => s + parseFloat(i.total_price), 0);
+                    }
+                } catch (apiErr) {
                     const local = JSON.parse(localStorage.getItem('cart')) || [];
                     cartItems = local.map(i => ({
-                        product_name:  i.name,
+                        product_name: i.name,
                         product_image: '',
-                        quantity:      i.quantity,
-                        unit_price:    i.price,
-                        total_price:   i.price * i.quantity,
+                        quantity: i.quantity,
+                        unit_price: i.price,
+                        total_price: i.price * i.quantity,
                     }));
                     subtotal = cartItems.reduce((s, i) => s + parseFloat(i.total_price), 0);
                 }
             } catch (e) {
                 cartItems = [];
-                subtotal  = 0;
+                subtotal = 0;
             }
 
             if (cartItems.length === 0) {
