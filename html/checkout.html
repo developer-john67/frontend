@@ -841,8 +841,8 @@
             const container = document.getElementById('summaryItems');
             container.innerHTML = cartItems.map(item => `
                 <div class="summary-item">
-                    <img src="${item.product_image || 'https://via.placeholder.com/52x52?text=?'}"
-                         onerror="this.src='https://via.placeholder.com/52x52?text=?'"
+                    <img src="${item.product_image || 'https://placehold.co/52x52?text=%3F'}"
+                         onerror="this.src='https://placehold.co/52x52?text=%3F'"
                          alt="${item.product_name}">
                     <div class="summary-item-info">
                         <div class="summary-item-name">${item.product_name}</div>

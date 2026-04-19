@@ -340,8 +340,8 @@
 
             document.getElementById('cartItems').innerHTML = cartData.map(item => `
                 <div class="cart-item" id="row-${item.id}">
-                    <img src="${item.image || 'https://via.placeholder.com/90'}" 
-                         onerror="this.src='https://via.placeholder.com/90'" 
+                    <img src="${item.image || 'https://placehold.co/90x90?text=No+Image'}" 
+                         onerror="this.src='https://placehold.co/90x90?text=No+Image'" 
                          alt="${item.name}" class="cart-item-image">
                     <div class="cart-item-details">
                         <div class="cart-item-title">${item.name}</div>

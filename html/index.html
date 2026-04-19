@@ -337,10 +337,10 @@
             }
 
             searchResults.innerHTML = results.slice(0, 6).map(product => {
-                const imageUrl = product.image_url || product.main_image || 'https://via.placeholder.com/40x40?text=Product';
+                const imageUrl = product.image_url || product.main_image || 'https://placehold.co/40x40?text=Product';
                 return `
                     <div class="search-result-item" onclick="window.location.href='product.html?id=${product.id || product.product_id}'">
-                        <img src="${imageUrl}" alt="${product.name}" class="search-result-image" onerror="this.src='https://via.placeholder.com/40x40?text=Product'">
+                        <img src="${imageUrl}" alt="${product.name}" class="search-result-image" onerror="this.src='https://placehold.co/40x40?text=Product'">
                         <div class="search-result-info">
                             <div class="search-result-name">${product.name}</div>
                             <div class="search-result-price">$${parseFloat(product.price).toFixed(2)}</div>
@@ -464,10 +464,10 @@
         }
 
         function createFlashCard(product) {
-            const imageUrl = product.image_url || 'https://via.placeholder.com/200x200?text=Product';
+            const imageUrl = product.image_url || 'https://placehold.co/200x200?text=Product';
             return `
                 <div class="flash-product">
-                    <img src="${imageUrl}" alt="${product.name}" onclick="window.location.href='product.html?id=${product.id}'" onerror="this.src='https://via.placeholder.com/200x200?text=Product'">
+                    <img src="${imageUrl}" alt="${product.name}" onclick="window.location.href='product.html?id=${product.id}'" onerror="this.src='https://placehold.co/200x200?text=Product'">
                     <div class="flash-product-info">
                         <div class="flash-product-price" onclick="window.location.href='product.html?id=${product.id}'">$${parseFloat(product.price).toFixed(2)}</div>
                         <button class="add-to-cart" onclick="addToCart('${product.id}', '${product.name}', ${product.price})">
