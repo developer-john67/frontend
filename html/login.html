@@ -13,145 +13,35 @@
     <meta name="apple-mobile-web-app-title" content="Dropship">
     <link rel="apple-touch-icon" href="../images/icon-192.svg">
     <style>
-        body {
-            background: var(--white);
-        }
-        .auth-page {
-            min-height: calc(100vh - 56px);
-            display: flex;
-            flex-direction: column;
-            padding: 0;
-        }
-        .auth-header {
-            background: var(--primary);
-            padding: 30px 20px;
-            text-align: center;
-            color: var(--white);
-        }
-        .auth-header h1 {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-        }
-        .auth-header p {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-        .auth-form {
-            padding: 25px 20px;
-            flex: 1;
-        }
-        .login-options {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .social-btn {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            background: var(--white);
-            font-size: 0.9rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .social-btn i {
-            font-size: 1.2rem;
-        }
-        .divider {
-            text-align: center;
-            margin: 20px 0;
-            color: var(--text-light);
-            font-size: 0.85rem;
-            position: relative;
-        }
-        .divider::before, .divider::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            width: 40%;
-            height: 1px;
-            background: var(--border);
-        }
+        body { background: var(--white); }
+        .auth-page { min-height: calc(100vh - 56px); display: flex; flex-direction: column; padding: 0; }
+        .auth-header { background: var(--primary); padding: 30px 20px; text-align: center; color: var(--white); }
+        .auth-header h1 { font-size: 1.5rem; margin-bottom: 8px; }
+        .auth-header p { font-size: 0.9rem; opacity: 0.9; }
+        .auth-form { padding: 25px 20px; flex: 1; }
+        .login-options { display: flex; gap: 10px; margin-bottom: 20px; }
+        .social-btn { flex: 1; padding: 12px; border: 1px solid var(--border); border-radius: 4px; background: var(--white); font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .social-btn i { font-size: 1.2rem; }
+        .divider { text-align: center; margin: 20px 0; color: var(--text-light); font-size: 0.85rem; position: relative; }
+        .divider::before, .divider::after { content: ''; position: absolute; top: 50%; width: 40%; height: 1px; background: var(--border); }
         .divider::before { left: 0; }
         .divider::after { right: 0; }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 14px 12px;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            font-size: 1rem;
-            background: var(--white);
-        }
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-        .forgot-link {
-            text-align: right;
-            margin-bottom: 20px;
-        }
-        .forgot-link a {
-            color: var(--primary);
-            font-size: 0.9rem;
-        }
-        .auth-btn {
-            width: 100%;
-            padding: 14px;
-            background: var(--primary);
-            color: var(--white);
-            border: none;
-            border-radius: 4px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .auth-btn:disabled {
-            background: #ffaa70;
-            cursor: not-allowed;
-        }
-        .auth-link {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 0.9rem;
-        }
-        .auth-link a {
-            color: var(--primary);
-            font-weight: 600;
-        }
-        .error-msg {
-            background: #ffebee;
-            color: #c62828;
-            padding: 12px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-            display: none;
-        }
-        .phone-input {
-            display: flex;
-            gap: 10px;
-        }
-        .phone-input select {
-            padding: 14px 8px;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            background: var(--white);
-            font-size: 1rem;
-        }
-        .phone-input input {
-            flex: 1;
-        }
+        .form-group { margin-bottom: 15px; }
+        .form-group input { width: 100%; padding: 14px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem; background: var(--white); }
+        .form-group input:focus { outline: none; border-color: var(--primary); }
+        .forgot-link { text-align: right; margin-bottom: 20px; }
+        .forgot-link a { color: var(--primary); font-size: 0.9rem; }
+        .auth-btn { width: 100%; padding: 14px; background: var(--primary); color: var(--white); border: none; border-radius: 4px; font-size: 1rem; font-weight: 600; cursor: pointer; }
+        .auth-btn:disabled { background: #ffaa70; cursor: not-allowed; }
+        .auth-link { text-align: center; margin-top: 20px; font-size: 0.9rem; }
+        .auth-link a { color: var(--primary); font-weight: 600; }
+        .error-msg { background: #ffebee; color: #c62828; padding: 12px; border-radius: 4px; margin-bottom: 15px; font-size: 0.9rem; display: none; }
+        .phone-input { display: flex; gap: 10px; }
+        .phone-input select { padding: 14px 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--white); font-size: 1rem; }
+        .phone-input input { flex: 1; }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="header-top">
             <a href="index.html" class="back-btn" style="color: white; font-size: 1.2rem;">
@@ -200,24 +90,32 @@
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const email = document.getElementById('email').value;
+            const email    = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const errorMsg = document.getElementById('errorMsg');
-            const btn = document.getElementById('loginBtn');
+            const btn      = document.getElementById('loginBtn');
 
             errorMsg.style.display = 'none';
             btn.textContent = 'Signing in...';
-            btn.disabled = true;
+            btn.disabled    = true;
 
             try {
                 await Auth.login(email, password);
+
+                // ── Restore cart backup saved before redirect to login ─────────
+                const backup = sessionStorage.getItem('cart_backup');
+                if (backup) {
+                    localStorage.setItem('cart', backup);
+                    sessionStorage.removeItem('cart_backup');
+                }
+
                 const redirect = new URLSearchParams(window.location.search).get('redirect') || 'account.html';
                 window.location.href = redirect;
             } catch (err) {
                 errorMsg.textContent = err.message || 'Invalid email or password.';
                 errorMsg.style.display = 'block';
                 btn.textContent = 'SIGN IN';
-                btn.disabled = false;
+                btn.disabled    = false;
             }
         });
     </script>

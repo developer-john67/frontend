@@ -8,402 +8,108 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="manifest" href="../manifest.json">
     <meta name="theme-color" content="#3b82f6">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Dropship">
     <link rel="apple-touch-icon" href="../images/icon-192.svg">
     <style>
         * { box-sizing: border-box; }
-
         .checkout-page { padding: 32px 0 64px; min-height: 80vh; }
-
-        /* ── Steps ── */
-        .steps {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0;
-            margin-bottom: 40px;
-        }
-        .step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            position: relative;
-        }
-        .step-circle {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: #e5e7eb;
-            color: #888;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 14px;
-            transition: background 0.3s, color 0.3s;
-        }
+        .steps { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 40px; }
+        .step { display: flex; flex-direction: column; align-items: center; gap: 6px; position: relative; }
+        .step-circle { width: 36px; height: 36px; border-radius: 50%; background: #e5e7eb; color: #888; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; transition: background 0.3s, color 0.3s; }
         .step.active .step-circle  { background: #3b82f6; color: #fff; }
         .step.done .step-circle    { background: #16a34a; color: #fff; }
-        .step-label {
-            font-size: 12px;
-            color: #888;
-            white-space: nowrap;
-        }
+        .step-label { font-size: 12px; color: #888; white-space: nowrap; }
         .step.active .step-label { color: #3b82f6; font-weight: 600; }
         .step.done .step-label   { color: #16a34a; }
-        .step-line {
-            width: 80px;
-            height: 2px;
-            background: #e5e7eb;
-            margin-bottom: 18px;
-            transition: background 0.3s;
-        }
+        .step-line { width: 80px; height: 2px; background: #e5e7eb; margin-bottom: 18px; transition: background 0.3s; }
         .step-line.done { background: #16a34a; }
-
-        /* ── Layout ── */
-        .checkout-layout {
-            display: grid;
-            grid-template-columns: 1fr 360px;
-            gap: 28px;
-            align-items: start;
-        }
-        @media (max-width: 768px) {
-            .checkout-layout { grid-template-columns: 1fr; }
-            .order-summary   { order: -1; }
-        }
-
-        /* ── Panels ── */
-        .checkout-panel {
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 14px;
-            padding: 28px;
-        }
-        .checkout-panel h2 {
-            font-size: 18px;
-            font-weight: 700;
-            margin: 0 0 24px;
-            color: #111;
-        }
-
-        /* ── Form ── */
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-        }
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-bottom: 16px;
-        }
+        .checkout-layout { display: grid; grid-template-columns: 1fr 360px; gap: 28px; align-items: start; }
+        @media (max-width: 768px) { .checkout-layout { grid-template-columns: 1fr; } .order-summary { order: -1; } }
+        .checkout-panel { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 28px; }
+        .checkout-panel h2 { font-size: 18px; font-weight: 700; margin: 0 0 24px; color: #111; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
         .form-group.full { grid-column: 1 / -1; }
-        .form-group label {
-            font-size: 13px;
-            font-weight: 600;
-            color: #444;
-        }
-        .form-group input, .form-group select {
-            padding: 10px 14px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.2s;
-            width: 100%;
-        }
-        .form-group input:focus, .form-group select:focus {
-            border-color: #3b82f6;
-        }
+        .form-group label { font-size: 13px; font-weight: 600; color: #444; }
+        .form-group input, .form-group select { padding: 10px 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.2s; width: 100%; }
+        .form-group input:focus, .form-group select:focus { border-color: #3b82f6; }
         .form-group input.error { border-color: #ef4444; }
         .field-error { font-size: 12px; color: #ef4444; display: none; }
-
-        /* ── Payment options ── */
         .payment-options { display: flex; flex-direction: column; gap: 10px; }
-        .payment-option {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 16px;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: border-color 0.2s, background 0.2s;
-        }
-        .payment-option:hover        { border-color: #93c5fd; background: #f0f9ff; }
-        .payment-option.selected     { border-color: #3b82f6; background: #eff6ff; }
+        .payment-option { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 2px solid #e5e7eb; border-radius: 10px; cursor: pointer; transition: border-color 0.2s, background 0.2s; }
+        .payment-option:hover { border-color: #93c5fd; background: #f0f9ff; }
+        .payment-option.selected { border-color: #3b82f6; background: #eff6ff; }
         .payment-option input[type=radio] { display: none; }
         .payment-option i { font-size: 20px; color: #3b82f6; width: 24px; text-align: center; }
         .payment-option span { font-size: 14px; font-weight: 500; }
         .card-fields { margin-top: 16px; display: none; }
         .card-fields.visible { display: block; }
-
-        /* ── Order summary ── */
         .order-summary { position: sticky; top: 80px; }
         .summary-items { margin-bottom: 20px; }
-        .summary-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 0;
-            border-bottom: 1px solid #f3f4f6;
-        }
-        .summary-item img {
-            width: 52px;
-            height: 52px;
-            object-fit: cover;
-            border-radius: 8px;
-            background: #f9fafb;
-        }
+        .summary-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f3f4f6; }
+        .summary-item img { width: 52px; height: 52px; object-fit: cover; border-radius: 8px; background: #f9fafb; }
         .summary-item-info { flex: 1; min-width: 0; }
-        .summary-item-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: #111;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        .summary-item-name { font-size: 13px; font-weight: 600; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .summary-item-qty  { font-size: 12px; color: #888; }
         .summary-item-price { font-size: 14px; font-weight: 700; color: #111; white-space: nowrap; }
-
         .summary-totals { border-top: 2px solid #e5e7eb; padding-top: 16px; }
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 8px;
-        }
-        .summary-row.total {
-            font-size: 16px;
-            font-weight: 700;
-            color: #111;
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px solid #e5e7eb;
-        }
-
-        /* ── Buttons ── */
-        .btn-primary {
-            width: 100%;
-            padding: 14px;
-            background: #3b82f6;
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-            margin-top: 20px;
-        }
-        .btn-primary:hover    { background: #2563eb; }
+        .summary-row { display: flex; justify-content: space-between; font-size: 14px; color: #555; margin-bottom: 8px; }
+        .summary-row.total { font-size: 16px; font-weight: 700; color: #111; margin-top: 8px; padding-top: 8px; border-top: 1px solid #e5e7eb; }
+        .btn-primary { width: 100%; padding: 14px; background: #3b82f6; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 20px; }
+        .btn-primary:hover { background: #2563eb; }
         .btn-primary:disabled { background: #93c5fd; cursor: not-allowed; }
-        .btn-secondary {
-            background: none;
-            border: 1px solid #ddd;
-            color: #555;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
+        .btn-secondary { background: none; border: 1px solid #ddd; color: #555; padding: 10px 20px; border-radius: 8px; font-size: 14px; cursor: pointer; transition: background 0.2s; }
         .btn-secondary:hover { background: #f3f4f6; }
-
-        /* ── Confirmation ── */
-        .confirmation {
-            text-align: center;
-            padding: 40px 20px;
-        }
-        .confirmation .check-icon {
-            width: 72px;
-            height: 72px;
-            background: #dcfce7;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-        }
+        .confirmation { text-align: center; padding: 40px 20px; }
+        .confirmation .check-icon { width: 72px; height: 72px; background: #dcfce7; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
         .confirmation .check-icon i { font-size: 32px; color: #16a34a; }
         .confirmation h2 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
         .confirmation p  { color: #666; margin-bottom: 24px; }
-        .order-id-box {
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 16px;
-            margin-bottom: 28px;
-            font-size: 14px;
-            color: #444;
-        }
+        .order-id-box { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; margin-bottom: 28px; font-size: 14px; color: #444; }
         .order-id-box strong { display: block; font-size: 18px; color: #111; margin-top: 4px; }
         .confirm-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-        .confirm-actions a {
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: background 0.2s;
-        }
-        .btn-go-home   { background: #3b82f6; color: #fff; }
+        .confirm-actions a { padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; transition: background 0.2s; }
+        .btn-go-home { background: #3b82f6; color: #fff; }
         .btn-go-home:hover { background: #2563eb; }
         .btn-go-orders { border: 1px solid #ddd; color: #555; }
         .btn-go-orders:hover { background: #f3f4f6; }
-
-        /* ── Empty cart ── */
-        .empty-cart {
-            text-align: center;
-            padding: 60px 20px;
-            color: #888;
-        }
+        .empty-cart { text-align: center; padding: 60px 20px; color: #888; }
         .empty-cart i { font-size: 48px; margin-bottom: 16px; display: block; }
         .empty-cart a { color: #3b82f6; text-decoration: none; font-weight: 600; }
-
-        /* ── Loading ── */
-        .loading-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.3);
-            z-index: 9999;
-            align-items: center;
-            justify-content: center;
-        }
+        .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 9999; align-items: center; justify-content: center; }
         .loading-overlay.visible { display: flex; }
-        .loading-spinner {
-            background: #fff;
-            border-radius: 12px;
-            padding: 28px 36px;
-            text-align: center;
-            font-size: 15px;
-            color: #333;
-        }
+        .loading-spinner { background: #fff; border-radius: 12px; padding: 28px 36px; text-align: center; font-size: 15px; color: #333; }
         .loading-spinner i { font-size: 28px; color: #3b82f6; display: block; margin-bottom: 10px; }
-
-        /* ── M-Pesa STK Push Modal ── */
-        .mpesa-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 10000;
-            align-items: center;
-            justify-content: center;
-        }
+        .mpesa-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center; }
         .mpesa-modal.visible { display: flex; }
-        .mpesa-modal-content {
-            background: #fff;
-            border-radius: 16px;
-            padding: 32px;
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-            animation: slideUp 0.3s ease;
-        }
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .mpesa-modal-content .mpesa-icon {
-            width: 80px;
-            height: 80px;
-            background: #25D366;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-        }
-        .mpesa-modal-content .mpesa-icon i {
-            font-size: 36px;
-            color: #fff;
-        }
-        .mpesa-modal-content h3 {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: #111;
-        }
-        .mpesa-modal-content p {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 20px;
-        }
-        .mpesa-amount {
-            font-size: 32px;
-            font-weight: 700;
-            color: #111;
-            margin-bottom: 20px;
-        }
-        .mpesa-phone {
-            font-size: 18px;
-            font-weight: 600;
-            color: #25D366;
-            margin-bottom: 24px;
-        }
-        .mpesa-status {
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 20px;
-        }
-        .mpesa-status.pending {
-            background: #fef3c7;
-            color: #92400e;
-        }
-        .mpesa-status.success {
-            background: #dcfce7;
-            color: #166534;
-        }
-        .mpesa-status.failed {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-        .mpesa-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-        }
-        .mpesa-actions button {
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: background 0.2s;
-        }
-        .mpesa-btn-cancel {
-            background: #f3f4f6;
-            color: #555;
-        }
+        .mpesa-modal-content { background: #fff; border-radius: 16px; padding: 32px; max-width: 400px; width: 90%; text-align: center; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .mpesa-modal-content .mpesa-icon { width: 80px; height: 80px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+        .mpesa-modal-content .mpesa-icon i { font-size: 36px; color: #fff; }
+        .mpesa-modal-content h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; color: #111; }
+        .mpesa-modal-content p { font-size: 14px; color: #666; margin-bottom: 20px; }
+        .mpesa-amount { font-size: 32px; font-weight: 700; color: #111; margin-bottom: 20px; }
+        .mpesa-phone { font-size: 18px; font-weight: 600; color: #25D366; margin-bottom: 24px; }
+        .mpesa-status { padding: 12px 20px; border-radius: 8px; font-size: 14px; font-weight: 500; margin-bottom: 20px; }
+        .mpesa-status.pending { background: #fef3c7; color: #92400e; }
+        .mpesa-status.success { background: #dcfce7; color: #166534; }
+        .mpesa-status.failed  { background: #fee2e2; color: #991b1b; }
+        .mpesa-actions { display: flex; gap: 12px; justify-content: center; }
+        .mpesa-actions button { padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: background 0.2s; }
+        .mpesa-btn-cancel { background: #f3f4f6; color: #555; }
         .mpesa-btn-cancel:hover { background: #e5e7eb; }
-        .mpesa-btn-retry {
-            background: #25D366;
-            color: #fff;
-        }
+        .mpesa-btn-retry { background: #25D366; color: #fff; }
         .mpesa-btn-retry:hover { background: #1da156; }
     </style>
 </head>
 <body>
 
-    <!-- ── Navbar ── -->
     <nav class="navbar">
         <div class="nav-container">
-            <div class="hamburger" id="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+            <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
             <div class="logo">
                 <img src="../images/logo.svg" alt="Dropship Logo">
                 <span>Dropship</span>
@@ -445,7 +151,6 @@
         </div>
     </nav>
 
-    <!-- Loading overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner">
             <i class="fas fa-spinner fa-spin"></i>
@@ -453,19 +158,15 @@
         </div>
     </div>
 
-    <!-- M-Pesa STK Push Modal -->
     <div class="mpesa-modal" id="mpesaModal">
         <div class="mpesa-modal-content">
-            <div class="mpesa-icon">
-                <i class="fas fa-mobile-alt"></i>
-            </div>
+            <div class="mpesa-icon"><i class="fas fa-mobile-alt"></i></div>
             <h3>Pay with M-Pesa</h3>
             <p>An STK push has been sent to your phone</p>
             <div class="mpesa-amount" id="mpesaAmount">KES 0.00</div>
             <div class="mpesa-phone" id="mpesaPhone">+254 712 345 678</div>
             <div class="mpesa-status pending" id="mpesaStatus">
-                <i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>
-                Waiting for payment...
+                <i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>Waiting for payment...
             </div>
             <div class="mpesa-actions">
                 <button class="mpesa-btn-cancel" onclick="cancelMpesaPayment()">Cancel</button>
@@ -477,7 +178,6 @@
     <main class="checkout-page">
         <div class="container">
 
-            <!-- ── Step indicators ── -->
             <div class="steps" id="stepsBar">
                 <div class="step active" id="step1">
                     <div class="step-circle">1</div>
@@ -495,7 +195,6 @@
                 </div>
             </div>
 
-            <!-- ── Empty cart state ── -->
             <div id="emptyCartState" style="display:none;">
                 <div class="empty-cart">
                     <i class="fas fa-shopping-cart"></i>
@@ -505,12 +204,8 @@
                 </div>
             </div>
 
-            <!-- ── Checkout layout ── -->
             <div class="checkout-layout" id="checkoutLayout" style="display:none;">
-
-                <!-- Left: steps content -->
                 <div>
-
                     <!-- STEP 1: Shipping -->
                     <div id="shippingStep">
                         <div class="checkout-panel">
@@ -588,45 +283,36 @@
                         <div class="checkout-panel">
                             <h2><i class="fas fa-credit-card" style="color:#3b82f6;margin-right:8px;"></i>Payment Method</h2>
                             <div class="payment-options">
-
                                 <label class="payment-option selected" onclick="selectPayment('card', this)">
                                     <input type="radio" name="payment" value="card" checked>
                                     <i class="fas fa-credit-card"></i>
                                     <span>Credit / Debit Card</span>
                                 </label>
-
                                 <label class="payment-option" onclick="selectPayment('mpesa', this)">
                                     <input type="radio" name="payment" value="mpesa">
                                     <i class="fas fa-mobile-alt"></i>
                                     <span>M-Pesa</span>
                                 </label>
-
                                 <label class="payment-option" onclick="selectPayment('paypal', this)">
                                     <input type="radio" name="payment" value="paypal">
                                     <i class="fab fa-paypal"></i>
                                     <span>PayPal</span>
                                 </label>
-
                                 <label class="payment-option" onclick="selectPayment('cod', this)">
                                     <input type="radio" name="payment" value="cod">
                                     <i class="fas fa-money-bill-wave"></i>
                                     <span>Cash on Delivery</span>
                                 </label>
-
                             </div>
-
-                            <!-- Card fields -->
                             <div class="card-fields visible" id="cardFields">
                                 <div class="form-group" style="margin-top:16px;">
                                     <label>Card Number</label>
-                                    <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19"
-                                           oninput="formatCard(this)">
+                                    <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)">
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group">
                                         <label>Expiry Date</label>
-                                        <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5"
-                                               oninput="formatExpiry(this)">
+                                        <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5" oninput="formatExpiry(this)">
                                     </div>
                                     <div class="form-group">
                                         <label>CVV</label>
@@ -638,8 +324,6 @@
                                     <input type="text" id="cardName" placeholder="John Doe">
                                 </div>
                             </div>
-
-                            <!-- M-Pesa fields -->
                             <div class="card-fields" id="mpesaFields">
                                 <div class="form-group" style="margin-top:16px;">
                                     <label>M-Pesa Phone Number *</label>
@@ -647,40 +331,28 @@
                                 </div>
                                 <p style="font-size:13px;color:#666;">You will receive an STK push to complete payment.</p>
                             </div>
-
                             <div style="display:flex;gap:12px;margin-top:20px;">
-                                <button class="btn-secondary" onclick="goToShipping()">
-                                    <i class="fas fa-arrow-left"></i> Back
-                                </button>
-                                <button class="btn-primary" style="margin-top:0;" onclick="goToReview()">
-                                    Review Order <i class="fas fa-arrow-right"></i>
-                                </button>
+                                <button class="btn-secondary" onclick="goToShipping()"><i class="fas fa-arrow-left"></i> Back</button>
+                                <button class="btn-primary" style="margin-top:0;" onclick="goToReview()">Review Order <i class="fas fa-arrow-right"></i></button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- STEP 3: Review & Confirm -->
+                    <!-- STEP 3: Review -->
                     <div id="reviewStep" style="display:none;">
                         <div class="checkout-panel">
                             <h2><i class="fas fa-check-circle" style="color:#3b82f6;margin-right:8px;"></i>Review Your Order</h2>
-
                             <div style="margin-bottom:20px;">
                                 <h3 style="font-size:14px;color:#555;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Shipping To</h3>
                                 <div id="reviewAddress" style="font-size:14px;line-height:1.8;color:#333;background:#f9fafb;padding:12px 16px;border-radius:8px;"></div>
                             </div>
-
                             <div style="margin-bottom:20px;">
                                 <h3 style="font-size:14px;color:#555;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Payment</h3>
                                 <div id="reviewPayment" style="font-size:14px;color:#333;background:#f9fafb;padding:12px 16px;border-radius:8px;"></div>
                             </div>
-
                             <div style="display:flex;gap:12px;margin-top:24px;">
-                                <button class="btn-secondary" onclick="goToPayment()">
-                                    <i class="fas fa-arrow-left"></i> Back
-                                </button>
-                                <button class="btn-primary" style="margin-top:0;" onclick="placeOrder()" id="placeOrderBtn">
-                                    <i class="fas fa-lock"></i> Place Order
-                                </button>
+                                <button class="btn-secondary" onclick="goToPayment()"><i class="fas fa-arrow-left"></i> Back</button>
+                                <button class="btn-primary" style="margin-top:0;" onclick="placeOrder()" id="placeOrderBtn"><i class="fas fa-lock"></i> Place Order</button>
                             </div>
                         </div>
                     </div>
@@ -689,15 +361,10 @@
                     <div id="confirmationStep" style="display:none;">
                         <div class="checkout-panel">
                             <div class="confirmation">
-                                <div class="check-icon">
-                                    <i class="fas fa-check"></i>
-                                </div>
+                                <div class="check-icon"><i class="fas fa-check"></i></div>
                                 <h2>Order Placed!</h2>
                                 <p>Thank you for your order. We'll send you a confirmation email shortly.</p>
-                                <div class="order-id-box">
-                                    Order ID
-                                    <strong id="confirmedOrderId">—</strong>
-                                </div>
+                                <div class="order-id-box">Order ID<strong id="confirmedOrderId">—</strong></div>
                                 <div class="confirm-actions">
                                     <a href="index.html" class="btn-go-home">Continue Shopping</a>
                                     <a href="account.html" class="btn-go-orders">View Orders</a>
@@ -705,10 +372,9 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
 
-                <!-- Right: Order Summary -->
+                <!-- Order Summary -->
                 <div class="order-summary">
                     <div class="checkout-panel">
                         <h2>Order Summary</h2>
@@ -716,22 +382,12 @@
                             <p style="color:#888;font-size:14px;">Loading cart...</p>
                         </div>
                         <div class="summary-totals">
-                            <div class="summary-row">
-                                <span>Subtotal</span>
-                                <span id="subtotalVal">$0.00</span>
-                            </div>
-                            <div class="summary-row">
-                                <span>Shipping</span>
-                                <span id="shippingVal">Free</span>
-                            </div>
-                            <div class="summary-row total">
-                                <span>Total</span>
-                                <span id="totalVal">$0.00</span>
-                            </div>
+                            <div class="summary-row"><span>Subtotal</span><span id="subtotalVal">$0.00</span></div>
+                            <div class="summary-row"><span>Shipping</span><span id="shippingVal">Free</span></div>
+                            <div class="summary-row total"><span>Total</span><span id="totalVal">$0.00</span></div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </main>
@@ -739,114 +395,114 @@
     <script src="../js/api.js"></script>
     <script src="../js/main.js"></script>
     <script>
-        // Mobile menu toggle
+        // Mobile menu
         const hamburger = document.getElementById('hamburger');
         const navMenu = document.querySelector('.nav-menu');
-        
         if (hamburger && navMenu) {
             hamburger.addEventListener('click', () => {
                 hamburger.classList.toggle('active');
                 navMenu.classList.toggle('active');
             });
         }
-        
-        // Mobile dropdown toggle
-        const dropdowns = document.querySelectorAll('.dropdown');
-        dropdowns.forEach(dropdown => {
+        document.querySelectorAll('.dropdown').forEach(dropdown => {
             dropdown.addEventListener('click', (e) => {
-                if (window.innerWidth <= 1024) {
-                    e.preventDefault();
-                    dropdown.classList.toggle('active');
-                }
+                if (window.innerWidth <= 1024) { e.preventDefault(); dropdown.classList.toggle('active'); }
             });
         });
-        
-        // Search functionality
-        const searchInput = document.getElementById('searchInput');
-        const searchBtn = document.getElementById('searchBtn');
+
+        // Search
+        const searchInput      = document.getElementById('searchInput');
+        const searchBtn        = document.getElementById('searchBtn');
         const mobileSearchInput = document.getElementById('mobileSearchInput');
+        function performSearch(query) { if (query) window.location.href = 'products.html?search=' + encodeURIComponent(query); }
+        if (searchBtn)          searchBtn.addEventListener('click', () => performSearch(searchInput.value));
+        if (searchInput)        searchInput.addEventListener('keypress', e => { if (e.key === 'Enter') performSearch(searchInput.value); });
+        if (mobileSearchInput)  mobileSearchInput.addEventListener('keypress', e => { if (e.key === 'Enter') performSearch(mobileSearchInput.value); });
 
-        function performSearch(query) {
-            if (query) {
-                window.location.href = 'products.html?search=' + encodeURIComponent(query);
-            }
-        }
-
-        if (searchBtn) {
-            searchBtn.addEventListener('click', () => performSearch(searchInput.value));
-        }
-        if (searchInput) {
-            searchInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') performSearch(searchInput.value);
-            });
-        }
-        if (mobileSearchInput) {
-            mobileSearchInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') performSearch(mobileSearchInput.value);
-            });
-        }
-        
-        function handleLogout() {
-            Auth.logout();
-            window.location.href = 'index.html';
-        }
+        function handleLogout() { Auth.logout(); window.location.href = 'index.html'; }
 
         // ── State ─────────────────────────────────────────────────────────────
-        let cartItems      = [];
-        let subtotal       = 0;
+        let cartItems        = [];
+        let subtotal         = 0;
         let selectedPayment  = 'card';
-        let shippingData   = {};
-        let currentOrderId = null;
+        let shippingData     = {};
+        let currentOrderId   = null;
         let currentTransactionId = null;
         let mpesaPollingInterval = null;
 
-        // ── Load cart on init ─────────────────────────────────────────────────
+        // ── Init checkout ─────────────────────────────────────────────────────
         async function initCheckout() {
-            try {
-                try {
-                    let data = await Cart.get();
-                    let apiItems = data.cart_items || [];
 
-                    const local = JSON.parse(localStorage.getItem('cart')) || [];
-                    if (local.length > 0 && apiItems.length === 0) {
-                        for (const item of local) {
-                            try {
-                                await Cart.addItem(String(item.id || item.product_id), item.quantity || 1);
-                            } catch (e) {}
+            // ── Redirect to login if not authenticated, saving cart first ─────
+            if (!Auth.isLoggedIn()) {
+                const cart = localStorage.getItem('cart');
+                if (cart) sessionStorage.setItem('cart_backup', cart);
+                window.location.href = 'login.html?redirect=checkout.html';
+                return;
+            }
+
+            // ── Restore cart backup if returning from login ────────────────────
+            const backup = sessionStorage.getItem('cart_backup');
+            if (backup) {
+                localStorage.setItem('cart', backup);
+                sessionStorage.removeItem('cart_backup');
+            }
+
+            try {
+                let data     = await Cart.get();
+                let apiItems = data.cart_items || [];
+
+                // ── Migrate localStorage → API cart ───────────────────────────
+                const localRaw = localStorage.getItem('cart');
+                const local    = localRaw ? JSON.parse(localRaw) : [];
+
+                if (local.length > 0 && apiItems.length === 0) {
+                    let migrated = 0;
+                    for (const item of local) {
+                        try {
+                            await Cart.addItem(String(item.id || item.product_id), item.quantity || 1);
+                            migrated++;
+                        } catch (e) {
+                            console.error('Failed to migrate item:', item, e);
                         }
-                        localStorage.removeItem('cart');
-                        data = await Cart.get();
-                        apiItems = data.cart_items || [];
                     }
 
-                    if (apiItems.length > 0) {
+                    if (migrated > 0) {
+                        // Clear localStorage only after confirmed migration
                         localStorage.removeItem('cart');
-                        cartItems = apiItems;
-                        subtotal = parseFloat(data.subtotal || 0);
+                        data     = await Cart.get();
+                        apiItems = data.cart_items || [];
                     } else {
+                        // Migration failed entirely — display localStorage items
                         cartItems = local.map(i => ({
-                            product_name: i.name,
+                            product_name:  i.name,
                             product_image: '',
-                            quantity: i.quantity,
-                            unit_price: i.price,
-                            total_price: i.price * i.quantity,
+                            quantity:      i.quantity,
+                            unit_price:    i.price,
+                            total_price:   i.price * i.quantity,
                         }));
                         subtotal = cartItems.reduce((s, i) => s + parseFloat(i.total_price), 0);
+                        document.getElementById('checkoutLayout').style.display = 'grid';
+                        renderSummary();
+                        prefillUserData();
+                        return;
                     }
-                } catch (apiErr) {
-                    const local = JSON.parse(localStorage.getItem('cart')) || [];
-                    cartItems = local.map(i => ({
-                        product_name: i.name,
-                        product_image: '',
-                        quantity: i.quantity,
-                        unit_price: i.price,
-                        total_price: i.price * i.quantity,
-                    }));
-                    subtotal = cartItems.reduce((s, i) => s + parseFloat(i.total_price), 0);
                 }
+
+                cartItems = apiItems;
+                subtotal  = parseFloat(data.subtotal || 0);
+
             } catch (e) {
-                cartItems = [];
-                subtotal = 0;
+                // API completely unreachable — fall back to localStorage
+                const local = JSON.parse(localStorage.getItem('cart') || '[]');
+                cartItems = local.map(i => ({
+                    product_name:  i.name,
+                    product_image: '',
+                    quantity:      i.quantity,
+                    unit_price:    i.price,
+                    total_price:   i.price * i.quantity,
+                }));
+                subtotal = cartItems.reduce((s, i) => s + parseFloat(i.total_price), 0);
             }
 
             if (cartItems.length === 0) {
@@ -862,8 +518,7 @@
         }
 
         function renderSummary() {
-            const container = document.getElementById('summaryItems');
-            container.innerHTML = cartItems.map(item => `
+            document.getElementById('summaryItems').innerHTML = cartItems.map(item => `
                 <div class="summary-item">
                     <img src="${item.product_image || 'https://placehold.co/52x52'}"
                          onerror="this.src='https://placehold.co/52x52'"
@@ -878,7 +533,6 @@
 
             const shipping = subtotal >= 50 ? 0 : 5.99;
             const total    = subtotal + shipping;
-
             document.getElementById('subtotalVal').textContent = `$${subtotal.toFixed(2)}`;
             document.getElementById('shippingVal').textContent = shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`;
             document.getElementById('totalVal').textContent    = `$${total.toFixed(2)}`;
@@ -887,7 +541,7 @@
         function prefillUserData() {
             const user = Auth.getUser();
             if (!user) return;
-            if (user.email)    document.getElementById('email').value     = user.email;
+            if (user.email)    document.getElementById('email').value = user.email;
             if (user.username) {
                 const parts = user.username.split(' ');
                 document.getElementById('firstName').value = parts[0] || '';
@@ -895,7 +549,6 @@
             }
         }
 
-        // ── Step navigation ────────────────────────────────────────────────────
         function setStep(n) {
             for (let i = 1; i <= 3; i++) {
                 const el = document.getElementById(`step${i}`);
@@ -904,16 +557,14 @@
                 if (i === n) el.classList.add('active');
             }
             for (let i = 1; i <= 2; i++) {
-                const line = document.getElementById(`line${i}`);
-                line.classList.toggle('done', i < n);
+                document.getElementById(`line${i}`).classList.toggle('done', i < n);
             }
-            document.getElementById('shippingStep').style.display    = n === 1 ? 'block' : 'none';
-            document.getElementById('paymentStep').style.display     = n === 2 ? 'block' : 'none';
-            document.getElementById('reviewStep').style.display      = n === 3 ? 'block' : 'none';
+            document.getElementById('shippingStep').style.display     = n === 1 ? 'block' : 'none';
+            document.getElementById('paymentStep').style.display      = n === 2 ? 'block' : 'none';
+            document.getElementById('reviewStep').style.display       = n === 3 ? 'block' : 'none';
             document.getElementById('confirmationStep').style.display = 'none';
         }
 
-        // ── Validation ─────────────────────────────────────────────────────────
         function validateField(id, errId, test) {
             const val = document.getElementById(id).value.trim();
             const err = document.getElementById(errId);
@@ -922,6 +573,7 @@
             if (err) err.style.display = ok ? 'none' : 'block';
             return ok;
         }
+
         function goToPayment() {
             const ok = [
                 validateField('firstName', 'firstNameErr', v => v.length > 0),
@@ -959,32 +611,22 @@
                 ${shippingData.country}<br>
                 ${shippingData.email}
             `;
-
-            const paymentLabels = {
-                card:   '💳 Credit / Debit Card',
-                mpesa:  '📱 M-Pesa',
-                paypal: '🅿️ PayPal',
-                cod:    '💵 Cash on Delivery',
-            };
+            const paymentLabels = { card: '💳 Credit / Debit Card', mpesa: '📱 M-Pesa', paypal: '🅿️ PayPal', cod: '💵 Cash on Delivery' };
             document.getElementById('reviewPayment').textContent = paymentLabels[selectedPayment] || selectedPayment;
-
             setStep(3);
             window.scrollTo(0, 0);
         }
 
-        // ── Payment selection ─────────────────────────────────────────────────
         function selectPayment(method, el) {
             selectedPayment = method;
             document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
             el.classList.add('selected');
-
             document.getElementById('cardFields').classList.remove('visible');
             document.getElementById('mpesaFields').classList.remove('visible');
             if (method === 'card')  document.getElementById('cardFields').classList.add('visible');
             if (method === 'mpesa') document.getElementById('mpesaFields').classList.add('visible');
         }
 
-        // ── Card formatting ───────────────────────────────────────────────────
         function formatCard(input) {
             let v = input.value.replace(/\D/g, '').substring(0, 16);
             input.value = v.replace(/(.{4})/g, '$1 ').trim();
@@ -996,26 +638,18 @@
         }
         function formatMpesaPhone(input) {
             let v = input.value.replace(/\D/g, '').substring(0, 10);
-            if (v.length > 0) {
-                if (v.length <= 3) {
-                    input.value = v;
-                } else if (v.length <= 6) {
-                    input.value = v.substring(0, 3) + ' ' + v.substring(3);
-                } else {
-                    input.value = v.substring(0, 3) + ' ' + v.substring(3, 6) + ' ' + v.substring(6);
-                }
-            }
+            if (v.length <= 3)      input.value = v;
+            else if (v.length <= 6) input.value = v.substring(0, 3) + ' ' + v.substring(3);
+            else                    input.value = v.substring(0, 3) + ' ' + v.substring(3, 6) + ' ' + v.substring(6);
         }
 
-        // ── Place order ────────────────────────────────────────────────────────
         async function placeOrder() {
             const btn = document.getElementById('placeOrderBtn');
             btn.disabled = true;
             document.getElementById('loadingOverlay').classList.add('visible');
 
-            const shipping = subtotal >= 50 ? 0 : 5.99;
-            const total    = subtotal + shipping;
-
+            const shipping  = subtotal >= 50 ? 0 : 5.99;
+            const total     = subtotal + shipping;
             const orderData = {
                 shipping_address: shippingData,
                 payment_method:   selectedPayment,
@@ -1028,8 +662,8 @@
             try {
                 let orderResult;
                 if (Auth.isLoggedIn()) {
-                    orderResult = await Orders.create(orderData);
-                    currentOrderId = orderResult.order_id || orderResult.id || 'ORD-' + Date.now();
+                    orderResult     = await Orders.create(orderData);
+                    currentOrderId  = orderResult.order_id || orderResult.id || 'ORD-' + Date.now();
                 } else {
                     await new Promise(r => setTimeout(r, 1200));
                     currentOrderId = 'ORD-' + Date.now();
@@ -1043,31 +677,21 @@
                         document.getElementById('loadingOverlay').classList.remove('visible');
                         return;
                     }
-
                     let formattedPhone = mpesaPhoneInput.replace(/\s/g, '').replace(/^0/, '254');
-                    if (!formattedPhone.startsWith('254')) {
-                        formattedPhone = '254' + formattedPhone;
-                    }
-
-                    const mpesaAmount = total;
+                    if (!formattedPhone.startsWith('254')) formattedPhone = '254' + formattedPhone;
 
                     document.getElementById('loadingOverlay').classList.remove('visible');
-                    document.getElementById('mpesaAmount').textContent = `KES ${mpesaAmount.toFixed(2)}`;
-                    document.getElementById('mpesaPhone').textContent = '+' + formattedPhone;
+                    document.getElementById('mpesaAmount').textContent = `KES ${total.toFixed(2)}`;
+                    document.getElementById('mpesaPhone').textContent  = '+' + formattedPhone;
                     document.getElementById('mpesaModal').classList.add('visible');
-
-                    await initiateMpesaPayment(currentOrderId, formattedPhone, mpesaAmount);
+                    await initiateMpesaPayment(currentOrderId, formattedPhone, total);
                     return;
                 }
 
                 document.getElementById('confirmedOrderId').textContent = currentOrderId;
                 document.getElementById('stepsBar').style.display = 'none';
-
-                ['shippingStep','paymentStep','reviewStep'].forEach(id => {
-                    document.getElementById(id).style.display = 'none';
-                });
+                ['shippingStep','paymentStep','reviewStep'].forEach(id => { document.getElementById(id).style.display = 'none'; });
                 document.getElementById('confirmationStep').style.display = 'block';
-
                 sessionStorage.removeItem('apiCart');
                 localStorage.removeItem('cart');
                 updateCartCount();
@@ -1080,26 +704,19 @@
             }
         }
 
-        // ── M-Pesa Payment Functions ──────────────────────────────────────────
         async function initiateMpesaPayment(orderId, phone, amount) {
             try {
                 const response = await fetch(`${API_BASE}/payments/initiate/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': getCSRFToken(),
+                        'X-CSRFToken':  getCSRFToken(),
                         'Authorization': `Token ${Auth.getToken()}`,
                     },
                     credentials: 'include',
-                    body: JSON.stringify({
-                        order_id: orderId,
-                        phone_number: phone,
-                        amount: amount
-                    })
+                    body: JSON.stringify({ order_id: orderId, phone_number: phone, amount }),
                 });
-
                 const data = await response.json();
-
                 if (data.success) {
                     currentTransactionId = data.checkout_request_id;
                     document.getElementById('mpesaStatus').className = 'mpesa-status pending';
@@ -1117,60 +734,36 @@
 
         function startMpesaPolling() {
             if (mpesaPollingInterval) clearInterval(mpesaPollingInterval);
-
             let pollCount = 0;
             mpesaPollingInterval = setInterval(async () => {
                 pollCount++;
-
                 try {
                     const response = await fetch(`${API_BASE}/payments/status/${currentTransactionId}/`, {
                         method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Token ${Auth.getToken()}`,
-                        },
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Token ${Auth.getToken()}` },
                         credentials: 'include',
                     });
-
                     const data = await response.json();
-
                     if (data.status === 'success' || data.status === 'completed') {
-                        clearInterval(mpesaPollingInterval);
-                        mpesaPollingInterval = null;
-
+                        clearInterval(mpesaPollingInterval); mpesaPollingInterval = null;
                         document.getElementById('mpesaStatus').className = 'mpesa-status success';
                         document.getElementById('mpesaStatus').innerHTML = '<i class="fas fa-check-circle" style="margin-right:8px;"></i>Payment successful!';
-
-                        setTimeout(() => {
-                            document.getElementById('mpesaModal').classList.remove('visible');
-                            showOrderConfirmation();
-                        }, 1500);
-
+                        setTimeout(() => { document.getElementById('mpesaModal').classList.remove('visible'); showOrderConfirmation(); }, 1500);
                     } else if (data.status === 'failed' || data.status === 'cancelled') {
-                        clearInterval(mpesaPollingInterval);
-                        mpesaPollingInterval = null;
-
+                        clearInterval(mpesaPollingInterval); mpesaPollingInterval = null;
                         document.getElementById('mpesaStatus').className = 'mpesa-status failed';
                         document.getElementById('mpesaStatus').innerHTML = '<i class="fas fa-exclamation-circle" style="margin-right:8px;"></i>Payment failed. Please try again.';
-
                     } else if (pollCount >= 30) {
-                        clearInterval(mpesaPollingInterval);
-                        mpesaPollingInterval = null;
-
+                        clearInterval(mpesaPollingInterval); mpesaPollingInterval = null;
                         document.getElementById('mpesaStatus').className = 'mpesa-status failed';
                         document.getElementById('mpesaStatus').innerHTML = '<i class="fas fa-clock" style="margin-right:8px;"></i>Payment timeout. Please try again.';
                     }
-                } catch (err) {
-                    console.error('Polling error:', err);
-                }
+                } catch (err) { console.error('Polling error:', err); }
             }, 3000);
         }
 
         function cancelMpesaPayment() {
-            if (mpesaPollingInterval) {
-                clearInterval(mpesaPollingInterval);
-                mpesaPollingInterval = null;
-            }
+            if (mpesaPollingInterval) { clearInterval(mpesaPollingInterval); mpesaPollingInterval = null; }
             document.getElementById('mpesaModal').classList.remove('visible');
             document.getElementById('placeOrderBtn').disabled = false;
             showBanner('Payment cancelled', 'info');
@@ -1187,24 +780,18 @@
         function showOrderConfirmation() {
             document.getElementById('confirmedOrderId').textContent = currentOrderId;
             document.getElementById('stepsBar').style.display = 'none';
-
-            ['shippingStep','paymentStep','reviewStep'].forEach(id => {
-                document.getElementById(id).style.display = 'none';
-            });
+            ['shippingStep','paymentStep','reviewStep'].forEach(id => { document.getElementById(id).style.display = 'none'; });
             document.getElementById('confirmationStep').style.display = 'block';
-
             sessionStorage.removeItem('apiCart');
             localStorage.removeItem('cart');
             updateCartCount();
         }
 
-        // ── Init ──────────────────────────────────────────────────────────────
         document.addEventListener('DOMContentLoaded', () => {
             updateNav();
             updateCartCount();
             initCheckout();
         });
-
     </script>
 </body>
 </html>
