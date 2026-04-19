@@ -84,10 +84,10 @@ function showBanner(message, type = 'success') {
 // ─── PRODUCTS ─────────────────────────────────────────────────────────────────
 
 const PLACEHOLDER_PRODUCTS = [
-    { id: 1, name: 'Wireless Headphones', price: 99.99,  image_url: 'https://via.placeholder.com/300x200' },
-    { id: 2, name: 'Smart Watch',         price: 199.99, image_url: 'https://via.placeholder.com/300x200' },
-    { id: 3, name: 'Running Shoes',       price: 79.99,  image_url: 'https://via.placeholder.com/300x200' },
-    { id: 4, name: 'Backpack',            price: 49.99,  image_url: 'https://via.placeholder.com/300x200' },
+    { id: 1, name: 'Wireless Headphones', price: 99.99,  image_url: 'https://placehold.co/300x200' },
+    { id: 2, name: 'Smart Watch',         price: 199.99, image_url: 'https://placehold.co/300x200' },
+    { id: 3, name: 'Running Shoes',       price: 79.99,  image_url: 'https://placehold.co/300x200' },
+    { id: 4, name: 'Backpack',            price: 49.99,  image_url: 'https://placehold.co/300x200' },
 ];
 
 function getImageUrl(product) {
@@ -102,7 +102,7 @@ function buildProductCard(product) {
         <div class="product-card">
             <img
                 src="${getImageUrl(product)}"
-                onerror="this.src='https://via.placeholder.com/300x200'"
+                onerror="this.src='https://placehold.co/300x200'"
                 alt="${product.name}"
                 class="product-image"
                 loading="lazy"
