@@ -16,7 +16,7 @@ async function request(endpoint, method = 'GET', body = null) {
   };
 
   const token = localStorage.getItem('authToken');
-  if (token) headers['Authorization'] = `Bearer ${token}`;
+  if (token) headers['Authorization'] = `Token ${token}`;
 
   const options = { method, headers, credentials: 'include' };
   if (body) options.body = JSON.stringify(body);
@@ -186,7 +186,7 @@ const Products = {
     const response = await fetch(`${API_BASE}/products/`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Token ${token}`,
         'X-CSRFToken': getCSRFToken(),
       },
       credentials: 'include',
@@ -205,7 +205,7 @@ const Products = {
     const response = await fetch(`${API_BASE}/products/admin/${id}/`, {
       method: 'PATCH',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Token ${token}`,
         'X-CSRFToken': getCSRFToken(),
       },
       credentials: 'include',
