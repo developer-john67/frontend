@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="manifest" href="../manifest.json">
     <meta name="theme-color" content="#3b82f6">
-    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Dropship">
     <link rel="apple-touch-icon" href="../images/icon-192.svg">
@@ -841,8 +841,8 @@
             const container = document.getElementById('summaryItems');
             container.innerHTML = cartItems.map(item => `
                 <div class="summary-item">
-                    <img src="${item.product_image || 'https://placehold.co/52x52?text=%3F'}"
-                         onerror="this.src='https://placehold.co/52x52?text=%3F'"
+                    <img src="${item.product_image || 'https://via.placeholder.com/52x52?text=?'}"
+                         onerror="this.src='https://via.placeholder.com/52x52?text=?'"
                          alt="${item.product_name}">
                     <div class="summary-item-info">
                         <div class="summary-item-name">${item.product_name}</div>
@@ -1060,7 +1060,7 @@
         // ── M-Pesa Payment Functions ──────────────────────────────────────────
         async function initiateMpesaPayment(orderId, phone, amount) {
             try {
-                const response = await fetch(`${API_BASE}/payments/initiate/`, {  // ✅ fixed URL
+                const response = await fetch(`${API_BASE}/payments/initiate/`, {  
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1070,7 +1070,7 @@
                     credentials: 'include',
                     body: JSON.stringify({
                         order_id: orderId,
-                        phone_number: phone,  // ✅ fixed field name
+                        phone_number: phone,  
                         amount: amount
                     })
                 });
@@ -1078,7 +1078,7 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    currentTransactionId = data.checkout_request_id;  // ✅ use checkout_request_id
+                    currentTransactionId = data.checkout_request_id;  
                     document.getElementById('mpesaStatus').className = 'mpesa-status pending';
                     document.getElementById('mpesaStatus').innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>Waiting for payment...';
                     
@@ -1101,7 +1101,7 @@
                 pollCount++;
                 
                 try {
-                    // ✅ fixed URL — GET with transaction_id in the path
+                    // fixed URL — GET with transaction_id in the path
                     const response = await fetch(`${API_BASE}/payments/status/${currentTransactionId}/`, {
                         method: 'GET',
                         headers: {
@@ -1113,7 +1113,7 @@
 
                     const data = await response.json();
 
-                    // ✅ fixed status check — backend returns 'status' field
+                   
                     if (data.status === 'success' || data.status === 'completed') {
                         clearInterval(mpesaPollingInterval);
                         mpesaPollingInterval = null;
@@ -1127,7 +1127,7 @@
                         }, 1500);
 
                     } else if (data.status === 'failed' || data.status === 'cancelled') {
-                        // ✅ handle failed/cancelled explicitly instead of just timing out
+                        //  handle failed/cancelled explicitly instead of just timing out
                         clearInterval(mpesaPollingInterval);
                         mpesaPollingInterval = null;
 

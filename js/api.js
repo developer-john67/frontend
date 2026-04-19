@@ -4,9 +4,23 @@ const API_BASE = window.location.hostname === 'localhost'
     ? 'http://localhost:8000/api' 
     : 'https://dropship-backend-otgc.onrender.com/api';
 
+const BACKEND_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:8000'
+    : 'https://dropship-backend-otgc.onrender.com';
+
 function getCSRFToken() {
   const cookie = document.cookie.split(';').find(c => c.trim().startsWith('csrftoken='));
   return cookie ? cookie.split('=')[1] : '';
+}
+
+// ─── IMAGE URL HELPER ─────────────────────────────────────────────────────────
+function getImageUrl(product) {
+    const raw = product.main_image || product.image || product.image_url || '';
+    if (!raw) return 'https://placehold.co/300x200';
+    // If already a full URL (e.g. S3), use as-is
+    if (raw.startsWith('http')) return raw;
+    // If relative path, prepend backend URL
+    return `${BACKEND_URL}${raw}`;
 }
 
 async function request(endpoint, method = 'GET', body = null) {
@@ -22,6 +36,20 @@ async function request(endpoint, method = 'GET', body = null) {
   if (body) options.body = JSON.stringify(body);
 
   const response = await fetch(`${API_BASE}${endpoint}`, options);
+
+  // If token is invalid, clear it and retry without auth
+  if (response.status === 401 && token) {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('authUser');
+    delete headers['Authorization'];
+    const retryResponse = await fetch(`${API_BASE}${endpoint}`, { method, headers, credentials: 'include' });
+    if (!retryResponse.ok) {
+      const error = await retryResponse.json().catch(() => ({ detail: 'Unknown error' }));
+      const message = error.error || error.detail || Object.values(error).flat().join(' ') || `HTTP ${retryResponse.status}`;
+      throw new Error(message);
+    }
+    return retryResponse.status === 204 ? null : retryResponse.json();
+  }
 
   if (!response.ok) {
     const error = await response.json().catch(() => ({ detail: 'Unknown error' }));
