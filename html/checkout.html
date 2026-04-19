@@ -792,10 +792,10 @@
         }
 
         // ── State ─────────────────────────────────────────────────────────────
-        let cartItems     = [];
-        let subtotal      = 0;
-        let selectedPayment = 'card';
-        let shippingData  = {};
+        let cartItems      = [];
+        let subtotal       = 0;
+        let selectedPayment  = 'card';
+        let shippingData   = {};
         let currentOrderId = null;
         let currentTransactionId = null;
         let mpesaPollingInterval = null;
@@ -803,13 +803,26 @@
         // ── Load cart on init ─────────────────────────────────────────────────
         async function initCheckout() {
             try {
-                let data;
                 if (Auth.isLoggedIn()) {
-                    data = await Cart.get();
-                    cartItems = data.cart_items || [];
+                    let data = await Cart.get();
+                    let apiItems = data.cart_items || [];
+
+                    // Migrate localStorage items to API cart if API cart is empty
+                    const local = JSON.parse(localStorage.getItem('cart')) || [];
+                    if (local.length > 0 && apiItems.length === 0) {
+                        for (const item of local) {
+                            try {
+                                await Cart.addItem(String(item.id || item.product_id), item.quantity || 1);
+                            } catch (e) {}
+                        }
+                        localStorage.removeItem('cart');
+                        data = await Cart.get();
+                        apiItems = data.cart_items || [];
+                    }
+
+                    cartItems = apiItems;
                     subtotal  = parseFloat(data.subtotal || 0);
                 } else {
-                    // Guest: read from localStorage
                     const local = JSON.parse(localStorage.getItem('cart')) || [];
                     cartItems = local.map(i => ({
                         product_name:  i.name,
@@ -841,8 +854,8 @@
             const container = document.getElementById('summaryItems');
             container.innerHTML = cartItems.map(item => `
                 <div class="summary-item">
-                    <img src="${item.product_image || 'https://via.placeholder.com/52x52?text=?'}"
-                         onerror="this.src='https://via.placeholder.com/52x52?text=?'"
+                    <img src="${item.product_image || 'https://placehold.co/52x52'}"
+                         onerror="this.src='https://placehold.co/52x52'"
                          alt="${item.product_name}">
                     <div class="summary-item-info">
                         <div class="summary-item-name">${item.product_name}</div>
@@ -928,7 +941,6 @@
         function goToShipping() { setStep(1); window.scrollTo(0, 0); }
 
         function goToReview() {
-            // Populate review summary
             document.getElementById('reviewAddress').innerHTML = `
                 ${shippingData.first_name} ${shippingData.last_name}<br>
                 ${shippingData.address}<br>
@@ -999,7 +1011,7 @@
                 items:            cartItems,
                 subtotal:         subtotal,
                 shipping_cost:    shipping,
-                total_amount:    total,
+                total_amount:     total,
             };
 
             try {
@@ -1020,12 +1032,12 @@
                         document.getElementById('loadingOverlay').classList.remove('visible');
                         return;
                     }
-                    
+
                     let formattedPhone = mpesaPhoneInput.replace(/\s/g, '').replace(/^0/, '254');
                     if (!formattedPhone.startsWith('254')) {
                         formattedPhone = '254' + formattedPhone;
                     }
-                    
+
                     const mpesaAmount = total;
 
                     document.getElementById('loadingOverlay').classList.remove('visible');
@@ -1060,17 +1072,17 @@
         // ── M-Pesa Payment Functions ──────────────────────────────────────────
         async function initiateMpesaPayment(orderId, phone, amount) {
             try {
-                const response = await fetch(`${API_BASE}/payments/initiate/`, {  
+                const response = await fetch(`${API_BASE}/payments/initiate/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRFToken': getCSRFToken(),
-                        'Authorization': `Bearer ${Auth.getToken()}`,
+                        'Authorization': `Token ${Auth.getToken()}`,
                     },
                     credentials: 'include',
                     body: JSON.stringify({
                         order_id: orderId,
-                        phone_number: phone,  
+                        phone_number: phone,
                         amount: amount
                     })
                 });
@@ -1078,10 +1090,9 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    currentTransactionId = data.checkout_request_id;  
+                    currentTransactionId = data.checkout_request_id;
                     document.getElementById('mpesaStatus').className = 'mpesa-status pending';
                     document.getElementById('mpesaStatus').innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>Waiting for payment...';
-                    
                     startMpesaPolling();
                 } else {
                     document.getElementById('mpesaStatus').className = 'mpesa-status failed';
@@ -1095,39 +1106,36 @@
 
         function startMpesaPolling() {
             if (mpesaPollingInterval) clearInterval(mpesaPollingInterval);
-            
+
             let pollCount = 0;
             mpesaPollingInterval = setInterval(async () => {
                 pollCount++;
-                
+
                 try {
-                    // fixed URL — GET with transaction_id in the path
                     const response = await fetch(`${API_BASE}/payments/status/${currentTransactionId}/`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${Auth.getToken()}`,
+                            'Authorization': `Token ${Auth.getToken()}`,
                         },
                         credentials: 'include',
                     });
 
                     const data = await response.json();
 
-                   
                     if (data.status === 'success' || data.status === 'completed') {
                         clearInterval(mpesaPollingInterval);
                         mpesaPollingInterval = null;
-                        
+
                         document.getElementById('mpesaStatus').className = 'mpesa-status success';
                         document.getElementById('mpesaStatus').innerHTML = '<i class="fas fa-check-circle" style="margin-right:8px;"></i>Payment successful!';
-                        
+
                         setTimeout(() => {
                             document.getElementById('mpesaModal').classList.remove('visible');
                             showOrderConfirmation();
                         }, 1500);
 
                     } else if (data.status === 'failed' || data.status === 'cancelled') {
-                        //  handle failed/cancelled explicitly instead of just timing out
                         clearInterval(mpesaPollingInterval);
                         mpesaPollingInterval = null;
 
@@ -1137,7 +1145,7 @@
                     } else if (pollCount >= 30) {
                         clearInterval(mpesaPollingInterval);
                         mpesaPollingInterval = null;
-                        
+
                         document.getElementById('mpesaStatus').className = 'mpesa-status failed';
                         document.getElementById('mpesaStatus').innerHTML = '<i class="fas fa-clock" style="margin-right:8px;"></i>Payment timeout. Please try again.';
                     }
@@ -1185,7 +1193,7 @@
             updateCartCount();
             initCheckout();
         });
-        
+
     </script>
 </body>
 </html>
