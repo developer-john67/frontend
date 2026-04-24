@@ -63,8 +63,6 @@
             </div>
         </div>
     </nav>
-        </div>
-    </nav>
 
     <main class="help-page">
         <div class="container">
@@ -125,92 +123,85 @@
     <script src="../js/main.js"></script>
     <script src="../js/help.js"></script>
     <script>
+        // ── WhatsApp configuration 
+        // Format: international code (254) + number without leading zero
+        const WHATSAPP_NUMBER  = '+254702288099';
+        const WHATSAPP_MESSAGE = 'Hello! I need help with my Dropship order.';
+
         // Mobile menu toggle
         const hamburger = document.getElementById('hamburger');
-        const navMenu = document.querySelector('.nav-menu');
-        
+        const navMenu   = document.querySelector('.nav-menu');
         if (hamburger && navMenu) {
             hamburger.addEventListener('click', () => {
                 hamburger.classList.toggle('active');
                 navMenu.classList.toggle('active');
             });
         }
-        
+
         // Mobile dropdown toggle
-        const dropdowns = document.querySelectorAll('.dropdown');
-        dropdowns.forEach(dropdown => {
-            dropdown.addEventListener('click', (e) => {
+        document.querySelectorAll('.dropdown').forEach(dropdown => {
+            dropdown.addEventListener('click', e => {
                 if (window.innerWidth <= 1024) {
                     e.preventDefault();
                     dropdown.classList.toggle('active');
                 }
             });
         });
-        
-        // Search functionality
-        const searchInput = document.getElementById('searchInput');
-        const searchBtn = document.getElementById('searchBtn');
+
+        // Search
+        const searchInput       = document.getElementById('searchInput');
+        const searchBtn         = document.getElementById('searchBtn');
         const mobileSearchInput = document.getElementById('mobileSearchInput');
 
         function performSearch(query) {
-            if (query) {
-                window.location.href = 'products.html?search=' + encodeURIComponent(query);
-            }
+            if (query) window.location.href = 'products.html?search=' + encodeURIComponent(query);
         }
+        if (searchBtn)         searchBtn.addEventListener('click', () => performSearch(searchInput.value));
+        if (searchInput)       searchInput.addEventListener('keypress', e => { if (e.key === 'Enter') performSearch(searchInput.value); });
+        if (mobileSearchInput) mobileSearchInput.addEventListener('keypress', e => { if (e.key === 'Enter') performSearch(mobileSearchInput.value); });
 
-        if (searchBtn) {
-            searchBtn.addEventListener('click', () => performSearch(searchInput.value));
-        }
-        if (searchInput) {
-            searchInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') performSearch(searchInput.value);
-            });
-        }
-        if (mobileSearchInput) {
-            mobileSearchInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') performSearch(mobileSearchInput.value);
-            });
-        }
-        
         function handleLogout() {
             Auth.logout();
             window.location.href = 'index.html';
         }
-        
-        // WhatsApp chat button
+
+        // WhatsApp button
         document.getElementById('whatsappChatBtn').addEventListener('click', () => {
-            window.open('https://wa.me/0702288099', '_blank');
+            const encodedMessage = encodeURIComponent(WHATSAPP_MESSAGE);
+            const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+
+            // On mobile: opens the WhatsApp app directly
+            // On desktop: opens WhatsApp Web
+            window.open(waUrl, '_blank');
         });
 
-        // Contact form submission - send to API
-        document.getElementById('contactForm').addEventListener('submit', async (e) => {
+        // Contact form
+        document.getElementById('contactForm').addEventListener('submit', async e => {
             e.preventDefault();
             const btn = e.target.querySelector('button[type="submit"]');
             btn.textContent = 'Sending...';
-            btn.disabled = true;
+            btn.disabled    = true;
 
-            const name = document.getElementById('contactName').value;
-            const email = document.getElementById('contactEmail').value;
-            const topic = document.getElementById('contactTopic').value;
+            const name    = document.getElementById('contactName').value;
+            const email   = document.getElementById('contactEmail').value;
+            const topic   = document.getElementById('contactTopic').value;
             const message = document.getElementById('contactMessage').value;
 
             try {
-                // Store in localStorage for now (no backend endpoint yet)
                 const contacts = JSON.parse(localStorage.getItem('contactMessages') || '[]');
                 contacts.push({ name, email, topic, message, date: new Date().toISOString() });
                 localStorage.setItem('contactMessages', JSON.stringify(contacts));
-                
+
                 alert('Message sent! We will get back to you shortly.');
                 e.target.reset();
             } catch (err) {
                 alert('Failed to send message. Please try again.');
             } finally {
                 btn.textContent = 'Send Message';
-                btn.disabled = false;
+                btn.disabled    = false;
             }
         });
 
-        // Update cart count
         updateCartCount();
     </script>
 </body>

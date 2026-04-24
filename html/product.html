@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product - Dropship</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="../manifest.json">
+    <meta name="theme-color" content="#FA7207">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Dropship">
+    <link rel="apple-touch-icon" href="../images/icon-192.svg">
+    <style>
+        .product-page {
+            padding-bottom: 80px;
+        }
+        .product-header {
+            background: var(--white);
+            padding: 12px 15px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 56px;
+            z-index: 99;
+        }
+        .back-nav {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .product-hero {
+            background: var(--white);
+            padding: 20px 15px;
+            margin-top: 10px;
+        }
+        .product-image-main {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 12px;
+            background: var(--secondary);
+        }
+        .product-info {
+            padding: 20px 15px;
+            background: var(--white);
+            margin-top: 10px;
+        }
+        .product-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        .product-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+        .product-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        .meta-label {
+            color: var(--text-light);
+            min-width: 80px;
+        }
+        .meta-value {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+        .product-description {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        .product-actions {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .qty-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--secondary);
+            border-radius: 8px;
+            padding: 4px;
+        }
+        .qty-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: var(--white);
+            border-radius: 6px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dark);
+        }
+        .qty-btn:hover {
+            background: var(--border);
+        }
+        .qty-display {
+            min-width: 32px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .add-to-cart-btn {
+            flex: 1;
+            padding: 12px 20px;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .add-to-cart-btn:hover {
+            background: var(--primary-dark);
+        }
+        .wishlist-btn {
+            width: 50px;
+            height: 48px;
+            border: 1px solid var(--border);
+            background: var(--white);
+            border-radius: 8px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+        .wishlist-btn:hover {
+            color: #e91e63;
+            border-color: #e91e63;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: var(--primary);
+            color: var(--white);
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 4px;
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+        .out-of-stock {
+            color: #c62828;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .loading-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+        .loading-state i {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            display: block;
+        }
+        .error-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: var(--white);
+            margin: 10px;
+            border-radius: 8px;
+        }
+        .error-state i {
+            font-size: 2.5rem;
+            color: #c62828;
+            margin-bottom: 16px;
+            display: block;
+        }
+        .not-found {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .not-found i {
+            font-size: 3rem;
+            color: var(--text-light);
+            margin-bottom: 16px;
+            display: block;
+        }
+        .not-found a {
+            color: var(--primary);
+            font-weight: 600;
+            margin-top: 12px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <a href="products.html" class="back-btn" style="color: white; font-size: 1.2rem;">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <a href="index.html" class="logo">
+                <i class="fas fa-shopping-bag logo-icon"></i>
+                <span>Dropship</span>
+            </a>
+            <a href="cart.html" class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="product-page">
+        <!-- Loading state -->
+        <div id="loadingState" class="loading-state">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading product details...</p>
+        </div>
+
+        <!-- Error state -->
+        <div id="errorState" class="error-state" style="display:none;">
+            <i class="fas fa-exclamation-circle"></i>
+            <h3>Failed to load product</h3>
+            <p>Please try again later.</p>
+            <a href="products.html"><i class="fas fa-arrow-left"></i> Back to Products</a>
+        </div>
+
+        <!-- Not found state -->
+        <div id="notFoundState" class="not-found" style="display:none;">
+            <i class="fas fa-box-open"></i>
+            <h3>Product not found</h3>
+            <p>This product may have been removed.</p>
+            <a href="products.html"><i class="fas fa-arrow-left"></i> Browse Products</a>
+        </div>
+
+        <!-- Product content -->
+        <div id="productContent" style="display:none;">
+            <div class="product-hero">
+                <img id="productImage" src="" alt="Product" class="product-image-main">
+            </div>
+
+            <div class="product-info">
+                <h1 id="productName" class="product-title"></h1>
+                <div id="productPrice" class="product-price"></div>
+
+                <div class="product-meta">
+                    <div class="meta-item" id="categoryMeta">
+                        <span class="meta-label">Category</span>
+                        <span class="meta-value"></span>
+                    </div>
+                    <div class="meta-item" id="stockMeta">
+                        <span class="meta-label">Availability</span>
+                        <span class="meta-value"></span>
+                    </div>
+                </div>
+
+                <div id="productDescription" class="product-description"></div>
+
+                <div class="product-actions">
+                    <div class="qty-selector">
+                        <button class="qty-btn" onclick="changeQty(-1)">−</button>
+                        <span id="qtyDisplay" class="qty-display">1</span>
+                        <button class="qty-btn" onclick="changeQty(+1)">+</button>
+                    </div>
+                    <button id="addToCartBtn" class="add-to-cart-btn">
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                    </button>
+                    <button class="wishlist-btn" title="Add to Wishlist">
+                        <i class="far fa-heart"></i>
+                    </button>
+                </div>
+
+                <div id="outOfStockMsg" class="out-of-stock" style="display:none;">
+                    <i class="fas fa-times-circle"></i> This product is currently out of stock
+                </div>
+
+                <div id="lowStockMsg" class="low-stock" style="display:none; color: #f57c00; font-weight: 600; margin-bottom: 16px;">
+                    <i class="fas fa-exclamation-triangle"></i> Only <span id="stockCount">0</span> left in stock
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="mobile-nav">
+        <ul class="mobile-nav-list">
+            <li class="mobile-nav-item" onclick="window.location.href='index.html'">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </li>
+            <li class="mobile-nav-item" onclick="window.location.href='products.html'">
+                <i class="fas fa-search"></i>
+                <span>Search</span>
+            </li>
+            <li class="mobile-nav-item">
+                <i class="fas fa-th"></i>
+                <span>Categories</span>
+            </li>
+            <li class="mobile-nav-item" onclick="window.location.href='cart.html'">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Cart</span>
+            </li>
+            <li class="mobile-nav-item" onclick="window.location.href='account.html'">
+                <i class="fas fa-user"></i>
+                <span>Account</span>
+            </li>
+        </ul>
+    </nav>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+        let productId = null;
+        let productData = null;
+        let quantity = 1;
+
+        function getProductIdFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id');
+        }
+
+        function showLoading() {
+            document.getElementById('loadingState').style.display = 'block';
+            document.getElementById('errorState').style.display = 'none';
+            document.getElementById('notFoundState').style.display = 'none';
+            document.getElementById('productContent').style.display = 'none';
+        }
+
+        function showError() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('errorState').style.display = 'block';
+            document.getElementById('notFoundState').style.display = 'none';
+            document.getElementById('productContent').style.display = 'none';
+        }
+
+        function showNotFound() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('errorState').style.display = 'none';
+            document.getElementById('notFoundState').style.display = 'block';
+            document.getElementById('productContent').style.display = 'none';
+        }
+
+        function showProduct(product) {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('errorState').style.display = 'none';
+            document.getElementById('notFoundState').style.display = 'none';
+            document.getElementById('productContent').style.display = 'block';
+
+            // Image
+            const img = document.getElementById('productImage');
+            const imageUrl = product.main_image || product.image_url || 'https://placehold.co/400x400?text=No+Image';
+            img.src = imageUrl;
+            img.onerror = function() { this.src = 'https://placehold.co/400x400?text=No+Image'; };
+
+            // Name
+            document.getElementById('productName').textContent = product.name || 'Unnamed Product';
+
+            // Price
+            const price = parseFloat(product.price || 0);
+            document.getElementById('productPrice').textContent = `Ksh${price.toFixed(2)}`;
+
+            // Category
+            const categoryMeta = document.getElementById('categoryMeta');
+            if (product.category_name) {
+                categoryMeta.style.display = 'flex';
+                categoryMeta.querySelector('.meta-value').textContent = product.category_name;
+            } else if (product.category_slug) {
+                categoryMeta.style.display = 'flex';
+                categoryMeta.querySelector('.meta-value').textContent = product.category_slug.replace('-', ' ').toUpperCase();
+            } else {
+                categoryMeta.style.display = 'none';
+            }
+
+            // Stock
+            const stockMeta = document.getElementById('stockMeta');
+            const stockVal = stockMeta.querySelector('.meta-value');
+            const stock = parseInt(product.stock || product.stock_count || product.inventory || 0);
+            if (stock > 0) {
+                stockMeta.style.display = 'flex';
+                stockVal.textContent = `In Stock (${stock} available)`;
+                stockVal.style.color = '#16a34a';
+            } else {
+                stockMeta.style.display = 'flex';
+                stockVal.textContent = 'Out of Stock';
+                stockVal.style.color = '#c62828';
+            }
+
+            // Low stock warning
+            if (stock > 0 && stock <= 5) {
+                document.getElementById('lowStockMsg').style.display = 'block';
+                document.getElementById('stockCount').textContent = stock;
+            } else {
+                document.getElementById('lowStockMsg').style.display = 'none';
+            }
+
+            // Out of stock
+            if (stock === 0) {
+                document.getElementById('outOfStockMsg').style.display = 'block';
+                document.getElementById('addToCartBtn').disabled = true;
+                document.getElementById('addToCartBtn').style.background = '#aaa';
+            } else {
+                document.getElementById('outOfStockMsg').style.display = 'none';
+                document.getElementById('addToCartBtn').disabled = false;
+                document.getElementById('addToCartBtn').style.background = '';
+            }
+
+            // Description
+            const descEl = document.getElementById('productDescription');
+            const description = product.description || product.short_description || '';
+            if (description) {
+                descEl.innerHTML = description.replace(/\n/g, '<br>');
+                descEl.style.display = 'block';
+            } else {
+                descEl.style.display = 'none';
+            }
+
+            // Reset quantity
+            quantity = 1;
+            document.getElementById('qtyDisplay').textContent = quantity;
+            productData = product;
+        }
+
+        async function loadProduct() {
+            const id = getProductIdFromURL();
+            if (!id) {
+                showNotFound();
+                return;
+            }
+
+            productId = id;
+            showLoading();
+
+            try {
+                const data = await Products.getOne(id);
+                productData = data;
+                showProduct(data);
+            } catch (err) {
+                console.error('Failed to load product:', err);
+                showError();
+            }
+        }
+
+        function changeQty(delta) {
+            const newQty = quantity + delta;
+            if (newQty < 1) return;
+            const stock = parseInt(productData?.stock_count || productData?.inventory || 999);
+            if (newQty <= stock) {
+                quantity = newQty;
+                document.getElementById('qtyDisplay').textContent = quantity;
+            }
+        }
+
+        async function addToCart() {
+            const btn = document.getElementById('addToCartBtn');
+            btn.disabled = true;
+
+            try {
+                await Cart.addItem(productId, quantity);
+                showBanner('✓ Added to cart!');
+                updateCartCount();
+            } catch (err) {
+                showBanner(err.message || 'Failed to add to cart', 'error');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        document.getElementById('addToCartBtn').addEventListener('click', addToCart);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProduct();
+            updateNav();
+            updateCartCount();
+        });
+    </script>
+</body>
+</html>

@@ -485,6 +485,9 @@
                         document.getElementById('checkoutLayout').style.display = 'grid';
                         renderSummary();
                         prefillUserData();
+                        // Update global cart badge
+                        const totalQty = cartItems.reduce((sum, i) => sum + i.quantity, 0);
+                        document.querySelectorAll('.cart-count').forEach(el => el.textContent = totalQty);
                         return;
                     }
                 }
@@ -515,6 +518,10 @@
             document.getElementById('checkoutLayout').style.display = 'grid';
             renderSummary();
             prefillUserData();
+
+            // Update global cart badge
+            const totalQty = cartItems.reduce((sum, i) => sum + i.quantity, 0);
+            document.querySelectorAll('.cart-count').forEach(el => el.textContent = totalQty);
         }
 
         function renderSummary() {

@@ -1,4 +1,4 @@
-// ─── CART (local) ────────────────────────────────────────────────────────────
+//  CART (local)
 
 function getLocalCart() {
     return JSON.parse(localStorage.getItem('cart')) || [];
@@ -14,7 +14,6 @@ function updateCartCount() {
     if (Auth.isLoggedIn()) {
         const apiCart = JSON.parse(sessionStorage.getItem('apiCart'));
         if (apiCart) {
-            // ✅ Sum quantities, not array length
             const count = apiCart.item_count
                 || apiCart.cart_items?.reduce((sum, i) => sum + (i.quantity || 1), 0)
                 || 0;
@@ -31,14 +30,13 @@ function updateCartCount() {
             cartCount.forEach(el => el.textContent = '0');
         });
     } else {
-        // ✅ Read fresh from localStorage every time
         const cart = getLocalCart();
         const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
         cartCount.forEach(el => el.textContent = totalItems);
     }
 }
 
-// ─── BANNER NOTIFICATION ──────────────────────────────────────────────────────
+// BANNER NOTIFICATION 
 
 function showBanner(message, type = 'success') {
     const existing = document.getElementById('status-banner');
@@ -81,8 +79,7 @@ function showBanner(message, type = 'success') {
     }, 2500);
 }
 
-// ─── PRODUCTS ─────────────────────────────────────────────────────────────────
-
+//  PRODUCTS 
 const PLACEHOLDER_PRODUCTS = [
     { id: 1, name: 'Wireless Headphones', price: 99.99,  image_url: 'https://placehold.co/300x200' },
     { id: 2, name: 'Smart Watch',         price: 199.99, image_url: 'https://placehold.co/300x200' },
@@ -92,16 +89,21 @@ const PLACEHOLDER_PRODUCTS = [
 
 function getImageUrl(product) {
     if (product.main_image) return product.main_image;
-    if (product.image_url) return product.image_url;
-    if (product.image) return product.image;
+    if (product.image_url)  return product.image_url;
+    if (product.image)      return product.image;
     return 'https://placehold.co/300x300/FA7207/white?text=No+Image';
 }
 
 function buildProductCard(product) {
+    const imageUrl = getImageUrl(product);
+    // Escape single quotes in name/image to avoid breaking the onclick attribute
+    const safeName  = (product.name || '').replace(/'/g, "\\'");
+    const safeImage = imageUrl.replace(/'/g, "\\'");
+
     return `
         <div class="product-card">
             <img
-                src="${getImageUrl(product)}"
+                src="${imageUrl}"
                 onerror="this.src='https://placehold.co/300x200'"
                 alt="${product.name}"
                 class="product-image"
@@ -112,7 +114,7 @@ function buildProductCard(product) {
                 <p class="product-price">$${parseFloat(product.price).toFixed(2)}</p>
                 <button
                     class="add-to-cart"
-                    onclick="addToCart('${product.product_id || product.id}', '${product.name}', ${product.price})"
+                    onclick="addToCart('${product.product_id || product.id}', '${safeName}', ${product.price}, '${safeImage}')"
                 >
                     Add to Cart
                 </button>
@@ -139,19 +141,17 @@ function displayFeaturedProducts() {
         });
 }
 
-// ─── ADD TO CART ──────────────────────────────────────────────────────────────
+// ADD TO CART
 
-window.addToCart = function(productId, productName, productPrice) {
-    console.log('addToCart called:', productId, productName, productPrice);
-    console.log('Auth:', typeof Auth);
-    console.log('Cart:', typeof Cart);
-    
+window.addToCart = function(productId, productName, productPrice, productImage = '') {
+    console.log('addToCart called:', productId, productName, productPrice, productImage);
+
     if (typeof Auth === 'undefined' || typeof Cart === 'undefined') {
         console.error('Auth or Cart not loaded');
         alert('Please refresh the page and try again.');
         return;
     }
-    
+
     if (Auth.isLoggedIn()) {
         Cart.addItem(productId, 1)
             .then(cartData => {
@@ -166,20 +166,20 @@ window.addToCart = function(productId, productName, productPrice) {
         return;
     }
 
-    // ✅ Always read fresh cart from localStorage
+    // Guest — persist to localStorage including the image
     const cart = getLocalCart();
-
-    // ✅ Loose equality to avoid string/number type mismatch on IDs
     const existing = cart.find(item => item.id == productId);
     if (existing) {
         existing.quantity += 1;
+        // Update image in case it was missing on a previous add
+        if (!existing.image && productImage) existing.image = productImage;
     } else {
         cart.push({
             id:       productId,
             name:     productName,
             price:    parseFloat(productPrice),
             quantity: 1,
-            image:    '',
+            image:    productImage,
         });
     }
 
@@ -188,7 +188,7 @@ window.addToCart = function(productId, productName, productPrice) {
     showBanner(`✓ ${productName} added to cart!`);
 };
 
-// ─── LOAD API CART COUNT ON PAGE LOAD ────────────────────────────────────────
+// LOAD API CART COUNT ON PAGE LOAD
 
 async function loadApiCartCount() {
     if (!Auth.isLoggedIn()) return;
@@ -199,7 +199,7 @@ async function loadApiCartCount() {
     } catch (_) {}
 }
 
-// ─── NAV ─────────────────────────────────────────────────────────────────────
+// NAV 
 
 function updateNav() {
     const user       = Auth.getUser();
@@ -225,8 +225,7 @@ function handleLogout() {
     window.location.href = 'index.html';
 }
 
-// ─── INIT ─────────────────────────────────────────────────────────────────────
-
+// INIT 
 document.addEventListener('DOMContentLoaded', () => {
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
@@ -238,13 +237,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 .catch((error) => {
                     console.error('[SW] Registration failed:', error);
                 });
-            
+
             navigator.serviceWorker.addEventListener('controllerchange', () => {
                 window.location.reload();
             });
         });
     }
-    
+
     displayFeaturedProducts();
     updateNav();
     loadApiCartCount();
@@ -256,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
             loadApiCartCount();
         }
         if (e.key === 'cart') {
-            updateCartCount(); 
+            updateCartCount();
         }
     });
 });

@@ -14,11 +14,32 @@
     <link rel="apple-touch-icon" href="../images/icon-192.svg">
     <style>
         body { background: var(--white); }
-        .auth-page { min-height: calc(100vh - 56px); display: flex; flex-direction: column; padding: 0; }
-        .auth-header { background: var(--primary); padding: 30px 20px; text-align: center; color: var(--white); }
-        .auth-header h1 { font-size: 1.5rem; margin-bottom: 8px; }
-        .auth-header p { font-size: 0.9rem; opacity: 0.9; }
-        .auth-form { padding: 25px 20px; flex: 1; }
+        .auth-page {
+            min-height: calc(100vh - 56px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        .auth-header {
+            background: var(--primary);
+            padding: 20px;
+            text-align: center;
+            color: var(--white);
+            width: 100%;
+            max-width: 400px;
+            border-radius: 12px 12px 0 0;
+        }
+        .auth-form {
+            width: 100%;
+            max-width: 400px;
+            padding: 25px 20px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+        }
         .login-options { display: flex; gap: 10px; margin-bottom: 20px; }
         .social-btn { flex: 1; padding: 12px; border: 1px solid var(--border); border-radius: 4px; background: var(--white); font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .social-btn i { font-size: 1.2rem; }
@@ -100,13 +121,35 @@
             btn.disabled    = true;
 
             try {
-                await Auth.login(email, password);
+                const data = await Auth.login(email, password);
 
-                // ── Restore cart backup saved before redirect to login ─────────
+                // ── Restore cart backup (from checkout redirect, if any) ─────────────
                 const backup = sessionStorage.getItem('cart_backup');
                 if (backup) {
                     localStorage.setItem('cart', backup);
                     sessionStorage.removeItem('cart_backup');
+                }
+
+                // ── Migrate guest cart (localStorage) → server cart ─────────────────
+                const localCart = JSON.parse(localStorage.getItem('cart')) || [];
+                if (localCart.length > 0) {
+                    let migrated = 0;
+                    for (const item of localCart) {
+                        try {
+                            await Cart.addItem(String(item.id || item.product_id), item.quantity || 1);
+                            migrated++;
+                        } catch (err) {
+                            console.error('Failed to migrate cart item:', item, err);
+                        }
+                    }
+                    if (migrated > 0) {
+                        localStorage.removeItem('cart');
+                        // Fetch updated cart to cache for immediate UI updates
+                        try {
+                            const fresh = await Cart.get();
+                            sessionStorage.setItem('apiCart', JSON.stringify(fresh));
+                        } catch (_) {}
+                    }
                 }
 
                 const redirect = new URLSearchParams(window.location.search).get('redirect') || 'account.html';

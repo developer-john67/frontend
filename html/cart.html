@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cart - Dropship</title>
+    <title>Products - Dropship</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="manifest" href="../manifest.json">
@@ -13,10 +13,10 @@
     <meta name="apple-mobile-web-app-title" content="Dropship">
     <link rel="apple-touch-icon" href="../images/icon-192.svg">
     <style>
-        .cart-page {
-            padding-bottom: 80px;
+        .products-page {
+            padding-bottom: 70px;
         }
-        .cart-header {
+        .products-header-bar {
             display: flex;
             align-items: center;
             gap: 10px;
@@ -27,199 +27,296 @@
             top: 56px;
             z-index: 99;
         }
-        .cart-header h1 {
-            font-size: 1.1rem;
-            font-weight: 700;
+        .back-btn {
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            padding: 8px;
         }
-        .cart-header .count {
-            font-size: 0.85rem;
-            color: var(--text-light);
-            margin-left: auto;
-        }
-        .cart-items {
-            padding: 10px;
-        }
-        .cart-item {
+        .products-search {
+            flex: 1;
             display: flex;
-            gap: 12px;
-            background: var(--white);
-            padding: 12px;
-            margin-bottom: 10px;
+            background: var(--secondary);
             border-radius: 4px;
-            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
         }
-        .cart-item-image {
-            width: 90px;
-            height: 90px;
+        .products-search input {
+            flex: 1;
+            padding: 10px 12px;
+            border: none;
+            background: transparent;
+            font-size: 0.95rem;
+            outline: none;
+        }
+        .products-search button {
+            background: var(--primary);
+            border: none;
+            padding: 10px 14px;
+            cursor: pointer;
+        }
+        .products-search button i {
+            color: var(--white);
+        }
+        .search-results {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border-radius: 0 0 4px 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        .search-results.active {
+            display: block;
+        }
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+        }
+        .search-result-item:hover {
+            background: var(--secondary);
+        }
+        .search-result-image {
+            width: 40px;
+            height: 40px;
             object-fit: contain;
             border: 1px solid var(--border);
             border-radius: 4px;
         }
-        .cart-item-details {
+        .search-result-info {
             flex: 1;
+            min-width: 0;
         }
-        .cart-item-title {
+        .search-result-name {
             font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .search-result-price {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .search-no-results, .search-loading {
+            padding: 20px;
+            text-align: center;
+            color: var(--text-light);
+        }
+        .search-loading i {
+            animation: spin 1s linear infinite;
+        }
+        .products-toolbar {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 15px;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+        }
+        .filter-sort-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: var(--white);
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            background: var(--border);
+            gap: 1px;
+        }
+        .product-card {
+            background: var(--white);
+            padding: 10px;
+            cursor: pointer;
+        }
+        .product-image {
+            width: 100%;
+            height: 140px;
+            object-fit: contain;
+            margin-bottom: 8px;
+        }
+        .product-title {
+            font-size: 0.85rem;
+            color: var(--text-dark);
             margin-bottom: 6px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            line-height: 1.4;
+            min-height: 40px;
         }
-        .cart-item-price {
+        .product-price {
+            font-size: 1rem;
             font-weight: 700;
             color: var(--text-dark);
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
-        .cart-quantity {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .qty-btn {
-            width: 28px;
-            height: 28px;
-            border: 1px solid var(--border);
-            background: var(--white);
-            border-radius: 4px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            color: var(--text-dark);
-        }
-        .qty-display {
-            font-weight: 600;
-            min-width: 24px;
-            text-align: center;
-        }
-        .cart-item-remove {
-            position: absolute;
-            bottom: 12px;
-            right: 12px;
-            background: none;
-            border: none;
+        .product-old-price {
+            font-size: 0.75rem;
             color: #999;
+            text-decoration: line-through;
+            margin-right: 8px;
+        }
+        .product-discount {
+            font-size: 0.7rem;
+            color: var(--green);
+            font-weight: 600;
+        }
+        .add-to-cart {
+            width: 100%;
+            padding: 8px;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 8px;
             cursor: pointer;
-            font-size: 1rem;
         }
-        .cart-item {
-            position: relative;
+        .add-to-cart:hover {
+            background: var(--primary-dark);
         }
-        .empty-cart {
+        .loading-state, .empty-state {
+            grid-column: 1 / -1;
             text-align: center;
             padding: 60px 20px;
-        }
-        .empty-cart i {
-            font-size: 4rem;
-            color: var(--border);
-            margin-bottom: 20px;
-        }
-        .empty-cart h2 {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-        }
-        .empty-cart p {
-            color: var(--text-light);
-            margin-bottom: 20px;
-        }
-        .shop-now-btn {
-            background: var(--primary);
-            color: var(--white);
-            padding: 12px 30px;
-            border-radius: 4px;
-            font-weight: 600;
-            display: inline-block;
-        }
-        .cart-footer {
-            position: fixed;
-            bottom: 60px;
-            left: 0;
-            right: 0;
             background: var(--white);
-            padding: 12px 15px;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
-        .cart-footer-info {
-            display: flex;
-            flex-direction: column;
+        .loading-state i {
+            font-size: 2rem;
+            color: var(--primary);
+            animation: spin 1s linear infinite;
         }
-        .cart-footer-label {
-            font-size: 0.8rem;
-            color: var(--text-light);
-        }
-        .cart-footer-total {
-            font-size: 1.1rem;
-            font-weight: 700;
-        }
-        .checkout-btn {
-            background: var(--primary);
-            color: var(--white);
-            padding: 12px 24px;
-            border-radius: 4px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
         @media (min-width: 1024px) {
-            .cart-header {
+            .products-header-bar {
                 top: 60px;
             }
-            .cart-footer {
-                bottom: 0;
+            .product-grid {
+                grid-template-columns: repeat(4, 1fr);
             }
-            .cart-items {
-                max-width: 800px;
-                margin: 0 auto;
+            .product-image {
+                height: 180px;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Mobile Menu -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <button class="mobile-menu-close" id="closeMenu">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="logo" style="font-size: 1.3rem;">
+                <i class="fas fa-shopping-bag"></i> Dropship
+            </div>
+            <div class="mobile-menu-user">
+                <div class="avatar"><i class="fas fa-user"></i></div>
+                <div><div style="font-weight: 600;">Welcome</div></div>
+            </div>
+        </div>
+        <div class="mobile-menu-links">
+            <div class="mobile-menu-section">
+                <h4>My Account</h4>
+                <a href="account.html"><i class="fas fa-user"></i> My Account</a>
+                <a href="cart.html"><i class="fas fa-shopping-cart"></i> Cart</a>
+            </div>
+            <div class="mobile-menu-section">
+                <h4>Categories</h4>
+                <a href="products.html?category=electronics"><i class="fas fa-laptop"></i> Electronics</a>
+                <a href="products.html?category=fashion"><i class="fas fa-tshirt"></i> Fashion</a>
+                <a href="products.html?category=home"><i class="fas fa-home"></i> Home</a>
+                <a href="products.html?category=beauty"><i class="fas fa-spa"></i> Beauty</a>
+            </div>
+            <div class="mobile-menu-section">
+                <h4>Help</h4>
+                <a href="help.html"><i class="fas fa-question-circle"></i> Help Center</a>
+            </div>
+        </div>
+    </div>
+
     <!-- Header -->
     <header class="header">
         <div class="header-top">
-            <a href="index.html" class="back-btn" style="color: white; font-size: 1.2rem;">
-                <i class="fas fa-arrow-left"></i>
-            </a>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
             <a href="index.html" class="logo">
                 <i class="fas fa-shopping-bag logo-icon"></i>
                 <span>Dropship</span>
             </a>
-            <span class="count" id="itemCount">0 items</span>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search products..." autocomplete="off">
+                <button type="button" id="searchBtn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <div class="header-actions">
+                <a href="account.html">
+                    <i class="far fa-user"></i>
+                </a>
+                <a href="cart.html">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </a>
+            </div>
         </div>
     </header>
 
-    <!-- Cart Content -->
-    <main class="cart-page">
-        <div id="emptyState" style="display:none;">
-            <div class="empty-cart">
-                <i class="fas fa-shopping-cart"></i>
-                <h2>Your cart is empty</h2>
-                <p>Looks like you haven't added anything yet.</p>
-                <a href="products.html" class="shop-now-btn">Shop Now</a>
+    <!-- Products Header -->
+    <div class="products-page">
+        <div class="products-header-bar">
+            <a href="index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div class="products-search" style="position: relative;">
+                <input type="text" id="productsSearchInput" placeholder="Search in this category..." autocomplete="off">
+                <button type="button" id="productsSearchBtn">
+                    <i class="fas fa-search"></i>
+                </button>
+                <div class="search-results" id="productsSearchResults"></div>
             </div>
         </div>
 
-        <div id="cartContent" style="display:none;">
-            <div class="cart-items" id="cartItems">
-                <!-- Cart items loaded via JS -->
+        <div class="products-toolbar">
+            <button class="filter-sort-btn" onclick="toggleFilters()">
+                <i class="fas fa-filter"></i> Filter
+            </button>
+            <button class="filter-sort-btn" onclick="toggleSort()">
+                <i class="fas fa-sort"></i> Sort
+            </button>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="product-grid" id="productGrid">
+            <div class="loading-state">
+                <i class="fas fa-spinner"></i>
+                <p>Loading products...</p>
             </div>
         </div>
-    </main>
-
-    <!-- Cart Footer -->
-    <div class="cart-footer" id="cartFooter" style="display:none;">
-        <div class="cart-footer-info">
-            <span class="cart-footer-label">Total</span>
-            <span class="cart-footer-total" id="cartTotal">$0.00</span>
-        </div>
-        <button class="checkout-btn" id="checkoutBtn">CHECKOUT</button>
     </div>
 
     <!-- Bottom Navigation -->
@@ -229,7 +326,7 @@
                 <i class="fas fa-home"></i>
                 <span>Home</span>
             </li>
-            <li class="mobile-nav-item" onclick="window.location.href='products.html'">
+            <li class="mobile-nav-item" onclick="document.getElementById('productsSearchInput').focus()">
                 <i class="fas fa-search"></i>
                 <span>Search</span>
             </li>
@@ -237,7 +334,7 @@
                 <i class="fas fa-th"></i>
                 <span>Categories</span>
             </li>
-            <li class="mobile-nav-item active">
+            <li class="mobile-nav-item" onclick="window.location.href='cart.html'">
                 <i class="fas fa-shopping-cart"></i>
                 <span>Cart</span>
             </li>
@@ -251,181 +348,238 @@
     <script src="../js/api.js"></script>
     <script src="../js/main.js"></script>
     <script>
-        let cartData = [];
-        let isApiCart = false;
+        // Mobile menu
+        const hamburger    = document.getElementById('hamburger');
+        const mobileMenu   = document.getElementById('mobileMenu');
+        const menuOverlay  = document.getElementById('menuOverlay');
+        const closeMenu    = document.getElementById('closeMenu');
 
-        const MEDIA_URL = window.location.origin + '/media/';
-
-        function normaliseApiItem(item) {
-            let image = item.product_image || '';
-            if (image && !image.startsWith('http')) image = MEDIA_URL + image;
-            return {
-                id: String(item.item_id),
-                product_id: String(item.product_id),
-                name: item.product_name || 'Unnamed product',
-                image: image,
-                price: parseFloat(item.unit_price) || 0,
-                quantity: parseInt(item.quantity) || 1,
-                total: parseFloat(item.total_price) || 0,
-            };
+        if (hamburger && mobileMenu) {
+            hamburger.addEventListener('click', () => {
+                mobileMenu.classList.add('active');
+                menuOverlay.classList.add('active');
+            });
+        }
+        if (closeMenu && mobileMenu) {
+            closeMenu.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                menuOverlay.classList.remove('active');
+            });
+        }
+        if (menuOverlay) {
+            menuOverlay.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                menuOverlay.classList.remove('active');
+            });
         }
 
-        function normaliseLocalItem(item) {
-            console.log('Raw localStorage item:', item);
-            const id = String(item.id || item.product_id || '');
-            const price = parseFloat(item.price) || 0;
-            const quantity = parseInt(item.quantity) || 1;
-            return {
-                id: id,
-                product_id: id,
-                name: item.name || 'Unnamed product',
-                image: item.image || '',
-                price: price,
-                quantity: quantity,
-                total: price * quantity,
-            };
-        }
+        // URL params
+        const params      = new URLSearchParams(window.location.search);
+        const categorySlug = params.get('category') || '';
+        const searchQuery  = params.get('search')   || '';
 
-        async function loadCart() {
-            try {
-                // Try API cart first (works for both logged in and anonymous users with session ID)
-                try {
-                    isApiCart = true;
-                    const data = await Cart.get();
-                    const apiItems = (data.cart_items || []).map(normaliseApiItem);
-                    const local = JSON.parse(localStorage.getItem('cart')) || [];
-                    if (local.length > 0 && apiItems.length === 0) {
-                        for (const item of local) {
-                            try {
-                                await Cart.addItem(String(item.id || item.product_id), item.quantity || 1);
-                            } catch (e) {}
-                        }
-                        localStorage.removeItem('cart');
-                        const fresh = await Cart.get();
-                        cartData = (fresh.cart_items || []).map(normaliseApiItem);
-                    } else if (apiItems.length > 0) {
-                        // Use API cart if it has items
-                        localStorage.removeItem('cart');
-                        cartData = apiItems;
-                    } else {
-                        // API cart is empty, fall back to localStorage
-                        isApiCart = false;
-                        cartData = local.map(normaliseLocalItem);
-                    }
-                } catch (apiErr) {
-                    // API failed, use localStorage cart
-                    isApiCart = false;
-                    const local = JSON.parse(localStorage.getItem('cart')) || [];
-                    console.log('Local cart (API fallback):', local);
-                    cartData = local.map(normaliseLocalItem);
-                }
-            } catch (e) {
-                isApiCart = false;
-                const local = JSON.parse(localStorage.getItem('cart')) || [];
-                console.log('Local cart (catch):', local);
-                cartData = local.map(normaliseLocalItem);
+        // Category labels
+        const CATEGORY_LABELS = {
+            'electronics':      'Electronics',
+            'sports-outdoor':   'Sports & Outdoor',
+            'home-garden':      'Home & Garden',
+            'clothing-apparel': 'Clothing & Apparel',
+            'games-toys':       'Games & Toys',
+            'beauty-health':    'Beauty & Health',
+            'automotive':       'Automotive',
+            'books-media':      'Books & Media',
+            'food-groceries':   'Food & Groceries',
+            'other':            'Other',
+            'fashion':          'Fashion',
+            'home':             'Home',
+            'beauty':           'Beauty',
+            'toys':             'Toys',
+            'groceries':        'Groceries',
+        };
+
+        const pageTitle = categorySlug
+            ? (CATEGORY_LABELS[categorySlug] || categorySlug)
+            : searchQuery
+                ? `Search: "${searchQuery}"`
+                : 'All Products';
+        document.title = `${pageTitle} - Dropship`;
+
+        // Search
+        const searchInput           = document.getElementById('searchInput');
+        const searchBtn             = document.getElementById('searchBtn');
+        const productsSearchInput   = document.getElementById('productsSearchInput');
+        const productsSearchBtn     = document.getElementById('productsSearchBtn');
+        const productsSearchResults = document.getElementById('productsSearchResults');
+        let productsSearchTimeout   = null;
+
+        function showProductsSearchLoading() {
+            if (productsSearchResults) {
+                productsSearchResults.innerHTML = '<div class="search-loading"><i class="fas fa-spinner"></i></div>';
+                productsSearchResults.classList.add('active');
             }
-            render();
         }
 
-        function render() {
-            const emptyState = document.getElementById('emptyState');
-            const cartContent = document.getElementById('cartContent');
-            const cartFooter = document.getElementById('cartFooter');
-
-            if (cartData.length === 0) {
-                emptyState.style.display = 'block';
-                cartContent.style.display = 'none';
-                cartFooter.style.display = 'none';
-                document.getElementById('itemCount').textContent = '0 items';
+        function showProductsSearchResults(results) {
+            if (!productsSearchResults) return;
+            if (!results || results.length === 0) {
+                productsSearchResults.innerHTML = '<div class="search-no-results">No products found</div>';
+                productsSearchResults.classList.add('active');
                 return;
             }
-
-            emptyState.style.display = 'none';
-            cartContent.style.display = 'block';
-            cartFooter.style.display = 'flex';
-
-            document.getElementById('cartItems').innerHTML = cartData.map(item => `
-                <div class="cart-item" id="row-${item.id}">
-                    <img src="${item.image || 'https://placehold.co/90x90?text=No+Image'}" 
-                         onerror="this.src='https://placehold.co/90x90?text=No+Image'" 
-                         alt="${item.name}" class="cart-item-image">
-                    <div class="cart-item-details">
-                        <div class="cart-item-title">${item.name}</div>
-                        <div class="cart-item-price">$${item.price.toFixed(2)}</div>
-                        <div class="cart-quantity">
-                            <button class="qty-btn" onclick="changeQty('${item.id}', ${item.quantity - 1})">−</button>
-                            <span class="qty-display">${item.quantity}</span>
-                            <button class="qty-btn" onclick="changeQty('${item.id}', ${item.quantity + 1})">+</button>
+            productsSearchResults.innerHTML = results.slice(0, 6).map(product => {
+                const imageUrl = product.main_image || product.image_url || 'https://placehold.co/40x40?text=Product';
+                return `
+                    <div class="search-result-item" onclick="window.location.href='product.html?id=${product.id || product.product_id}'">
+                        <img src="${imageUrl}" alt="${product.name}" class="search-result-image"
+                             onerror="this.src='https://placehold.co/40x40?text=Product'">
+                        <div class="search-result-info">
+                            <div class="search-result-name">${product.name}</div>
+                            <div class="search-result-price">$${parseFloat(product.price).toFixed(2)}</div>
                         </div>
                     </div>
-                    <button class="cart-item-remove" onclick="removeItem('${item.id}')">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            `).join('');
-
-            const subtotal = cartData.reduce((s, i) => s + i.price * i.quantity, 0);
-            const total = subtotal;
-            const count = cartData.reduce((s, i) => s + i.quantity, 0);
-
-            document.getElementById('itemCount').textContent = count + ' items';
-            document.getElementById('cartTotal').textContent = '$' + total.toFixed(2);
+                `;
+            }).join('');
+            productsSearchResults.classList.add('active');
         }
 
-        window.changeQty = async function(itemId, newQty) {
-            if (newQty < 1) { removeItem(itemId); return; }
-            if (isApiCart) {
-                try {
-                    const data = await Cart.updateItem(itemId, newQty);
-                    cartData = (data.cart_items || []).map(normaliseApiItem);
-                } catch (e) {
-                    showToast('Failed to update quantity');
-                    return;
-                }
-            } else {
-                const item = cartData.find(i => i.id == itemId);
-                if (item) item.quantity = newQty;
-                localStorage.setItem('cart', JSON.stringify(
-                    cartData.map(i => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity, image: i.image }))
-                ));
-            }
-            render();
-        };
+        function hideProductsSearchResults() {
+            if (productsSearchResults) productsSearchResults.classList.remove('active');
+        }
 
-        window.removeItem = async function(itemId) {
-            if (isApiCart) {
-                try {
-                    const data = await Cart.removeItem(itemId);
-                    cartData = (data.cart_items || []).map(normaliseApiItem);
-                } catch (e) {
-                    showToast('Failed to remove item');
-                    return;
-                }
-            } else {
-                cartData = cartData.filter(i => i.id != itemId);
-                localStorage.setItem('cart', JSON.stringify(
-                    cartData.map(i => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity, image: i.image }))
-                ));
+        async function performProductsLiveSearch(query) {
+            if (!query || query.length < 2) { hideProductsSearchResults(); return; }
+            showProductsSearchLoading();
+            try {
+                const products = await Products.getAll({ search: query });
+                showProductsSearchResults(products.results || products || []);
+            } catch (error) {
+                productsSearchResults.innerHTML = '<div class="search-no-results">Error searching</div>';
+                productsSearchResults.classList.add('active');
             }
-            render();
-            showToast('Item removed from cart');
-        };
+        }
 
-        document.getElementById('checkoutBtn').addEventListener('click', () => {
-            window.location.href = 'checkout.html';
+        function handleProductsSearchInput() {
+            const query = productsSearchInput.value.trim();
+            if (productsSearchTimeout) clearTimeout(productsSearchTimeout);
+            if (query.length < 2) { hideProductsSearchResults(); return; }
+            productsSearchTimeout = setTimeout(() => performProductsLiveSearch(query), 300);
+        }
+
+        function performSearch(query) {
+            if (query) {
+                hideProductsSearchResults();
+                window.location.href = 'products.html?search=' + encodeURIComponent(query);
+            }
+        }
+
+        if (searchBtn)          searchBtn.addEventListener('click', () => performSearch(searchInput.value));
+        if (searchInput)        searchInput.addEventListener('keypress', e => { if (e.key === 'Enter') performSearch(searchInput.value); });
+        if (productsSearchBtn)  productsSearchBtn.addEventListener('click', () => performSearch(productsSearchInput.value));
+        if (productsSearchInput) {
+            productsSearchInput.addEventListener('input', handleProductsSearchInput);
+            productsSearchInput.addEventListener('keypress', e => { if (e.key === 'Enter') performSearch(productsSearchInput.value); });
+            productsSearchInput.addEventListener('focus', () => {
+                if (productsSearchInput.value.trim().length >= 2) productsSearchResults.classList.add('active');
+            });
+        }
+
+        document.addEventListener('click', e => {
+            if (productsSearchResults
+                && !productsSearchResults.contains(e.target)
+                && !productsSearchInput.contains(e.target)) {
+                hideProductsSearchResults();
+            }
         });
+
+        // Product grid
+        let allProducts = [];
+
+        function getProductImage(product) {
+            return product.main_image
+                || product.image_url
+                || product.image
+                || 'https://placehold.co/200x200?text=Product';
+        }
+
+        function buildCard(product) {
+            const image     = getProductImage(product);
+            const price     = parseFloat(product.price).toFixed(2);
+            const productId = product.id || product.product_id;
+            // Escape single quotes so they don't break the onclick attribute
+            const safeName  = (product.name || '').replace(/'/g, "\\'");
+            const safeImage = image.replace(/'/g, "\\'");
+
+            return `
+                <div class="product-card" onclick="window.location.href='product.html?id=${productId}'">
+                    <img src="${image}"
+                         alt="${product.name}"
+                         class="product-image"
+                         loading="lazy"
+                         onerror="this.src='https://placehold.co/200x200?text=Product'">
+                    <div class="product-title">${product.name}</div>
+                    <div class="product-price">$${price}</div>
+                    <button class="add-to-cart"
+                            onclick="event.stopPropagation();
+                                     addToCart('${productId}', '${safeName}', ${product.price}, '${safeImage}')">
+                        <i class="fas fa-cart-plus"></i> Add
+                    </button>
+                </div>`;
+        }
+
+        function renderProducts(products) {
+            const grid = document.getElementById('productGrid');
+            if (!products || products.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-box-open"></i>
+                        <p>No products found.</p>
+                        <a href="products.html">Browse all products</a>
+                    </div>`;
+                return;
+            }
+            grid.innerHTML = products.map(buildCard).join('');
+        }
+
+        function sortProducts() {
+            const sorted = [...allProducts].sort(() => Math.random() - 0.5);
+            renderProducts(sorted);
+        }
+
+        function toggleFilters() { alert('Filter options coming soon!'); }
+        function toggleSort()    { sortProducts(); }
+
+        async function loadProducts() {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = '<div class="loading-state"><i class="fas fa-spinner"></i><p>Loading products...</p></div>';
+
+            try {
+                const apiParams = {};
+                if (categorySlug) apiParams.category = categorySlug;
+                if (searchQuery)  apiParams.search   = searchQuery;
+
+                const data     = await Products.getAll(apiParams);
+                const products = data.results || data || [];
+                allProducts    = products;
+                renderProducts(products);
+            } catch (err) {
+                grid.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-circle"></i><p>Failed to load products.</p></div>`;
+                console.error(err);
+            }
+        }
 
         function showToast(message) {
             const toast = document.createElement('div');
-            toast.className = 'toast';
+            toast.className  = 'toast';
             toast.textContent = message;
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 2000);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            loadCart();
+            loadProducts();
+            updateCartCount();
+            updateNav();
+            loadApiCartCount();
         });
     </script>
 </body>

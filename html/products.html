@@ -346,12 +346,13 @@
     </nav>
 
     <script src="../js/api.js"></script>
+    <script src="../js/main.js"></script>
     <script>
         // Mobile menu
-        const hamburger = document.getElementById('hamburger');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const menuOverlay = document.getElementById('menuOverlay');
-        const closeMenu = document.getElementById('closeMenu');
+        const hamburger    = document.getElementById('hamburger');
+        const mobileMenu   = document.getElementById('mobileMenu');
+        const menuOverlay  = document.getElementById('menuOverlay');
+        const closeMenu    = document.getElementById('closeMenu');
 
         if (hamburger && mobileMenu) {
             hamburger.addEventListener('click', () => {
@@ -359,14 +360,12 @@
                 menuOverlay.classList.add('active');
             });
         }
-
         if (closeMenu && mobileMenu) {
             closeMenu.addEventListener('click', () => {
                 mobileMenu.classList.remove('active');
                 menuOverlay.classList.remove('active');
             });
         }
-
         if (menuOverlay) {
             menuOverlay.addEventListener('click', () => {
                 mobileMenu.classList.remove('active');
@@ -375,44 +374,43 @@
         }
 
         // URL params
-        const params = new URLSearchParams(window.location.search);
+        const params      = new URLSearchParams(window.location.search);
         const categorySlug = params.get('category') || '';
-        const searchQuery = params.get('search') || '';
+        const searchQuery  = params.get('search')   || '';
 
         // Category labels
         const CATEGORY_LABELS = {
-            'electronics': 'Electronics',
-            'sports-outdoor': 'Sports & Outdoor',
-            'home-garden': 'Home & Garden',
+            'electronics':      'Electronics',
+            'sports-outdoor':   'Sports & Outdoor',
+            'home-garden':      'Home & Garden',
             'clothing-apparel': 'Clothing & Apparel',
-            'games-toys': 'Games & Toys',
-            'beauty-health': 'Beauty & Health',
-            'automotive': 'Automotive',
-            'books-media': 'Books & Media',
-            'food-groceries': 'Food & Groceries',
-            'other': 'Other',
-            'fashion': 'Fashion',
-            'home': 'Home',
-            'beauty': 'Beauty',
-            'toys': 'Toys',
-            'groceries': 'Groceries'
+            'games-toys':       'Games & Toys',
+            'beauty-health':    'Beauty & Health',
+            'automotive':       'Automotive',
+            'books-media':      'Books & Media',
+            'food-groceries':   'Food & Groceries',
+            'other':            'Other',
+            'fashion':          'Fashion',
+            'home':             'Home',
+            'beauty':           'Beauty',
+            'toys':             'Toys',
+            'groceries':        'Groceries',
         };
 
-        // Set page title
-        const pageTitle = categorySlug 
+        const pageTitle = categorySlug
             ? (CATEGORY_LABELS[categorySlug] || categorySlug)
-            : searchQuery 
+            : searchQuery
                 ? `Search: "${searchQuery}"`
                 : 'All Products';
         document.title = `${pageTitle} - Dropship`;
 
-        // Search
-        const searchInput = document.getElementById('searchInput');
-        const searchBtn = document.getElementById('searchBtn');
-        const productsSearchInput = document.getElementById('productsSearchInput');
-        const productsSearchBtn = document.getElementById('productsSearchBtn');
+        //  Search
+        const searchInput           = document.getElementById('searchInput');
+        const searchBtn             = document.getElementById('searchBtn');
+        const productsSearchInput   = document.getElementById('productsSearchInput');
+        const productsSearchBtn     = document.getElementById('productsSearchBtn');
         const productsSearchResults = document.getElementById('productsSearchResults');
-        let productsSearchTimeout = null;
+        let productsSearchTimeout   = null;
 
         function showProductsSearchLoading() {
             if (productsSearchResults) {
@@ -429,10 +427,11 @@
                 return;
             }
             productsSearchResults.innerHTML = results.slice(0, 6).map(product => {
-                const imageUrl = product.image_url || product.main_image || 'https://placehold.co/40x40?text=Product';
+                const imageUrl = product.main_image || product.image_url || 'https://placehold.co/40x40?text=Product';
                 return `
                     <div class="search-result-item" onclick="window.location.href='product.html?id=${product.id || product.product_id}'">
-                        <img src="${imageUrl}" alt="${product.name}" class="search-result-image" onerror="this.src='https://placehold.co/40x40?text=Product'">
+                        <img src="${imageUrl}" alt="${product.name}" class="search-result-image"
+                             onerror="this.src='https://placehold.co/40x40?text=Product'">
                         <div class="search-result-info">
                             <div class="search-result-name">${product.name}</div>
                             <div class="search-result-price">$${parseFloat(product.price).toFixed(2)}</div>
@@ -448,10 +447,7 @@
         }
 
         async function performProductsLiveSearch(query) {
-            if (!query || query.length < 2) {
-                hideProductsSearchResults();
-                return;
-            }
+            if (!query || query.length < 2) { hideProductsSearchResults(); return; }
             showProductsSearchLoading();
             try {
                 const products = await Products.getAll({ search: query });
@@ -465,48 +461,66 @@
         function handleProductsSearchInput() {
             const query = productsSearchInput.value.trim();
             if (productsSearchTimeout) clearTimeout(productsSearchTimeout);
-            if (query.length < 2) {
-                hideProductsSearchResults();
-                return;
-            }
+            if (query.length < 2) { hideProductsSearchResults(); return; }
             productsSearchTimeout = setTimeout(() => performProductsLiveSearch(query), 300);
         }
 
-        function performSearch(query, isProductsPage = false) {
+        function performSearch(query) {
             if (query) {
                 hideProductsSearchResults();
                 window.location.href = 'products.html?search=' + encodeURIComponent(query);
             }
         }
 
-        if (searchBtn) searchBtn.addEventListener('click', () => performSearch(searchInput.value));
-        if (searchInput) searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') performSearch(searchInput.value); });
-        if (productsSearchBtn) productsSearchBtn.addEventListener('click', () => performSearch(productsSearchInput.value, true));
+        if (searchBtn)          searchBtn.addEventListener('click', () => performSearch(searchInput.value));
+        if (searchInput)        searchInput.addEventListener('keypress', e => { if (e.key === 'Enter') performSearch(searchInput.value); });
+        if (productsSearchBtn)  productsSearchBtn.addEventListener('click', () => performSearch(productsSearchInput.value));
         if (productsSearchInput) {
             productsSearchInput.addEventListener('input', handleProductsSearchInput);
-            productsSearchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') performSearch(productsSearchInput.value, true); });
+            productsSearchInput.addEventListener('keypress', e => { if (e.key === 'Enter') performSearch(productsSearchInput.value); });
             productsSearchInput.addEventListener('focus', () => {
                 if (productsSearchInput.value.trim().length >= 2) productsSearchResults.classList.add('active');
             });
         }
 
-        document.addEventListener('click', (e) => {
-            if (productsSearchResults && !productsSearchResults.contains(e.target) && !productsSearchInput.contains(e.target)) {
+        document.addEventListener('click', e => {
+            if (productsSearchResults
+                && !productsSearchResults.contains(e.target)
+                && !productsSearchInput.contains(e.target)) {
                 hideProductsSearchResults();
             }
         });
 
+        // Product grid 
         let allProducts = [];
 
+        function getProductImage(product) {
+            return product.main_image
+                || product.image_url
+                || product.image
+                || 'https://placehold.co/200x200?text=Product';
+        }
+
         function buildCard(product) {
-            const image = product.main_image || product.image_url || 'https://placehold.co/200x200?text=Product';
-            const price = parseFloat(product.price).toFixed(2);
+            const image     = getProductImage(product);
+            const price     = parseFloat(product.price).toFixed(2);
+            const productId = product.id || product.product_id;
+            // Escape single quotes so they don't break the onclick attribute
+            const safeName  = (product.name || '').replace(/'/g, "\\'");
+            const safeImage = image.replace(/'/g, "\\'");
+
             return `
-                <div class="product-card" onclick="window.location.href='product.html?id=${product.id || product.product_id}'">
-                    <img src="${image}" alt="${product.name}" class="product-image" loading="lazy" onerror="this.src='https://placehold.co/200x200?text=Product'">
+                <div class="product-card" onclick="window.location.href='product.html?id=${productId}'">
+                    <img src="${image}"
+                         alt="${product.name}"
+                         class="product-image"
+                         loading="lazy"
+                         onerror="this.src='https://placehold.co/200x200?text=Product'">
                     <div class="product-title">${product.name}</div>
                     <div class="product-price">$${price}</div>
-                    <button class="add-to-cart" onclick="event.stopPropagation(); addToCart('${product.id || product.product_id}', '${product.name}', ${product.price})">
+                    <button class="add-to-cart"
+                            onclick="event.stopPropagation();
+                                     addToCart('${productId}', '${safeName}', ${product.price}, '${safeImage}')">
                         <i class="fas fa-cart-plus"></i> Add
                     </button>
                 </div>`;
@@ -515,7 +529,12 @@
         function renderProducts(products) {
             const grid = document.getElementById('productGrid');
             if (!products || products.length === 0) {
-                grid.innerHTML = `<div class="empty-state"><i class="fas fa-box-open"></i><p>No products found.</p><a href="products.html">Browse all products</a></div>`;
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-box-open"></i>
+                        <p>No products found.</p>
+                        <a href="products.html">Browse all products</a>
+                    </div>`;
                 return;
             }
             grid.innerHTML = products.map(buildCard).join('');
@@ -526,13 +545,8 @@
             renderProducts(sorted);
         }
 
-        function toggleFilters() {
-            alert('Filter options coming soon!');
-        }
-
-        function toggleSort() {
-            sortProducts();
-        }
+        function toggleFilters() { alert('Filter options coming soon!'); }
+        function toggleSort()    { sortProducts(); }
 
         async function loadProducts() {
             const grid = document.getElementById('productGrid');
@@ -541,11 +555,11 @@
             try {
                 const apiParams = {};
                 if (categorySlug) apiParams.category = categorySlug;
-                if (searchQuery) apiParams.search = searchQuery;
+                if (searchQuery)  apiParams.search   = searchQuery;
 
-                const data = await Products.getAll(apiParams);
+                const data     = await Products.getAll(apiParams);
                 const products = data.results || data || [];
-                allProducts = products;
+                allProducts    = products;
                 renderProducts(products);
             } catch (err) {
                 grid.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-circle"></i><p>Failed to load products.</p></div>`;
@@ -553,48 +567,19 @@
             }
         }
 
-        function addToCart(id, name, price) {
-            if (Auth.isLoggedIn()) {
-                Cart.addItem(String(id), 1).then(() => {
-                    updateCartCount();
-                    showToast('Added to cart!');
-                }).catch(err => {
-                    showToast(err.message || 'Failed to add to cart');
-                });
-            } else {
-                let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-                const existing = cart.find(item => item.id === id);
-                if (existing) {
-                    existing.quantity += 1;
-                } else {
-                    cart.push({ id, name, price, quantity: 1 });
-                }
-                localStorage.setItem('cart', JSON.stringify(cart));
-                updateCartCount();
-                showToast('Added to cart!');
-            }
-        }
-
         function showToast(message) {
             const toast = document.createElement('div');
-            toast.className = 'toast';
+            toast.className  = 'toast';
             toast.textContent = message;
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 2000);
         }
 
-        function updateCartCount() {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            const countEl = document.getElementById('cartCount');
-            if (countEl && cart) {
-                const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-                countEl.textContent = totalItems;
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
             loadProducts();
             updateCartCount();
+            updateNav();
+            loadApiCartCount();
         });
     </script>
 </body>
