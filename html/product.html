@@ -471,7 +471,32 @@
             btn.disabled = true;
 
             try {
-                await Cart.addItem(productId, quantity);
+                if (Auth.isLoggedIn()) {
+                    await Cart.addItem(productId, quantity);
+                    try {
+                        const fresh = await Cart.get();
+                        sessionStorage.setItem('apiCart', JSON.stringify(fresh));
+                    } catch (_) {}
+                } else {
+                    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                    const existing = cart.find(item => item.id == productId);
+                    if (existing) {
+                        existing.quantity = (existing.quantity || 1) + quantity;
+                        if (!existing.image) {
+                            const image = productData?.main_image || productData?.image_url || '';
+                            if (image) existing.image = image;
+                        }
+                    } else {
+                        cart.push({
+                            id: productId,
+                            name: productData?.name || 'Product',
+                            price: parseFloat(productData?.price || 0),
+                            quantity: quantity,
+                            image: productData?.main_image || productData?.image_url || '',
+                        });
+                    }
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                }
                 showBanner('✓ Added to cart!');
                 updateCartCount();
             } catch (err) {
