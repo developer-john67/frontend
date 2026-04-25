@@ -229,7 +229,7 @@ function handleLogout() {
 document.addEventListener('DOMContentLoaded', () => {
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/js/service-worker.js')
+            navigator.serviceWorker.register('/service-worker.js')
                 .then((registration) => {
                     console.log('[SW] Registered:', registration.scope);
                     registration.update();
