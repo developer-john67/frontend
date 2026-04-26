@@ -19,7 +19,7 @@
     Cache-Control = "public, max-age=86400"
 
 [[headers]]
-  for = "/js/service-worker.js"
+  for = "/service-worker.js"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
