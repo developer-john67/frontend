@@ -476,7 +476,8 @@
                         // Migration failed entirely — display localStorage items
                         cartItems = local.map(i => ({
                             product_name:  i.name,
-                            product_image: '',
+                            product_image: i.image || i.product_image || '',
+                            image:         i.image || i.product_image || '',
                             quantity:      i.quantity,
                             unit_price:    i.price,
                             total_price:   i.price * i.quantity,
@@ -500,7 +501,8 @@
                 const local = JSON.parse(localStorage.getItem('cart') || '[]');
                 cartItems = local.map(i => ({
                     product_name:  i.name,
-                    product_image: '',
+                    product_image: i.image || i.product_image || '',
+                    image:         i.image || i.product_image || '',
                     quantity:      i.quantity,
                     unit_price:    i.price,
                     total_price:   i.price * i.quantity,
@@ -527,7 +529,7 @@
         function renderSummary() {
             document.getElementById('summaryItems').innerHTML = cartItems.map(item => `
                 <div class="summary-item">
-                    <img src="${getImageUrl({image: item.product_image})}"
+                    <img src="${getImageUrl(item)}"
                          onerror="this.src='https://placehold.co/52x52'"
                          alt="${item.product_name}">
                     <div class="summary-item-info">

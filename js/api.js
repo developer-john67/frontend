@@ -15,7 +15,7 @@ function getCSRFToken() {
 
 // ─── IMAGE URL HELPER ─────────────────────────────────────────────────────────
 function getImageUrl(product) {
-    const raw = product.main_image || product.image || product.image_url || '';
+    const raw = product.product_image || product.main_image || product.image || product.image_url || '';
     if (!raw) return 'https://placehold.co/300x200';
     if (raw.startsWith('http')) return raw;
     return `${BACKEND_URL}${raw}`;

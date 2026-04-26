@@ -116,7 +116,7 @@
                         subtotal += itemTotal;
                         return `
                             <div class="cart-item">
-                                <img src="${getImageUrl({image: item.product_image || item.image})}"
+                                <img src="${getImageUrl(item)}"
                                      alt="${item.product_name || item.name}"
                                      class="cart-item-image"
                                      onerror="this.src='https://placehold.co/100x100?text=Product'">
