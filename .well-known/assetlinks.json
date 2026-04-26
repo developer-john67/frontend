@@ -1,0 +1,10 @@
+[{
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+        "namespace": "android_app",
+        "package_name": "app.netlify.frewsi.twa",
+        "sha256_cert_fingerprints": [
+            "73:8B:A0:64:27:3F:A7:6E:50:0B:9A:4F:D2:D6:DB:CC:91:21:D3:8E:52:94:1E:AD:78:2A:5D:B2:E2:E1:FD:0D"
+        ]
+    }
+}]
