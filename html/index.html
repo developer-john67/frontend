@@ -514,13 +514,40 @@
             updateCartCount();
         });
 
-        function updateCartCount() {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        function getLocalCart() {
+            return JSON.parse(localStorage.getItem('cart') || '[]');
+        }
+
+        async function updateCartCount() {
             const countEl = document.getElementById('cartCount');
-            if (countEl && cart) {
-                const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-                countEl.textContent = totalItems;
+            if (!countEl) return;
+
+            if (Auth.isLoggedIn()) {
+                const apiCart = JSON.parse(sessionStorage.getItem('apiCart') || 'null');
+                if (apiCart) {
+                    const count = apiCart.item_count
+                        || apiCart.cart_items?.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0)
+                        || 0;
+                    countEl.textContent = count;
+                    return;
+                }
+
+                try {
+                    const data = await Cart.get();
+                    sessionStorage.setItem('apiCart', JSON.stringify(data));
+                    const count = data.item_count
+                        || data.cart_items?.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0)
+                        || 0;
+                    countEl.textContent = count;
+                    return;
+                } catch (err) {
+                    console.warn('Cart API failed, falling back to local storage cart:', err);
+                }
             }
+
+            const cart = getLocalCart();
+            const totalItems = cart.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0);
+            countEl.textContent = totalItems;
         }
 
         // Service Worker Registration for PWA/TWA

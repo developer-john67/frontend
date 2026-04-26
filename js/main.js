@@ -15,7 +15,7 @@ function updateCartCount() {
         const apiCart = JSON.parse(sessionStorage.getItem('apiCart'));
         if (apiCart) {
             const count = apiCart.item_count
-                || apiCart.cart_items?.reduce((sum, i) => sum + (i.quantity || 1), 0)
+                || apiCart.cart_items?.reduce((sum, i) => sum + (Number(i.quantity) || 1), 0)
                 || 0;
             cartCount.forEach(el => el.textContent = count);
             return;
@@ -23,15 +23,17 @@ function updateCartCount() {
         Cart.get().then(data => {
             sessionStorage.setItem('apiCart', JSON.stringify(data));
             const count = data.item_count
-                || data.cart_items?.reduce((sum, i) => sum + (i.quantity || 1), 0)
+                || data.cart_items?.reduce((sum, i) => sum + (Number(i.quantity) || 1), 0)
                 || 0;
             cartCount.forEach(el => el.textContent = count);
         }).catch(() => {
-            cartCount.forEach(el => el.textContent = '0');
+            const cart = getLocalCart();
+            const totalItems = cart.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0);
+            cartCount.forEach(el => el.textContent = totalItems);
         });
     } else {
         const cart = getLocalCart();
-        const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+        const totalItems = cart.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0);
         cartCount.forEach(el => el.textContent = totalItems);
     }
 }
