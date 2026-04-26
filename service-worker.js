@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dropship-v3';
+const CACHE_NAME = 'dropship-v4';
 const STATIC_ASSETS = [
     '/',
     '/html/index.html',
