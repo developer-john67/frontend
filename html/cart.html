@@ -116,7 +116,7 @@
                         subtotal += itemTotal;
                         return `
                             <div class="cart-item">
-                                <img src="${item.product_image || item.image || 'https://placehold.co/100x100?text=Product'}"
+                                <img src="${getImageUrl({image: item.product_image || item.image})}"
                                      alt="${item.product_name || item.name}"
                                      class="cart-item-image"
                                      onerror="this.src='https://placehold.co/100x100?text=Product'">
@@ -174,6 +174,7 @@
                     }));
                 }
                 renderCart();
+                updateCartCount();
             } catch (err) {
                 const local = JSON.parse(localStorage.getItem('cart') || '[]');
                 cartItems = local.map(item => ({
@@ -181,6 +182,7 @@
                     price: item.price, quantity: item.quantity || 1, unit_price: item.price
                 }));
                 renderCart();
+                updateCartCount();
             }
         }
 
@@ -200,6 +202,7 @@
                     cartItems = cart.map(i => ({ id: i.id, product_name: i.name, product_image: i.image, price: i.price, quantity: i.quantity || 1, unit_price: i.price }));
                 }
                 renderCart();
+                updateCartCount();
             } catch (err) { showBanner('Failed to update quantity', 'error'); }
         }
 
@@ -217,6 +220,7 @@
                     cartItems = cart.map(i => ({ id: i.id, product_name: i.name, product_image: i.image, price: i.price, quantity: i.quantity || 1, unit_price: i.price }));
                 }
                 renderCart();
+                updateCartCount();
             } catch (err) { showBanner('Failed to remove item', 'error'); }
         }
 

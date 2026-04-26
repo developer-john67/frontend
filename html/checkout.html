@@ -527,7 +527,7 @@
         function renderSummary() {
             document.getElementById('summaryItems').innerHTML = cartItems.map(item => `
                 <div class="summary-item">
-                    <img src="${item.product_image || 'https://placehold.co/52x52'}"
+                    <img src="${getImageUrl({image: item.product_image})}"
                          onerror="this.src='https://placehold.co/52x52'"
                          alt="${item.product_name}">
                     <div class="summary-item-info">
@@ -758,8 +758,10 @@
         function startMpesaPolling() {
             if (mpesaPollingInterval) clearInterval(mpesaPollingInterval);
             let pollCount = 0;
+            console.log('[M-PESA] Starting polling for transaction:', currentTransactionId);
             mpesaPollingInterval = setInterval(async () => {
                 pollCount++;
+                console.log(`[M-PESA] Polling attempt ${pollCount}...`);
                 try {
                     const response = await fetch(`${API_BASE}/payments/status/${currentTransactionId}/`, {
                         method: 'GET',
@@ -767,21 +769,46 @@
                         credentials: 'include',
                     });
                     const data = await response.json();
+                    console.log('[M-PESA] Status response:', data);
+                    
+                    // Check if response was successful
+                    if (!response.ok) {
+                        console.warn('[M-PESA] HTTP error:', response.status, data.error);
+                        if (pollCount >= 30) {
+                            clearInterval(mpesaPollingInterval); mpesaPollingInterval = null;
+                            document.getElementById('mpesaStatus').className = 'mpesa-status failed';
+                            document.getElementById('mpesaStatus').innerHTML = '<i class="fas fa-exclamation-circle" style="margin-right:8px;"></i>Transaction not found. Please try again.';
+                        }
+                        return;
+                    }
+                    
                     if (data.status === 'success' || data.status === 'completed') {
+                        console.log('[M-PESA] Payment successful!');
                         clearInterval(mpesaPollingInterval); mpesaPollingInterval = null;
                         document.getElementById('mpesaStatus').className = 'mpesa-status success';
                         document.getElementById('mpesaStatus').innerHTML = '<i class="fas fa-check-circle" style="margin-right:8px;"></i>Payment successful!';
                         setTimeout(() => { document.getElementById('mpesaModal').classList.remove('visible'); showOrderConfirmation(); }, 1500);
                     } else if (data.status === 'failed' || data.status === 'cancelled') {
+                        console.log('[M-PESA] Payment failed:', data.status);
                         clearInterval(mpesaPollingInterval); mpesaPollingInterval = null;
                         document.getElementById('mpesaStatus').className = 'mpesa-status failed';
                         document.getElementById('mpesaStatus').innerHTML = '<i class="fas fa-exclamation-circle" style="margin-right:8px;"></i>Payment failed. Please try again.';
                     } else if (pollCount >= 30) {
+                        console.log('[M-PESA] Polling timeout after', pollCount, 'attempts');
                         clearInterval(mpesaPollingInterval); mpesaPollingInterval = null;
                         document.getElementById('mpesaStatus').className = 'mpesa-status failed';
                         document.getElementById('mpesaStatus').innerHTML = '<i class="fas fa-clock" style="margin-right:8px;"></i>Payment timeout. Please try again.';
+                    } else {
+                        console.log('[M-PESA] Still pending, current status:', data.status);
                     }
-                } catch (err) { console.error('Polling error:', err); }
+                } catch (err) { 
+                    console.error('[M-PESA] Polling error:', err);
+                    if (pollCount >= 30) {
+                        clearInterval(mpesaPollingInterval); mpesaPollingInterval = null;
+                        document.getElementById('mpesaStatus').className = 'mpesa-status failed';
+                        document.getElementById('mpesaStatus').innerHTML = '<i class="fas fa-exclamation-circle" style="margin-right:8px;"></i>Payment service error. Please try again.';
+                    }
+                }
             }, 3000);
         }
 
