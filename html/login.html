@@ -4,49 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Dropship</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="manifest" href="../manifest.json">
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#FA7207">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Dropship">
-    <link rel="apple-touch-icon" href="../images/icon-192.svg">
+    <link rel="apple-touch-icon" href="/icons/icon-192.png">
     <style>
         body { background: var(--white); }
-        .auth-page {
-            min-height: calc(100vh - 56px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-        }
-        .auth-header {
-            background: var(--primary);
-            padding: 20px;
-            text-align: center;
-            color: var(--white);
-            width: 100%;
-            max-width: 400px;
-            border-radius: 12px 12px 0 0;
-        }
-        .auth-form {
-            width: 100%;
-            max-width: 400px;
-            padding: 25px 20px;
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-top: none;
-            border-radius: 0 0 12px 12px;
-        }
-        .login-options { display: flex; gap: 10px; margin-bottom: 20px; }
-        .social-btn { flex: 1; padding: 12px; border: 1px solid var(--border); border-radius: 4px; background: var(--white); font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .social-btn i { font-size: 1.2rem; }
-        .divider { text-align: center; margin: 20px 0; color: var(--text-light); font-size: 0.85rem; position: relative; }
-        .divider::before, .divider::after { content: ''; position: absolute; top: 50%; width: 40%; height: 1px; background: var(--border); }
-        .divider::before { left: 0; }
-        .divider::after { right: 0; }
+        .auth-page { min-height: calc(100vh - 56px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; }
+        .auth-header { background: var(--primary); padding: 20px; text-align: center; color: var(--white); width: 100%; max-width: 400px; border-radius: 12px 12px 0 0; }
+        .auth-form { width: 100%; max-width: 400px; padding: 25px 20px; background: var(--white); border: 1px solid var(--border); border-top: none; border-radius: 0 0 12px 12px; }
         .form-group { margin-bottom: 15px; }
         .form-group input { width: 100%; padding: 14px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem; background: var(--white); }
         .form-group input:focus { outline: none; border-color: var(--primary); }
@@ -57,18 +27,15 @@
         .auth-link { text-align: center; margin-top: 20px; font-size: 0.9rem; }
         .auth-link a { color: var(--primary); font-weight: 600; }
         .error-msg { background: #ffebee; color: #c62828; padding: 12px; border-radius: 4px; margin-bottom: 15px; font-size: 0.9rem; display: none; }
-        .phone-input { display: flex; gap: 10px; }
-        .phone-input select { padding: 14px 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--white); font-size: 1rem; }
-        .phone-input input { flex: 1; }
     </style>
 </head>
 <body>
     <header class="header">
         <div class="header-top">
-            <a href="index.html" class="back-btn" style="color: white; font-size: 1.2rem;">
+            <a href="/html/index.html" class="back-btn" style="color: white; font-size: 1.2rem;">
                 <i class="fas fa-arrow-left"></i>
             </a>
-            <a href="index.html" class="logo">
+            <a href="/html/index.html" class="logo">
                 <i class="fas fa-shopping-bag logo-icon"></i>
                 <span>Dropship</span>
             </a>
@@ -80,10 +47,8 @@
             <h1>Welcome Back</h1>
             <p>Sign in to continue shopping</p>
         </div>
-
         <div class="auth-form">
             <div id="errorMsg" class="error-msg"></div>
-
             <form id="loginForm">
                 <div class="form-group">
                     <input type="email" id="email" placeholder="Email Address" required>
@@ -91,74 +56,53 @@
                 <div class="form-group">
                     <input type="password" id="password" placeholder="Password" required>
                 </div>
-                <div class="forgot-link">
-                    <a href="#">Forgot Password?</a>
-                </div>
+                <div class="forgot-link"><a href="#">Forgot Password?</a></div>
                 <button type="submit" class="auth-btn" id="loginBtn">SIGN IN</button>
             </form>
-
-            <p class="auth-link">Don't have an account? <a href="signup.html">Create Account</a></p>
+            <p class="auth-link">Don't have an account? <a href="/html/signup.html">Create Account</a></p>
         </div>
     </main>
 
-    <script src="../js/api.js"></script>
-    <script src="../js/main.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/main.js"></script>
     <script>
-        if (Auth.isLoggedIn()) {
-            window.location.href = 'account.html';
-        }
+        if (Auth.isLoggedIn()) window.location.href = '/html/account.html';
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-
-            const email    = document.getElementById('email').value;
+            const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const errorMsg = document.getElementById('errorMsg');
-            const btn      = document.getElementById('loginBtn');
+            const btn = document.getElementById('loginBtn');
 
             errorMsg.style.display = 'none';
             btn.textContent = 'Signing in...';
-            btn.disabled    = true;
+            btn.disabled = true;
 
             try {
-                const data = await Auth.login(email, password);
-
-                // ── Restore cart backup (from checkout redirect, if any) ─────────────
+                await Auth.login(email, password);
                 const backup = sessionStorage.getItem('cart_backup');
-                if (backup) {
-                    localStorage.setItem('cart', backup);
-                    sessionStorage.removeItem('cart_backup');
-                }
+                if (backup) { localStorage.setItem('cart', backup); sessionStorage.removeItem('cart_backup'); }
 
-                // ── Migrate guest cart (localStorage) → server cart ─────────────────
                 const localCart = JSON.parse(localStorage.getItem('cart')) || [];
                 if (localCart.length > 0) {
                     let migrated = 0;
                     for (const item of localCart) {
-                        try {
-                            await Cart.addItem(String(item.id || item.product_id), item.quantity || 1);
-                            migrated++;
-                        } catch (err) {
-                            console.error('Failed to migrate cart item:', item, err);
-                        }
+                        try { await Cart.addItem(String(item.id || item.product_id), item.quantity || 1); migrated++; } catch (err) {}
                     }
                     if (migrated > 0) {
                         localStorage.removeItem('cart');
-                        // Fetch updated cart to cache for immediate UI updates
-                        try {
-                            const fresh = await Cart.get();
-                            sessionStorage.setItem('apiCart', JSON.stringify(fresh));
-                        } catch (_) {}
+                        try { const fresh = await Cart.get(); sessionStorage.setItem('apiCart', JSON.stringify(fresh)); } catch (_) {}
                     }
                 }
 
-                const redirect = new URLSearchParams(window.location.search).get('redirect') || 'account.html';
+                const redirect = new URLSearchParams(window.location.search).get('redirect') || '/html/account.html';
                 window.location.href = redirect;
             } catch (err) {
                 errorMsg.textContent = err.message || 'Invalid email or password.';
                 errorMsg.style.display = 'block';
                 btn.textContent = 'SIGN IN';
-                btn.disabled    = false;
+                btn.disabled = false;
             }
         });
     </script>

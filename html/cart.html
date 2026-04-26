@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cart - Dropship</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="manifest" href="../manifest.json">
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#FA7207">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Dropship">
-    <link rel="apple-touch-icon" href="../images/icon-192.svg">
+    <link rel="apple-touch-icon" href="/icons/icon-192.png">
     <style>
         .cart-page { padding: 20px 15px 100px; max-width: 800px; margin: 0 auto; }
         .cart-header { display: flex; align-items: center; gap: 15px; margin-bottom: 24px; }
@@ -32,36 +32,32 @@
         .remove-btn:hover { background: #fef2f2; }
         .empty-cart { text-align: center; padding: 60px 20px; }
         .empty-cart i { font-size: 4rem; color: var(--text-light); margin-bottom: 20px; display: block; }
-        .empty-cart h3 { font-size: 1.25rem; margin: 0 0 12px; color: var(--text-dark); }
+        .empty-cart h3 { font-size: 1.25rem; margin: 0 0 12px; }
         .empty-cart p { color: var(--text-light); margin: 0 0 24px; }
         .empty-cart a { display: inline-block; padding: 12px 32px; background: var(--primary); color: white; border-radius: 8px; text-decoration: none; font-weight: 600; }
         .cart-summary { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-top: 20px; }
-        .summary-row { display: flex; justify-content: space-between; margin-bottom: 12px; color: var(--text-dark); }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 12px; }
         .summary-row.total { font-size: 1.25rem; font-weight: 700; color: var(--primary); border-top: 1px solid var(--border); padding-top: 16px; margin-top: 8px; }
         .checkout-btn { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-top: 16px; }
-        .checkout-btn:hover { background: var(--primary-dark); }
         .checkout-btn:disabled { background: #aaa; cursor: not-allowed; }
         .login-prompt { text-align: center; padding: 20px; background: #f0f9ff; border-radius: 12px; margin: 20px 0; }
-        .login-prompt p { margin: 0 0 12px; color: var(--text-dark); }
         .login-prompt a { color: var(--primary); font-weight: 600; text-decoration: none; }
         .loading-state { text-align: center; padding: 40px 20px; color: var(--text-light); }
         .loading-state i { font-size: 2.5rem; margin-bottom: 16px; display: block; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .error-state { text-align: center; padding: 40px 20px; background: var(--white); border-radius: 12px; margin: 20px 0; }
-        .error-state i { font-size: 2.5rem; color: #ef4444; margin-bottom: 16px; display: block; }
     </style>
 </head>
 <body>
     <header class="header">
         <div class="header-top">
-            <a href="index.html" class="back-btn" style="color: white; font-size: 1.2rem;">
+            <a href="/html/index.html" class="back-btn" style="color: white; font-size: 1.2rem;">
                 <i class="fas fa-arrow-left"></i>
             </a>
-            <a href="index.html" class="logo">
+            <a href="/html/index.html" class="logo">
                 <i class="fas fa-shopping-bag logo-icon"></i>
                 <span>Dropship</span>
             </a>
-            <a href="cart.html" class="cart-icon">
+            <a href="/html/cart.html" class="cart-icon">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="cart-count" id="cartCount">0</span>
             </a>
@@ -73,7 +69,6 @@
             <h1>Shopping Cart</h1>
             <span class="cart-count-badge" id="cartItemsCount">0 items</span>
         </div>
-
         <div id="cartContent">
             <div class="loading-state" id="loadingState">
                 <i class="fas fa-spinner"></i>
@@ -84,47 +79,30 @@
 
     <nav class="mobile-nav">
         <ul class="mobile-nav-list">
-            <li class="mobile-nav-item" onclick="window.location.href='index.html'">
-                <i class="fas fa-home"></i>
-                <span>Home</span>
-            </li>
-            <li class="mobile-nav-item" onclick="window.location.href='products.html'">
-                <i class="fas fa-search"></i>
-                <span>Search</span>
-            </li>
-            <li class="mobile-nav-item">
-                <i class="fas fa-th"></i>
-                <span>Categories</span>
-            </li>
-            <li class="mobile-nav-item" onclick="window.location.href='cart.html'">
-                <i class="fas fa-shopping-cart"></i>
-                <span>Cart</span>
-            </li>
-            <li class="mobile-nav-item" onclick="window.location.href='account.html'">
-                <i class="fas fa-user"></i>
-                <span>Account</span>
-            </li>
+            <li class="mobile-nav-item" onclick="window.location.href='/html/index.html'"><i class="fas fa-home"></i><span>Home</span></li>
+            <li class="mobile-nav-item" onclick="window.location.href='/html/products.html'"><i class="fas fa-search"></i><span>Search</span></li>
+            <li class="mobile-nav-item"><i class="fas fa-th"></i><span>Categories</span></li>
+            <li class="mobile-nav-item active" onclick="window.location.href='/html/cart.html'"><i class="fas fa-shopping-cart"></i><span>Cart</span></li>
+            <li class="mobile-nav-item" onclick="window.location.href='/html/account.html'"><i class="fas fa-user"></i><span>Account</span></li>
         </ul>
     </nav>
 
-    <script src="../js/api.js"></script>
-    <script src="../js/main.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/main.js"></script>
     <script>
         let cartItems = [];
         let isLoggedIn = false;
 
         function renderCart() {
             const content = document.getElementById('cartContent');
-            
             if (cartItems.length === 0) {
                 content.innerHTML = `
                     <div class="empty-cart">
                         <i class="fas fa-shopping-cart"></i>
                         <h3>Your cart is empty</h3>
-                        <p>Looks like you haven't added anything to your cart yet.</p>
-                        <a href="products.html">Start Shopping</a>
-                    </div>
-                `;
+                        <p>Looks like you haven't added anything yet.</p>
+                        <a href="/html/products.html">Start Shopping</a>
+                    </div>`;
                 document.getElementById('cartItemsCount').textContent = '0 items';
                 updateCartCount();
                 return;
@@ -134,12 +112,12 @@
             content.innerHTML = `
                 <div class="cart-items">
                     ${cartItems.map((item, index) => {
-                        const itemTotal = (parseFloat(item.unit_price || item.price || 0) * (item.quantity || 1));
+                        const itemTotal = parseFloat(item.unit_price || item.price || 0) * (item.quantity || 1);
                         subtotal += itemTotal;
                         return `
                             <div class="cart-item">
-                                <img src="${item.product_image || item.image || '../images/placeholder.png'}" 
-                                     alt="${item.product_name || item.name}" 
+                                <img src="${item.product_image || item.image || 'https://placehold.co/100x100?text=Product'}"
+                                     alt="${item.product_name || item.name}"
                                      class="cart-item-image"
                                      onerror="this.src='https://placehold.co/100x100?text=Product'">
                                 <div class="cart-item-details">
@@ -156,58 +134,32 @@
                                         </button>
                                     </div>
                                 </div>
-                            </div>
-                        `;
+                            </div>`;
                     }).join('')}
                 </div>
                 <div class="cart-summary">
-                    <div class="summary-row">
-                        <span>Subtotal</span>
-                        <span>$${subtotal.toFixed(2)}</span>
-                    </div>
-                    <div class="summary-row">
-                        <span>Shipping</span>
-                        <span>${subtotal >= 50 ? 'Free' : '$5.99'}</span>
-                    </div>
-                    <div class="summary-row total">
-                        <span>Total</span>
-                        <span>$${(subtotal >= 50 ? subtotal : subtotal + 5.99).toFixed(2)}</span>
-                    </div>
-                    ${!isLoggedIn ? `
-                        <div class="login-prompt">
-                            <p>Ready to checkout? Sign in for faster checkout and order tracking.</p>
-                            <a href="login.html">Sign In</a>
-                        </div>
-                    ` : ''}
-                    <button class="checkout-btn" onclick="proceedToCheckout()" ${cartItems.length === 0 ? 'disabled' : ''}>
-                        Proceed to Checkout
-                    </button>
-                </div>
-            `;
-            
-            document.getElementById('cartItemsCount').textContent = `${cartItems.reduce((sum, i) => sum + (i.quantity || 1), 0)} items`;
+                    <div class="summary-row"><span>Subtotal</span><span>$${subtotal.toFixed(2)}</span></div>
+                    <div class="summary-row"><span>Shipping</span><span>${subtotal >= 50 ? 'Free' : '$5.99'}</span></div>
+                    <div class="summary-row total"><span>Total</span><span>$${(subtotal >= 50 ? subtotal : subtotal + 5.99).toFixed(2)}</span></div>
+                    ${!isLoggedIn ? `<div class="login-prompt"><p>Sign in for faster checkout.</p><a href="/html/login.html">Sign In</a></div>` : ''}
+                    <button class="checkout-btn" onclick="proceedToCheckout()">Proceed to Checkout</button>
+                </div>`;
+
+            document.getElementById('cartItemsCount').textContent = `${cartItems.reduce((s, i) => s + (i.quantity || 1), 0)} items`;
             updateCartCount();
         }
 
         async function loadCart() {
             isLoggedIn = Auth.isLoggedIn();
-            
             try {
                 if (isLoggedIn) {
-                    // Get cart from API
                     const data = await Cart.get();
                     cartItems = data.cart_items || [];
-                    
                     if (cartItems.length === 0) {
-                        // Check if there's a local cart to migrate
                         const local = JSON.parse(localStorage.getItem('cart') || '[]');
                         if (local.length > 0) {
                             for (const item of local) {
-                                try {
-                                    await Cart.addItem(String(item.id || item.product_id), item.quantity || 1);
-                                } catch (e) {
-                                    console.error('Failed to migrate item:', item, e);
-                                }
+                                try { await Cart.addItem(String(item.id || item.product_id), item.quantity || 1); } catch (e) {}
                             }
                             const fresh = await Cart.get();
                             cartItems = fresh.cart_items || [];
@@ -215,30 +167,18 @@
                         }
                     }
                 } else {
-                    // Get cart from localStorage
                     const local = JSON.parse(localStorage.getItem('cart') || '[]');
                     cartItems = local.map(item => ({
-                        id: item.id,
-                        product_name: item.name,
-                        product_image: item.image,
-                        price: item.price,
-                        quantity: item.quantity || 1,
-                        unit_price: item.price
+                        id: item.id, product_name: item.name, product_image: item.image,
+                        price: item.price, quantity: item.quantity || 1, unit_price: item.price
                     }));
                 }
-                
                 renderCart();
             } catch (err) {
-                console.error('Failed to load cart:', err);
-                // Fallback to localStorage
                 const local = JSON.parse(localStorage.getItem('cart') || '[]');
                 cartItems = local.map(item => ({
-                    id: item.id,
-                    product_name: item.name,
-                    product_image: item.image,
-                    price: item.price,
-                    quantity: item.quantity || 1,
-                    unit_price: item.price
+                    id: item.id, product_name: item.name, product_image: item.image,
+                    price: item.price, quantity: item.quantity || 1, unit_price: item.price
                 }));
                 renderCart();
             }
@@ -247,12 +187,7 @@
         async function updateQuantity(index, delta) {
             const item = cartItems[index];
             const newQty = (item.quantity || 1) + delta;
-            
-            if (newQty < 1) {
-                removeItem(index);
-                return;
-            }
-            
+            if (newQty < 1) { removeItem(index); return; }
             try {
                 if (isLoggedIn) {
                     await Cart.updateItem(item.id || item.item_id, newQty);
@@ -261,33 +196,15 @@
                 } else {
                     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
                     const existing = cart.find(i => i.id == item.id);
-                    if (existing) {
-                        existing.quantity = newQty;
-                        if (newQty < 1) {
-                            const idx = cart.findIndex(i => i.id == item.id);
-                            cart.splice(idx, 1);
-                        }
-                        localStorage.setItem('cart', JSON.stringify(cart));
-                    }
-                    cartItems = cart.map(i => ({
-                        id: i.id,
-                        product_name: i.name,
-                        product_image: i.image,
-                        price: i.price,
-                        quantity: i.quantity || 1,
-                        unit_price: i.price
-                    }));
+                    if (existing) { existing.quantity = newQty; localStorage.setItem('cart', JSON.stringify(cart)); }
+                    cartItems = cart.map(i => ({ id: i.id, product_name: i.name, product_image: i.image, price: i.price, quantity: i.quantity || 1, unit_price: i.price }));
                 }
                 renderCart();
-            } catch (err) {
-                console.error('Failed to update quantity:', err);
-                showBanner('Failed to update quantity', 'error');
-            }
+            } catch (err) { showBanner('Failed to update quantity', 'error'); }
         }
 
         async function removeItem(index) {
             const item = cartItems[index];
-            
             try {
                 if (isLoggedIn) {
                     await Cart.removeItem(item.id || item.item_id);
@@ -296,40 +213,19 @@
                 } else {
                     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
                     const idx = cart.findIndex(i => i.id == item.id);
-                    if (idx > -1) {
-                        cart.splice(idx, 1);
-                        localStorage.setItem('cart', JSON.stringify(cart));
-                    }
-                    cartItems = cart.map(i => ({
-                        id: i.id,
-                        product_name: i.name,
-                        product_image: i.image,
-                        price: i.price,
-                        quantity: i.quantity || 1,
-                        unit_price: i.price
-                    }));
+                    if (idx > -1) { cart.splice(idx, 1); localStorage.setItem('cart', JSON.stringify(cart)); }
+                    cartItems = cart.map(i => ({ id: i.id, product_name: i.name, product_image: i.image, price: i.price, quantity: i.quantity || 1, unit_price: i.price }));
                 }
                 renderCart();
-            } catch (err) {
-                console.error('Failed to remove item:', err);
-                showBanner('Failed to remove item', 'error');
-            }
+            } catch (err) { showBanner('Failed to remove item', 'error'); }
         }
 
         function proceedToCheckout() {
-            if (!isLoggedIn) {
-                // Save cart and redirect to login
-                localStorage.setItem('cart_backup', JSON.stringify(cartItems));
-                window.location.href = 'login.html?redirect=cart.html';
-                return;
-            }
-            window.location.href = 'checkout.html';
+            if (!isLoggedIn) { window.location.href = '/html/login.html?redirect=/html/checkout.html'; return; }
+            window.location.href = '/html/checkout.html';
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            loadCart();
-            updateNav();
-        });
+        document.addEventListener('DOMContentLoaded', () => { loadCart(); updateNav(); });
     </script>
 </body>
 </html>

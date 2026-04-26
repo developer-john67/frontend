@@ -4,127 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - Dropship</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="manifest" href="../manifest.json">
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#FA7207">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Dropship">
-    <link rel="apple-touch-icon" href="../images/icon-192.svg">
+    <link rel="apple-touch-icon" href="/icons/icon-192.png">
     <style>
-        body {
-            background: var(--white);
-        }
-        .auth-page {
-            min-height: calc(100vh - 56px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-        }
-        .auth-header {
-            background: var(--primary);
-            padding: 20px;
-            text-align: center;
-            color: var(--white);
-            width: 100%;
-            max-width: 400px;
-            border-radius: 12px 12px 0 0;
-        }
-        .auth-form {
-            width: 100%;
-            max-width: 400px;
-            padding: 25px 20px;
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-top: none;
-            border-radius: 0 0 12px 12px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            font-size: 0.85rem;
-            color: var(--text-dark);
-            margin-bottom: 6px;
-            font-weight: 500;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 14px 12px;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            font-size: 1rem;
-            background: var(--white);
-        }
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-        .terms {
-            font-size: 0.8rem;
-            color: var(--text-light);
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-        .terms a {
-            color: var(--primary);
-        }
-        .auth-btn {
-            width: 100%;
-            padding: 14px;
-            background: var(--primary);
-            color: var(--white);
-            border: none;
-            border-radius: 4px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .auth-btn:disabled {
-            background: #ffaa70;
-            cursor: not-allowed;
-        }
-        .auth-link {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 0.9rem;
-        }
-        .auth-link a {
-            color: var(--primary);
-            font-weight: 600;
-        }
-        .error-msg {
-            background: #ffebee;
-            color: #c62828;
-            padding: 12px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-            display: none;
-        }
-        .success-msg {
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 12px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-            display: none;
-        }
+        body { background: var(--white); }
+        .auth-page { min-height: calc(100vh - 56px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; }
+        .auth-header { background: var(--primary); padding: 20px; text-align: center; color: var(--white); width: 100%; max-width: 400px; border-radius: 12px 12px 0 0; }
+        .auth-form { width: 100%; max-width: 400px; padding: 25px 20px; background: var(--white); border: 1px solid var(--border); border-top: none; border-radius: 0 0 12px 12px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 0.85rem; color: var(--text-dark); margin-bottom: 6px; font-weight: 500; }
+        .form-group input { width: 100%; padding: 14px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem; background: var(--white); }
+        .form-group input:focus { outline: none; border-color: var(--primary); }
+        .terms { font-size: 0.8rem; color: var(--text-light); margin-bottom: 20px; line-height: 1.5; }
+        .terms a { color: var(--primary); }
+        .auth-btn { width: 100%; padding: 14px; background: var(--primary); color: var(--white); border: none; border-radius: 4px; font-size: 1rem; font-weight: 600; cursor: pointer; }
+        .auth-btn:disabled { background: #ffaa70; cursor: not-allowed; }
+        .auth-link { text-align: center; margin-top: 20px; font-size: 0.9rem; }
+        .auth-link a { color: var(--primary); font-weight: 600; }
+        .error-msg { background: #ffebee; color: #c62828; padding: 12px; border-radius: 4px; margin-bottom: 15px; font-size: 0.9rem; display: none; }
+        .success-msg { background: #e8f5e9; color: #2e7d32; padding: 12px; border-radius: 4px; margin-bottom: 15px; font-size: 0.9rem; display: none; }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="header-top">
-            <a href="index.html" class="back-btn" style="color: white; font-size: 1.2rem;">
+            <a href="/html/index.html" class="back-btn" style="color: white; font-size: 1.2rem;">
                 <i class="fas fa-arrow-left"></i>
             </a>
-            <a href="index.html" class="logo">
+            <a href="/html/index.html" class="logo">
                 <i class="fas fa-shopping-bag logo-icon"></i>
                 <span>Dropship</span>
             </a>
@@ -136,11 +49,9 @@
             <h1>Create Account</h1>
             <p>Join us and start shopping</p>
         </div>
-
         <div class="auth-form">
             <div id="errorMsg" class="error-msg"></div>
             <div id="successMsg" class="success-msg"></div>
-
             <form id="signupForm">
                 <div class="form-group">
                     <label for="fullName">Full Name</label>
@@ -158,26 +69,18 @@
                     <label for="confirmPassword">Confirm Password</label>
                     <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
                 </div>
-
-                <p class="terms">
-                    By creating an account, you agree to our 
-                    <a href="#">Terms of Service</a> and 
-                    <a href="#">Privacy Policy</a>
-                </p>
-
+                <p class="terms">By creating an account, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></p>
                 <button type="submit" class="auth-btn" id="signupBtn">CREATE ACCOUNT</button>
             </form>
-
-            <p class="auth-link">Already have an account? <a href="login.html">Sign In</a></p>
+            <p class="auth-link">Already have an account? <a href="/html/login.html">Sign In</a></p>
         </div>
     </main>
 
-    <script src="../js/api.js"></script>
-    <script src="../js/main.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/main.js"></script>
     <script>
         document.getElementById('signupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-
             const fullName = document.getElementById('fullName').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
@@ -189,17 +92,8 @@
             errorMsg.style.display = 'none';
             successMsg.style.display = 'none';
 
-            if (password !== confirmPassword) {
-                errorMsg.textContent = 'Passwords do not match.';
-                errorMsg.style.display = 'block';
-                return;
-            }
-
-            if (password.length < 6) {
-                errorMsg.textContent = 'Password must be at least 6 characters.';
-                errorMsg.style.display = 'block';
-                return;
-            }
+            if (password !== confirmPassword) { errorMsg.textContent = 'Passwords do not match.'; errorMsg.style.display = 'block'; return; }
+            if (password.length < 6) { errorMsg.textContent = 'Password must be at least 6 characters.'; errorMsg.style.display = 'block'; return; }
 
             btn.textContent = 'Creating account...';
             btn.disabled = true;
@@ -208,9 +102,7 @@
                 await Auth.register(fullName, email, password);
                 successMsg.textContent = 'Verification code sent! Check your email.';
                 successMsg.style.display = 'block';
-                setTimeout(() => {
-                    window.location.href = 'verify-email.html?email=' + encodeURIComponent(email);
-                }, 2000);
+                setTimeout(() => { window.location.href = '/html/verify-email.html?email=' + encodeURIComponent(email); }, 2000);
             } catch (err) {
                 errorMsg.textContent = err.message || 'Registration failed. Please try again.';
                 errorMsg.style.display = 'block';

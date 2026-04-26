@@ -4,162 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Account - Dropship</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="manifest" href="../manifest.json">
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#FA7207">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Dropship">
-    <link rel="apple-touch-icon" href="../images/icon-192.svg">
+    <link rel="apple-touch-icon" href="/icons/icon-192.png">
     <style>
-        .account-page {
-            padding-bottom: 80px;
-        }
-        .account-header {
-            background: var(--white);
-            padding: 20px 15px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            box-shadow: var(--shadow);
-        }
-        .user-avatar {
-            width: 60px;
-            height: 60px;
-            background: var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            font-size: 1.5rem;
-        }
-        .user-info h3 {
-            font-size: 1.1rem;
-            margin-bottom: 4px;
-        }
-        .user-info p {
-            font-size: 0.85rem;
-            color: var(--text-light);
-        }
-        .user-info .edit-profile {
-            font-size: 0.8rem;
-            color: var(--primary);
-            margin-top: 4px;
-        }
-        .account-menu {
-            background: var(--white);
-            margin-top: 10px;
-            box-shadow: var(--shadow);
-        }
-        .account-menu-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 15px;
-            border-bottom: 1px solid var(--border);
-            cursor: pointer;
-        }
-        .account-menu-item:last-child {
-            border-bottom: none;
-        }
-        .account-menu-item i {
-            font-size: 1.2rem;
-            color: var(--primary);
-            width: 25px;
-        }
-        .account-menu-item span {
-            flex: 1;
-            font-size: 0.95rem;
-        }
-        .account-menu-item .arrow {
-            color: #999;
-        }
-        .account-section {
-            display: none;
-            padding: 15px;
-            background: var(--white);
-            margin-top: 10px;
-        }
-        .account-section.active {
-            display: block;
-        }
-        .account-section h2 {
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-        }
-        .section-card {
-            background: var(--white);
-            border-radius: 4px;
-            padding: 15px;
-            margin-bottom: 10px;
-            box-shadow: var(--shadow);
-        }
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border);
-        }
-        .order-id {
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-        .order-date {
-            font-size: 0.8rem;
-            color: var(--text-light);
-        }
-        .order-status {
-            font-size: 0.8rem;
-            color: var(--green);
-            font-weight: 600;
-        }
-        .order-total {
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-        .logout-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: calc(100% - 30px);
-            margin: 20px 15px;
-            padding: 14px;
-            background: var(--white);
-            border: 1px solid #ffcdd2;
-            border-radius: 4px;
-            color: #c62828;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .logout-btn:hover {
-            background: #ffebee;
-        }
+        .account-page { padding-bottom: 80px; }
+        .account-header { background: var(--white); padding: 20px 15px; display: flex; align-items: center; gap: 15px; box-shadow: var(--shadow); }
+        .user-avatar { width: 60px; height: 60px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 1.5rem; }
+        .user-info h3 { font-size: 1.1rem; margin-bottom: 4px; }
+        .user-info p { font-size: 0.85rem; color: var(--text-light); }
+        .user-info .edit-profile { font-size: 0.8rem; color: var(--primary); margin-top: 4px; }
+        .account-menu { background: var(--white); margin-top: 10px; box-shadow: var(--shadow); }
+        .account-menu-item { display: flex; align-items: center; gap: 15px; padding: 15px; border-bottom: 1px solid var(--border); cursor: pointer; }
+        .account-menu-item:last-child { border-bottom: none; }
+        .account-menu-item i { font-size: 1.2rem; color: var(--primary); width: 25px; }
+        .account-menu-item span { flex: 1; font-size: 0.95rem; }
+        .account-menu-item .arrow { color: #999; }
+        .account-section { display: none; padding: 15px; background: var(--white); margin-top: 10px; }
+        .account-section.active { display: block; }
+        .account-section h2 { font-size: 1.1rem; margin-bottom: 15px; }
+        .section-card { background: var(--white); border-radius: 4px; padding: 15px; margin-bottom: 10px; box-shadow: var(--shadow); }
+        .order-header { display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+        .order-id { font-weight: 600; font-size: 0.9rem; }
+        .order-date { font-size: 0.8rem; color: var(--text-light); }
+        .order-status { font-size: 0.8rem; color: var(--green); font-weight: 600; }
+        .order-total { font-weight: 700; color: var(--text-dark); }
+        .logout-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: calc(100% - 30px); margin: 20px 15px; padding: 14px; background: var(--white); border: 1px solid #ffcdd2; border-radius: 4px; color: #c62828; font-size: 0.95rem; font-weight: 600; cursor: pointer; }
+        .logout-btn:hover { background: #ffebee; }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="header-top">
-            <a href="index.html" class="back-btn" style="color: white; font-size: 1.2rem;">
+            <a href="/html/index.html" class="back-btn" style="color: white; font-size: 1.2rem;">
                 <i class="fas fa-arrow-left"></i>
             </a>
-            <a href="index.html" class="logo">
+            <a href="/html/index.html" class="logo">
                 <i class="fas fa-shopping-bag logo-icon"></i>
                 <span>Dropship</span>
             </a>
         </div>
     </header>
 
-    <!-- Account Header -->
     <div class="account-header" id="accountHeader">
-        <div class="user-avatar">
-            <i class="fas fa-user"></i>
-        </div>
+        <div class="user-avatar"><i class="fas fa-user"></i></div>
         <div class="user-info" id="userInfo">
             <h3 id="userName">Welcome</h3>
             <p id="userEmail">Sign in to your account</p>
@@ -167,60 +60,45 @@
         </div>
     </div>
 
-    <!-- Account Menu -->
     <div class="account-menu" id="accountMenu">
         <div class="account-menu-item" data-section="orders">
-            <i class="fas fa-box"></i>
-            <span>My Orders</span>
-            <i class="fas fa-chevron-right arrow"></i>
+            <i class="fas fa-box"></i><span>My Orders</span><i class="fas fa-chevron-right arrow"></i>
         </div>
         <div class="account-menu-item" data-section="addresses">
-            <i class="fas fa-map-marker-alt"></i>
-            <span>Saved Addresses</span>
-            <i class="fas fa-chevron-right arrow"></i>
+            <i class="fas fa-map-marker-alt"></i><span>Saved Addresses</span><i class="fas fa-chevron-right arrow"></i>
         </div>
         <div class="account-menu-item" data-section="payment">
-            <i class="fas fa-credit-card"></i>
-            <span>Payment Methods</span>
-            <i class="fas fa-chevron-right arrow"></i>
+            <i class="fas fa-credit-card"></i><span>Payment Methods</span><i class="fas fa-chevron-right arrow"></i>
         </div>
         <div class="account-menu-item" data-section="profile">
-            <i class="fas fa-user"></i>
-            <span>Profile</span>
-            <i class="fas fa-chevron-right arrow"></i>
+            <i class="fas fa-user"></i><span>Profile</span><i class="fas fa-chevron-right arrow"></i>
         </div>
         <div class="account-menu-item" data-section="settings">
-            <i class="fas fa-cog"></i>
-            <span>Settings</span>
-            <i class="fas fa-chevron-right arrow"></i>
+            <i class="fas fa-cog"></i><span>Settings</span><i class="fas fa-chevron-right arrow"></i>
         </div>
     </div>
 
-    <!-- Orders Section -->
     <div id="orders" class="account-section">
         <h2>My Orders</h2>
         <div id="ordersList"></div>
     </div>
 
-    <!-- Addresses Section -->
     <div id="addresses" class="account-section">
         <h2>Saved Addresses</h2>
-        <button class="add-address-btn" style="background: var(--primary); color: white; padding: 12px; border: none; border-radius: 4px; width: 100%; margin-bottom: 15px; font-weight: 600;">
+        <button style="background: var(--primary); color: white; padding: 12px; border: none; border-radius: 4px; width: 100%; margin-bottom: 15px; font-weight: 600;">
             <i class="fas fa-plus"></i> Add New Address
         </button>
         <div id="addressesGrid"></div>
     </div>
 
-    <!-- Payment Section -->
     <div id="payment" class="account-section">
         <h2>Payment Methods</h2>
-        <button class="add-address-btn" style="background: var(--primary); color: white; padding: 12px; border: none; border-radius: 4px; width: 100%; margin-bottom: 15px; font-weight: 600;">
+        <button style="background: var(--primary); color: white; padding: 12px; border: none; border-radius: 4px; width: 100%; margin-bottom: 15px; font-weight: 600;">
             <i class="fas fa-plus"></i> Add Payment Method
         </button>
         <div id="paymentMethods"></div>
     </div>
 
-    <!-- Profile Section -->
     <div id="profile" class="account-section">
         <h2>Profile Information</h2>
         <form id="profileForm" class="section-card">
@@ -240,111 +118,71 @@
         </form>
     </div>
 
-    <!-- Settings Section -->
     <div id="settings" class="account-section">
         <h2>Account Settings</h2>
         <div class="section-card">
             <h3 style="font-size: 1rem; margin-bottom: 15px;">Change Password</h3>
-            <div class="form-group" style="margin-bottom: 15px;">
+            <div style="margin-bottom: 15px;">
                 <input type="password" id="currentPassword" placeholder="Current Password" style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px;">
             </div>
-            <div class="form-group" style="margin-bottom: 15px;">
+            <div style="margin-bottom: 15px;">
                 <input type="password" id="newPassword" placeholder="New Password" style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px;">
             </div>
             <button type="button" style="width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 4px; font-weight: 600;">Update Password</button>
         </div>
     </div>
 
-    <!-- Logout Button -->
     <button class="logout-btn" id="logoutBtn" style="display: none;">
         <i class="fas fa-sign-out-alt"></i> Logout
     </button>
 
-    <!-- Bottom Navigation -->
     <nav class="mobile-nav">
         <ul class="mobile-nav-list">
-            <li class="mobile-nav-item" onclick="window.location.href='index.html'">
-                <i class="fas fa-home"></i>
-                <span>Home</span>
-            </li>
-            <li class="mobile-nav-item" onclick="window.location.href='products.html'">
-                <i class="fas fa-search"></i>
-                <span>Search</span>
-            </li>
-            <li class="mobile-nav-item">
-                <i class="fas fa-th"></i>
-                <span>Categories</span>
-            </li>
-            <li class="mobile-nav-item" onclick="window.location.href='cart.html'">
-                <i class="fas fa-shopping-cart"></i>
-                <span>Cart</span>
-            </li>
-            <li class="mobile-nav-item active">
-                <i class="fas fa-user"></i>
-                <span>Account</span>
-            </li>
+            <li class="mobile-nav-item" onclick="window.location.href='/html/index.html'"><i class="fas fa-home"></i><span>Home</span></li>
+            <li class="mobile-nav-item" onclick="window.location.href='/html/products.html'"><i class="fas fa-search"></i><span>Search</span></li>
+            <li class="mobile-nav-item"><i class="fas fa-th"></i><span>Categories</span></li>
+            <li class="mobile-nav-item" onclick="window.location.href='/html/cart.html'"><i class="fas fa-shopping-cart"></i><span>Cart</span></li>
+            <li class="mobile-nav-item active"><i class="fas fa-user"></i><span>Account</span></li>
         </ul>
     </nav>
 
-    <script src="../js/api.js"></script>
-    <script src="../js/main.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/main.js"></script>
     <script>
-        // Check login status
         function checkAuth() {
             if (Auth.isLoggedIn()) {
                 const user = Auth.getUser();
-                document.getElementById('userName').textContent = user.name || 'User';
+                document.getElementById('userName').textContent = user.name || user.username || 'User';
                 document.getElementById('userEmail').textContent = user.email || '';
                 document.getElementById('loginLink').style.display = 'none';
                 document.getElementById('logoutBtn').style.display = 'flex';
-                
-                if (user.name) {
-                    document.getElementById('fullName').value = user.name;
-                }
-                if (user.email) {
-                    document.getElementById('email').value = user.email;
-                }
+                if (user.name) document.getElementById('fullName').value = user.name;
+                if (user.email) document.getElementById('email').value = user.email;
             } else {
                 document.getElementById('loginLink').style.display = 'block';
                 document.getElementById('logoutBtn').style.display = 'none';
-                document.getElementById('loginLink').onclick = () => window.location.href = 'login.html';
+                document.getElementById('loginLink').onclick = () => window.location.href = '/html/login.html';
             }
         }
 
-        // Menu navigation
-        const menuItems = document.querySelectorAll('.account-menu-item');
-        const sections = document.querySelectorAll('.account-section');
-
-        menuItems.forEach(item => {
+        document.querySelectorAll('.account-menu-item').forEach(item => {
             item.addEventListener('click', () => {
-                const section = item.dataset.section;
-                sections.forEach(s => s.classList.remove('active'));
-                document.getElementById(section).classList.add('active');
+                document.querySelectorAll('.account-section').forEach(s => s.classList.remove('active'));
+                document.getElementById(item.dataset.section).classList.add('active');
                 window.scrollTo(0, 0);
             });
         });
 
-        // Logout
         document.getElementById('logoutBtn').addEventListener('click', () => {
             Auth.logout();
-            window.location.href = 'index.html';
+            window.location.href = '/html/index.html';
         });
 
-        // Profile form
         document.getElementById('profileForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            showToast('Profile updated successfully!');
+            showBanner('Profile updated successfully!');
         });
 
-        function showToast(message) {
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 2000);
-        }
-
-        // Initialize
         checkAuth();
     </script>
 </body>
