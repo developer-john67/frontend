@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dropship - Shop Online</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="manifest" href="../manifest.json">
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#FA7207">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Dropship">
-    <link rel="apple-touch-icon" href="../images/icon-192.svg">
+    <link rel="apple-touch-icon" href="/icons/icon-192.png">
     <style>
         .search-results {
             display: none;
@@ -275,8 +275,8 @@
         </div>
     </footer>
 
-    <script src="../js/api.js"></script>
-    <script src="../js/main.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/main.js"></script>
     <script>
         // Mobile menu
         const hamburger = document.getElementById('hamburger');
@@ -337,7 +337,7 @@
             }
 
             searchResults.innerHTML = results.slice(0, 6).map(product => {
-                const imageUrl = product.image_url || product.main_image || 'https://placehold.co/40x40?text=Product';
+                const imageUrl = getImageUrl(product);
                 return `
                     <div class="search-result-item" onclick="window.location.href='/html/product.html?id=${product.id || product.product_id}'">
                         <img src="${imageUrl}" alt="${product.name}" class="search-result-image" onerror="this.src='https://placehold.co/40x40?text=Product'">
@@ -448,7 +448,7 @@
 
         function createProductCard(product) {
             const prodId = product.product_id || product.id || '';
-            const imageUrl = product.main_image || product.image_url || 'https://placehold.co/200x200/FA7207/white?text=No+Image';
+            const imageUrl = getImageUrl(product);
             const prodName = product.name || 'Unnamed Product';
             const prodPrice = product.price || 0;
             return `
@@ -464,7 +464,7 @@
         }
 
         function createFlashCard(product) {
-            const imageUrl = product.image_url || 'https://placehold.co/200x200?text=Product';
+            const imageUrl = getImageUrl(product);
             return `
                 <div class="flash-product">
                     <img src="${imageUrl}" alt="${product.name}" onclick="window.location.href='/html/product.html?id=${product.id}'" onerror="this.src='https://placehold.co/200x200?text=Product'">
